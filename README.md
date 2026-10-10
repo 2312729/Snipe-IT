@@ -23,6 +23,7 @@ Tip
 * [Tổng quan chức năng và mã nguồn](https://github.com/Bee-Max-Ne/Snipe-IT#tong-quan-chuc-nang-va-ma-nguon)
 * [Kiến trúc hệ thống](https://github.com/Bee-Max-Ne/Snipe-IT#kien-truc-he-thong)
 * [Hướng dẫn tiếp nhận nhà phát triển](https://github.com/Bee-Max-Ne/Snipe-IT#huong-dan-tiep-nhan-nha-phat-trien)
+* [Báo cáo giữa kỳ đợt 2](#bao-cao-giua-ky-milestone-2)
 * [Kế hoạch triển khai K16 Testcontainers](https://github.com/Bee-Max-Ne/Snipe-IT#ke-hoach-trien-khai-k16-testcontainers)
 * [User&#39;s Manual](https://github.com/Bee-Max-Ne/Snipe-IT#users-manual)
 * [Bug Reports &amp; Feature Requests](https://github.com/Bee-Max-Ne/Snipe-IT#bug-reports--feature-requests)
@@ -331,6 +332,295 @@ Trước khi gửi thay đổi, hãy chạy các kiểm thử liên quan; nếu 
 | Cổng 8000 đang được sử dụng                   | Đổi `APP_PORT`trong `.env`Docker sang một cổng còn trống rồi tạo lại container ứng dụng                                                                                                                                                                                      |
 | Đã sửa PHP nhưng giao diện không đổi         | Xác nhận ứng dụng đang chạy image được tạo từ mã nguồn, không phải `snipe/snipe-it:latest`; nếu sửa giao diện, chạy `npm run dev`                                                                                                                                    |
 | `/.env`trả về nội dung cấu hình               | Ngừng cho phép truy cập công khai ngay; cấu hình máy chủ web chặn tệp ẩn, đánh giá thông tin bí mật có thể đã lộ và thay mới các thông tin xác thực. Không chỉ dựa vào bước kiểm tra của ứng dụng                                                     |
+
+<a id="bao-cao-giua-ky-milestone-2"></a>
+
+## Báo cáo giữa kỳ đợt 2
+
+> Báo cáo này tổng hợp nội dung có thể xác minh từ mã nguồn, cấu hình và kết quả
+> kiểm thử đã được ghi nhận. Các ô `[Nhóm bổ sung]` và mục “cần thu thập” là
+> thông tin/minh chứng chưa có trong kho mã; không được xem là kết quả đã hoàn
+> thành.
+
+### Thông tin đề tài và nhóm
+
+| Mục | Nội dung |
+|---|---|
+| Tên đề tài | Phân tích và kiểm thử hệ thống quản lý tài sản CNTT Snipe-IT |
+| Mã dự án/kỹ thuật | R03 Snipe-IT × K16 Testcontainers — xác nhận mã R03 với giảng viên nếu mã lớp khác |
+| Địa chỉ kho mã | `https://github.com/Bee-Max-Ne/Snipe-IT` |
+| Mã lần ghi nhận mốc trong Git | `ec8eb741397bf11345f51ae8c7f3a89e1aff1ac5`; đây là mốc mã nguồn đã chọn trước các thay đổi đợt 2, cần đối chiếu `git rev-parse HEAD` khi nộp |
+| Thành viên | `[Nhóm bổ sung họ tên, mã sinh viên và vai trò của từng thành viên]` |
+| Công cụ quản lý nhóm | `[Nhóm bổ sung Jira / Trello / GitHub Projects hoặc công cụ thực tế đã sử dụng]` |
+
+Mã SHA mốc ở trên ghi nhận phiên bản đã chọn ban đầu, không bao gồm các thay
+đổi của đợt 2 được mô tả trong báo cáo. Khi phát hành/nộp báo cáo, cập nhật
+thêm mã SHA của lần ghi nhận Git cuối cùng chứa các thay đổi để người khác có
+thể dựng lại đúng phiên bản bàn giao.
+
+### Phần 1 — Tổng quan dự án và thiết lập môi trường
+
+#### 1.1 Thông tin chung và cấu trúc mã nguồn
+
+Snipe-IT là ứng dụng web Laravel quản lý tài sản CNTT, danh mục, người dùng,
+quyền, cấp phát/thu hồi và lịch sử thao tác. Các phần mã nguồn liên quan trực
+tiếp tới đề tài:
+
+| Thành phần | Vai trò trong hệ thống/kiểm thử |
+|---|---|
+| `app/Http/Controllers/` và `app/Http/Controllers/Api/` | Tiếp nhận và điều phối yêu cầu giao diện web và REST API |
+| `app/Http/Transformers/` | Định dạng phản hồi JSON của API |
+| `app/Models/`, `app/Policies/` | Mô hình Eloquent, quan hệ dữ liệu và kiểm tra quyền |
+| `app/Actions/`, `app/Services/`, `app/Jobs/` | Nghiệp vụ dùng chung, tích hợp và công việc nền |
+| `routes/` | Khai báo tuyến web, API và tuyến theo nhóm nghiệp vụ |
+| `resources/views/`, `app/Livewire/` | Giao diện Blade và các thành phần tương tác riêng lẻ |
+| `database/migrations/`, `database/factories/`, `database/seeders/` | Cấu trúc cơ sở dữ liệu, dữ liệu kiểm thử và dữ liệu khởi tạo |
+| `tests/Unit/`, `tests/Feature/` | Kiểm thử đơn vị và kiểm thử chức năng |
+| `tests/testcontainers/run.mjs` | Tạo MySQL dùng một lần và gọi PHPUnit với cấu hình cơ sở dữ liệu động |
+| `.github/workflows/` | Quy trình kiểm thử tự động bằng GitHub Actions |
+
+#### 1.2 Thư viện phụ thuộc và nền tảng
+
+| Nhóm | Thư viện/cấu hình trong mã nguồn |
+|---|---|
+| Môi trường chạy/máy chủ | PHP `^8.2`, khung ứng dụng Laravel `^12.0` |
+| Ánh xạ đối tượng và cơ sở dữ liệu | Eloquent; MySQL/MariaDB qua cấu hình Laravel và phần mở rộng PHP `pdo_mysql` |
+| Xác thực API | Laravel Passport `^12.0`; khóa RSA được bộ chạy tạo tạm cho tiến trình kiểm thử |
+| Giao diện | Blade, Laravel UI, AdminLTE/Bootstrap; Laravel Mix `^6.0.49`, webpack; biên dịch bằng `npm run dev`, `npm run watch` hoặc `npm run prod` |
+| Kiểm thử PHP | PHPUnit `^11.0`; các bộ `Unit` và `Feature` được khai báo trong `phpunit.xml` |
+| Kiểm thử cơ sở dữ liệu cô lập | Node.js, `@testcontainers/mysql` `^11.7.2`; bộ chạy ghim ảnh vùng chứa `mysql:8.0.36` |
+| Tệp khóa phiên bản | `composer.lock`, `package-lock.json`; `.nvmrc` của kho mã ghi Node.js `18.16.0` |
+| Dịch vụ phát triển Docker | `dev.docker-compose.yml` dùng Dockerfile mã nguồn, MariaDB `11.4.7`, Redis `7.4.3`, MailHog `v1.0.1`; đây là ngăn xếp phát triển, không phải ảnh vùng chứa Testcontainers dùng khi kiểm thử |
+
+Các cấu hình trên phân biệt rõ ảnh vùng chứa MySQL `8.0.36` dùng khi kiểm thử
+với MariaDB `11.4.7` của Docker Compose. Kết quả kiểm thử trên một hệ quản trị
+cơ sở dữ liệu không tự chứng minh khả năng tương thích với hệ quản trị còn lại.
+
+#### 1.3 Kiến trúc hệ thống và luồng dữ liệu
+
+Sơ đồ thành phần/vùng chứa của hệ thống và luồng được chọn:
+
+```mermaid
+flowchart LR
+    subgraph clients["Người dùng"]
+        browser["Trình duyệt hoặc ứng dụng gọi API"]
+    end
+    subgraph app["Ứng dụng Laravel"]
+        routes["Tuyến web và API"]
+        auth["Xác thực và chính sách phân quyền"]
+        controllers["Bộ điều khiển và nghiệp vụ"]
+        transformers["Bộ biến đổi dữ liệu API"]
+    end
+    subgraph data["Dịch vụ kiểm thử và dữ liệu"]
+        mysql[("MySQL hoặc MariaDB")]
+        runner["Bộ chạy Testcontainers bằng Node.js"]
+        phpunit["Bộ kiểm thử PHPUnit"]
+    end
+
+    browser --> routes
+    routes --> auth
+    auth --> controllers
+    controllers --> mysql
+    controllers --> transformers
+    runner --> mysql
+    runner --> phpunit
+    phpunit --> controllers
+    phpunit --> mysql
+```
+
+Các mô-đun quan trọng gồm tuyến và bộ điều khiển để nhận yêu cầu; thành phần
+xác thực và chính sách phân quyền để xác minh người thực hiện có quyền hay
+không; mô hình và nghiệp vụ để cập nhật tài sản; cơ sở dữ liệu để lưu trạng
+thái và lịch sử; bộ biến đổi để tạo phản hồi JSON; PHPUnit và bộ chạy để thực
+thi, xác minh luồng trên cơ sở dữ liệu tạm thời.
+
+Luồng dữ liệu của bốn nghiệp vụ trọng tâm:
+
+```mermaid
+flowchart LR
+    A[Người dùng hoặc quản trị viên] --> B[Trình duyệt hoặc ứng dụng gọi API]
+    B --> C{Tuyến web hoặc API}
+    C --> D[Xác thực phiên làm việc hoặc Passport]
+    D --> E[Bộ điều khiển và kiểm tra yêu cầu]
+    E --> F[Chính sách phân quyền]
+    F -->|Cho phép| G[Mô hình tài sản và xử lý nghiệp vụ]
+    F -->|Từ chối| H[Phản hồi từ chối hoặc lỗi kiểm tra dữ liệu]
+    G --> I[(MySQL hoặc MariaDB)]
+    I --> J[Thông tin cấp phát và lịch sử thao tác]
+    J --> K[Phản hồi giao diện hoặc bộ biến đổi API]
+    K --> B
+    L[Bộ chạy Testcontainers] --> M[Cơ sở dữ liệu MySQL tạm thời]
+    M --> G
+    N[Bộ kiểm thử PHPUnit] --> E
+    N --> M
+```
+
+1. **Đăng nhập và phân quyền:** người dùng gửi thông tin qua giao diện web hoặc
+   API; lớp trung gian xác thực danh tính, chính sách phân quyền kiểm tra quyền
+   trước khi cho phép thao tác.
+2. **Tạo và quản lý tài sản:** yêu cầu hợp lệ đi qua bộ điều khiển và bước kiểm
+   tra dữ liệu; thay đổi được lưu vào cơ sở dữ liệu, sau đó trả về giao diện
+   Blade hoặc dữ liệu JSON đã được bộ biến đổi định dạng.
+3. **Cấp phát tài sản (checkout):** người có quyền chọn tài sản sẵn sàng và
+   người, vị trí hoặc tài sản nhận; hệ thống kiểm tra điều kiện rồi ghi nhận
+   thông tin cấp phát, trạng thái và lịch sử.
+4. **Thu hồi tài sản (checkin):** người có quyền thu hồi tài sản đã cấp; hệ
+   thống cập nhật thông tin bàn giao, trạng thái và lịch sử thu hồi.
+
+#### 1.4 Hướng dẫn tiếp nhận và dựng môi trường
+
+Các yêu cầu được khai báo hoặc sử dụng trong kho mã gồm PHP `8.2+`, Composer
+2, các phần mở rộng PHP trong `composer.json` (bao gồm `pdo`, `mbstring`,
+`curl`, `fileinfo`), Node.js/npm để biên dịch giao diện bằng Laravel Mix;
+Docker Desktop cần thiết khi dùng Testcontainers hoặc Docker Compose. Ứng dụng
+hiện không yêu cầu Python hay Java.
+
+Các lệnh dựng môi trường cơ bản từ PowerShell trên máy mới:
+
+```powershell
+git clone https://github.com/Bee-Max-Ne/Snipe-IT.git snipe-it
+Set-Location .\snipe-it
+git checkout ec8eb741397bf11345f51ae8c7f3a89e1aff1ac5
+Copy-Item .env.example .env
+composer install
+npm ci
+```
+
+Tạo cơ sở dữ liệu cục bộ còn trống và tài khoản riêng; cấu hình `.env` với
+`APP_URL=http://127.0.0.1:8000`, `DB_CONNECTION`, `DB_HOST`, `DB_PORT`,
+`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` và `MAIL_MAILER=log`. Không đưa
+`.env` hoặc thông tin bí mật vào lần ghi nhận Git. Khởi tạo và chạy ứng dụng:
+
+```powershell
+php artisan key:generate
+php artisan migrate
+php artisan storage:link
+npm run dev
+php artisan serve --host=127.0.0.1 --port=8000
+```
+
+Sau đó mở `http://127.0.0.1:8000` và hoàn tất thiết lập ban đầu trên trình
+duyệt. Chỉ nạp dữ liệu mẫu vào cơ sở dữ liệu dùng một lần: `DatabaseSeeder` có
+thao tác xóa dữ liệu trong một số bảng và xóa một số thư mục tệp tải lên. Để
+dùng ngăn xếp Docker phát triển, xem hướng dẫn
+[chạy mã nguồn bằng Docker](#ch%E1%BA%A1y-m%C3%A3-ngu%E1%BB%93n-hi%E1%BB%87n-t%E1%BA%A1i-b%E1%BA%B1ng-docker-tr%C3%AAn-windows);
+không dùng cơ sở dữ liệu cần bảo toàn hoặc cơ sở dữ liệu vận hành thật để làm
+môi trường trình diễn/kiểm thử.
+
+### Phần 2 — Bằng chứng vận hành và trình diễn nghiệp vụ
+
+#### 2.1 Xác nhận môi trường hoạt động
+
+Kết quả do người thực hiện cung cấp trong lần chạy ngày `2026-10-10` và đã ghi
+nhận: PHP `8.2.12`, PHPUnit `11.5.55`, Node.js `25.2.1`, Composer `2.10.3`;
+kiểm thử được thực hiện bằng Testcontainers/MySQL. Đây là minh chứng từ cửa sổ
+dòng lệnh của người dùng, không phải lượt chạy do phiên biên tập tài liệu thực hiện.
+
+**Bằng chứng còn cần bổ sung:** ảnh chụp trang đăng nhập/bảng điều khiển, nhật
+ký khởi động đã loại bỏ thông tin nhạy cảm và trạng thái container. Không đưa
+mật khẩu, mã thông báo, khóa Passport hay dữ liệu cá nhân vào báo cáo.
+
+#### 2.2 Bảng minh chứng kiểm chứng nghiệp vụ
+
+| Nghiệp vụ | Cách kiểm chứng hiện có | Kết quả được ghi nhận | Minh chứng còn thiếu |
+|---|---|---|---|
+| Đăng nhập và phân quyền | Mã nguồn có luồng web/API và chính sách phân quyền; chưa có minh chứng trình diễn giao diện được cung cấp | Chưa xác nhận kết quả trình diễn thực tế trong hồ sơ | Ảnh đăng nhập và trường hợp được phép/bị từ chối |
+| Tạo và quản lý tài sản | Mã nguồn có mô hình, bộ điều khiển, tuyến và bộ tạo dữ liệu; chưa có kết quả trình diễn độc lập được cung cấp | Chưa xác nhận kết quả trình diễn thực tế trong hồ sơ | Ảnh/nhật ký tạo tài sản và xác nhận dữ liệu trong CSDL |
+| Cấp phát rồi thu hồi qua API | `AssetCheckoutTest::test_asset_can_be_checked_out_and_checked_back_in_through_api` chạy qua Testcontainers | Người dùng xác nhận PHPUnit đạt: **1 kiểm thử, 11 lượt xác nhận**, 2:08.481 | Lưu nhật ký đầu ra và liên kết quy trình tích hợp liên tục; hiện mới xác nhận kết quả cục bộ |
+
+Một lần chạy cũ của toàn bộ `AssetCheckoutTest.php` được báo cáo có 29 kiểm
+thử, 134 lượt xác nhận, 1 kiểm thử chưa hoàn tất, thời gian 5:24.708. Đây là
+lần chạy trước khi bổ sung kiểm thử toàn bộ vòng đời tài sản và không phải kết
+quả của toàn bộ các bộ `Unit`/`Feature`. Không dùng kết quả này để kết luận
+toàn hệ thống đã vượt qua kiểm thử.
+
+### Phần 3 — Kế hoạch triển khai kỹ thuật kiểm thử nâng cao K16
+
+#### 3.1 Cơ sở lý thuyết và lý do lựa chọn
+
+K16 Testcontainers tạo một dịch vụ phụ thuộc thực tế trong vùng chứa tạm thời
+cho mỗi lượt kiểm thử, cấp cổng kết nối động và cấu hình kết nối riêng, chạy
+kiểm thử rồi dọn vùng chứa. So với đối tượng giả lập hoặc SQLite, cơ sở dữ
+liệu thật giúp kiểm tra tích hợp Laravel với MySQL, cấu trúc/lược đồ dữ liệu,
+các bước chuyển đổi cấu trúc và hành vi SQL của hệ quản trị đã chọn. Đổi lại,
+kỹ thuật này cần Docker và ảnh vùng chứa, tốn thời gian khởi động và tài
+nguyên; kết quả trên MySQL không đại diện cho MariaDB hay cấu hình vận hành
+thật khác.
+
+Phần triển khai trong kho mã dùng Node.js `@testcontainers/mysql`, ảnh
+vùng chứa MySQL `8.0.36`, sau đó khởi chạy PHPUnit. Bộ chạy tạo cơ sở dữ liệu
+và mật khẩu ngẫu nhiên, truyền địa chỉ máy chủ/cổng động cùng khóa Passport
+RSA tạm thời qua biến môi trường của tiến trình. Nếu thiếu `.env.testing`, bộ
+chạy tạo tệp này từ tệp mẫu rồi xóa tệp do chính nó tạo sau khi chạy. Lệnh
+thực hiện:
+
+```powershell
+npm run test:integration:testcontainers -- tests/Feature/Checkouts/Api/AssetCheckoutTest.php --filter=test_asset_can_be_checked_out_and_checked_back_in_through_api
+```
+
+#### 3.2 Phạm vi, giả định và rủi ro
+
+**Phạm vi hiện tại:** cấp phát/thu hồi tài sản qua API; quyền của người thực
+hiện; thông tin người nhận, trạng thái và dữ liệu cấp phát/thu hồi được kiểm
+tra bằng kiểm thử chức năng; kết nối Laravel với vùng chứa MySQL. Phạm vi chưa
+bao gồm toàn bộ nghiệp vụ Snipe-IT, tự động hóa trình duyệt, kiểm thử tải,
+SMTP, hàng đợi hoặc Redis.
+
+**Giả định:** dịch vụ Docker đang hoạt động; PHP 8.2 trở lên có PDO MySQL; các
+thư viện Composer/npm đã được cài đặt; bộ chạy có thể tải ảnh vùng chứa; mỗi
+lượt kiểm thử chỉ dùng cơ sở dữ liệu trong vùng chứa riêng, không chuyển sang
+cơ sở dữ liệu cục bộ hoặc dùng chung.
+
+| Rủi ro | Ảnh hưởng | Biện pháp giảm thiểu/ứng phó |
+|---|---|---|
+| Docker chưa chạy hoặc không tải được ảnh vùng chứa | Không thể khởi tạo kiểm thử | Hiển thị lỗi rõ ràng và dừng; không chuyển sang cơ sở dữ liệu dùng chung |
+| Thiếu PHP/PDO MySQL hoặc sai đường dẫn PHP trên Windows | PHPUnit không khởi chạy | Cài PHP phù hợp; dùng `PHP_BINARY` hoặc đường dẫn XAMPP được bộ chạy hỗ trợ |
+| Vùng chứa khởi động chậm hoặc tiêu tốn nhiều tài nguyên | Kiểm thử kéo dài hoặc hết thời gian chờ | Chạy kiểm thử có chọn lọc; quy trình tích hợp liên tục giới hạn 15 phút; theo dõi tài nguyên |
+| Khác biệt phiên bản MySQL/MariaDB | Kết quả không đại diện cho hệ quản trị còn lại | Ghi rõ MySQL `8.0.36`; kiểm chứng riêng nếu cần MariaDB |
+| Rò rỉ thông tin kiểm thử | Lộ thông tin truy cập hoặc khóa | Dùng mật khẩu ngẫu nhiên và khóa tạm; không ghi bí mật vào nhật ký hoặc đưa `.env` lên Git |
+| Tiến trình bị buộc dừng | Có thể không chạy được bước dọn dẹp trong `finally` | Kiểm tra Docker sau sự cố; đánh giá riêng việc dọn dẹp trong kiểm thử độ ổn định |
+
+#### 3.3 Tiêu chí đạt/không đạt
+
+| Chỉ số | Đạt | Không đạt |
+|---|---|---|
+| Kiểm thử cấp phát/thu hồi mục tiêu | PHPUnit trả mã thoát 0, chạy đúng 1 kiểm thử được chọn, có ít nhất 11 điều khẳng định | Kiểm thử lỗi, chạy sai kiểm thử hoặc mã thoát khác 0 |
+| Cô lập cơ sở dữ liệu | Kết nối tới MySQL trong vùng chứa được tạo cho lượt chạy; không sử dụng cơ sở dữ liệu cục bộ/dùng chung | Có chuyển dự phòng hoặc ghi dữ liệu ra ngoài phạm vi |
+| Dọn dẹp vùng chứa | Vùng chứa dừng sau khi PHPUnit trả kết quả bình thường, kể cả khi kiểm thử thất bại | Tiến trình kết thúc bình thường nhưng vùng chứa kiểm thử vẫn chạy |
+| Tích hợp liên tục (CI) | Quy trình `Testcontainers Integration` chạy thành công trên yêu cầu hợp nhất/lần đẩy đã cấu hình và hoàn tất trong tối đa 15 phút | Quy trình thất bại, bị bỏ qua ngoài dự kiến hoặc hết thời gian |
+| Tính trung thực của báo cáo | Phân biệt kiểm thử mục tiêu với toàn bộ bộ kiểm thử và ghi rõ kiểm thử chưa hoàn tất | Dùng kết quả một kiểm thử để tuyên bố toàn bộ bộ kiểm thử đạt |
+
+Chưa đặt mục tiêu tỷ lệ bao phủ mã nguồn: cấu hình hiện tại chưa cung cấp bằng
+chứng bao phủ cho luồng này; nhóm cần thống nhất chỉ số nếu giảng viên yêu
+cầu. Quy trình tự động đã có trong mã nguồn nhưng hồ sơ chưa xác nhận kết quả
+chạy thực tế trên GitHub Actions.
+
+### Phần 4 — Tiến độ và phân công công việc nhóm
+
+| Thành viên/vai trò theo kế hoạch | Nội dung đã có trong mã nguồn/hồ sơ | Cần bổ sung để xác nhận bàn giao |
+|---|---|---|
+| Thành viên 1 — Vận hành/môi trường | Hướng dẫn tiếp nhận, cấu hình bộ chạy Testcontainers và môi trường cơ sở dữ liệu | Họ tên, mã lần ghi nhận/yêu cầu hợp nhất liên quan, nhật ký dựng môi trường |
+| Thành viên 2 — Phân tích/máy chủ | Bản đồ mô-đun, thư viện phụ thuộc, nghiệp vụ và dữ liệu trong báo cáo | Họ tên, phần phân tích cụ thể và lịch sử đóng góp |
+| Thành viên 3 — Phân tích/máy chủ/kiểm thử | Kiểm thử API cấp phát/thu hồi và các kiểm thử cấp phát hiện có | Họ tên, mã lần ghi nhận/yêu cầu hợp nhất và kết quả kiểm thử gắn với tác giả |
+| Thành viên 4 — Đảm bảo chất lượng/rủi ro | Rủi ro, tiêu chí đạt/không đạt và kế hoạch CI trong nội dung K16 | Họ tên, biên bản rà soát, nhật ký CI thực tế |
+| Thành viên 5 — Đảm bảo chất lượng/trình diễn | Các kịch bản đăng nhập, tạo tài sản, cấp phát/thu hồi đã được xác định | Họ tên, ảnh/nhật ký các luồng trình diễn và phần việc thực tế |
+
+Không suy đoán tác giả từ danh sách tệp thay đổi. Khi hoàn thiện báo cáo nhóm,
+ghi bổ sung họ tên/mã sinh viên và trích lịch sử các lần ghi nhận Git đã kiểm
+tra bằng lệnh
+`git log --format="%h %ad %an %s" --date=short`; nếu có thay đổi chưa được ghi nhận,
+ghi riêng là thay đổi chưa được ghi nhận vào Git trong thư mục làm việc, không
+trình bày như một thay đổi đã được lưu phiên bản.
+
+### Kết luận và các việc còn lại
+
+Mã nguồn hiện có phần phân tích cấu trúc/thư viện phụ thuộc, hướng dẫn dựng
+môi trường, bộ chạy Testcontainers, kiểm thử API cấp phát/thu hồi, quy trình
+CI và tiêu chí nghiệm thu. Bằng chứng tự động đã được ghi nhận cho một luồng
+xử lý phía máy chủ. Báo cáo chưa đủ căn cứ để tuyên bố toàn bộ đợt 2 đã hoàn
+tất: cần bổ sung danh sách thành viên, lịch sử các lần ghi nhận Git đã xác
+minh, ảnh/nhật ký khởi động, minh chứng trình diễn ba luồng và kết quả GitHub
+Actions thực tế.
 
 `<a id="ke-hoach-trien-khai-k16-testcontainers"></a>`
 
