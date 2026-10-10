@@ -1,13 +1,9 @@
-### Contributing
+# Đóng góp
 
-Please see the documentation on [contributing and developing for Snipe-IT](https://snipe-it.readme.io/docs/contributing-overview).
+Vui lòng tham khảo tài liệu chính thức về [đóng góp và phát triển Snipe-IT](https://snipe-it.readme.io/docs/contributing-overview).
 
-> Please read the [AI Usage Policy](https://snipe-it.readme.io/docs/contributing-overview#ai-usage-policy) if you are
-> using AI.
+> Vui lòng đọc [Chính sách sử dụng AI](https://snipe-it.readme.io/docs/contributing-overview#ai-usage-policy) nếu bạn đang sử dụng AI trong quá trình phát triển.
 >
-> Additionally, if you are using an AI coding assistant, this repository ships with generated
-> instructions from [Laravel Boost](https://laravel.com/docs/13.x/boost): `AGENTS.md` and `CLAUDE.md` provide always-on
-> guidance in addition to path-scoped rules in the `.ai/rules` directory. Together, they cover how this application is
-> architected and the conventions to follow.
+> Ngoài ra, nếu bạn đang dùng trợ lý lập trình AI, kho mã này đi kèm với hướng dẫn sinh ra từ [Laravel Boost](https://laravel.com/docs/13.x/boost): `AGENTS.md` và `CLAUDE.md` cung cấp hướng dẫn luôn có sẵn, bên cạnh các quy tắc theo đường dẫn trong thư mục `.ai/rules`.
 
-Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+Dự án này được phát hành theo [Contributor Code of Conduct](CODE_OF_CONDUCT.md). Bằng cách tham gia, bạn đồng ý tuân thủ các điều khoản của nó.

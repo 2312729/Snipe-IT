@@ -1,31 +1,23 @@
-# Multi-fieldset per AssetModel: design pause point
+# Thiết kế multi-fieldset cho AssetModel: điểm dừng
 
-## What's on the table
-Letting a single AssetModel attach more than one CustomFieldset, instead
-of the current single `models.fieldset_id` FK.
+## Vấn đề đang xét
 
-## Existing pivots in this neighborhood
-- `custom_field_custom_fieldset`: CustomField to CustomFieldset (which
-  fields belong to a fieldset). Already exists.
-- `models_custom_fields`: AssetModel to CustomField, columns
-  `asset_model_id`, `custom_field_id`, `default_value`. **Purpose is
-  per-model default-value overrides only.** It does NOT determine
-  which fields a model has. That still routes through
-  `models.fieldset_id`, then `custom_field_custom_fieldset`, then
-  `custom_fields`. Migration:
-  `database/migrations/2018_04_16_133902_create_custom_field_default_values_table.php`.
-  Relations:
-  `AssetModel::customFields()` and `CustomField::assetModels()` both use
-  `belongsToMany(..., 'models_custom_fields')->withPivot('default_value')`.
+Cho phép một AssetModel gắn nhiều CustomFieldset thay vì chỉ một khóa ngoại duy nhất `models.fieldset_id` như hiện nay.
 
-## Missing pivot for the feature
-- AssetModel to CustomFieldset (many-to-many). Not present in any
-  form today.
+## Pivot hiện có trong khu vực này
 
-## Two paths I laid out
+- `custom_field_custom_fieldset`: CustomField đến CustomFieldset (xác định trường nào thuộc một fieldset). Đã tồn tại.
+- `models_custom_fields`: AssetModel đến CustomField, với cột `asset_model_id`, `custom_field_id`, `default_value`. **Mục đích là ghi đè giá trị mặc định theo model.** Nó không quyết định model có những field nào; điều đó vẫn đi qua `models.fieldset_id`, rồi `custom_field_custom_fieldset`, rồi `custom_fields`. Migration: `database/migrations/2018_04_16_133902_create_custom_field_default_values_table.php`.
 
-### Path A: smaller change
-Add a new pivot:
+## Pivot còn thiếu cho tính năng
+
+- AssetModel đến CustomFieldset (many-to-many). Chưa tồn tại trong bất kỳ form nào hiện tại.
+
+## Hai hướng đi đã đề xuất
+
+### Hướng A: thay đổi nhỏ hơn
+
+Thêm một pivot mới:
 
 ```php
 Schema::create('asset_model_custom_fieldset', function (Blueprint $table) {
@@ -35,58 +27,26 @@ Schema::create('asset_model_custom_fieldset', function (Blueprint $table) {
     $table->unsignedInteger('order')->default(0);
     $table->timestamps();
     $table->unique(['model_id', 'custom_fieldset_id']);
-    // No FKs, per project convention.
 });
-
-// Backfill from the existing single FK.
-DB::statement("
-    INSERT INTO asset_model_custom_fieldset
-        (model_id, custom_fieldset_id, `order`, created_at, updated_at)
-    SELECT id, fieldset_id, 0, NOW(), NOW()
-    FROM models
-    WHERE fieldset_id IS NOT NULL
-");
 ```
 
-- Keeps the mental model: model has fieldsets, fieldsets have fields,
-  merge at render time.
-- `models.fieldset_id` stays as a compatibility shim during the code
-  sweep. A follow-up migration drops it once every consumer reads from
-  the new pivot.
-- Consumer sweep sites (from earlier grep): AssetsController + API
-  transformer + create/edit blades + custom reports + CSV import +
-  PDF label renderer + bulk edit. Roughly 15 to 25 sites, small
-  individually.
-- API contract change: `assets.*.custom_fieldset` becomes an array
-  (`custom_fieldsets`). Softest rollout is emitting both keys through
-  a deprecation window.
-- Rough sizing: 2 to 3 focused days for the core (migration,
-  relations, consumer sweep, tests) plus a docs / API-deprecation note.
+- Giữ mô hình tư duy: model có fieldsets, fieldsets có fields, hợp nhất khi render.
+- `models.fieldset_id` giữ vai trò shim tương thích trong quá trình chuyển đổi. Migration sau đó có thể xóa nó khi mọi consumer đọc từ pivot mới.
+- Phạm vi consumer cần duyệt lại: AssetsController, API transformer, blades create/edit, custom reports, CSV import, PDF label renderer, bulk edit. Khoảng 15–25 điểm, mỗi chỗ nhỏ.
+- Thay đổi contract API: `assets.*.custom_fieldset` trở thành mảng `custom_fieldsets`. Cách rollout mềm nhất là giữ cả hai khóa trong một thời gian deprecation.
 
-### Path B: architecturally cleaner rewrite
-Promote `models_custom_fields` from a defaults side-table into the
-primary "which fields does this model have" table.
+### Hướng B: viết lại theo kiến trúc sạch hơn
 
-- Add `order` to `models_custom_fields`. Keep `default_value`.
-- Demote CustomFieldset to a reusable template. Applying a fieldset
-  populates rows in `models_custom_fields` for the target model.
-- Model to field becomes direct. Fieldsets become a UI convenience for
-  bulk-attach.
-- Removes the three-hop `model, fieldset, pivot, field` walk from
-  every consumer.
-- Bigger migration (data reshaping) and bigger consumer sweep, but no
-  more "which layer owns the field membership" ambiguity.
+Nâng `models_custom_fields` từ side-table default thành bảng chính để xác định "model có những field nào".
 
-## Open questions (unresolved when we paused)
-1. Path A or Path B: Snipe's call. B is cleaner, A ships faster.
-2. Field ordering across attached fieldsets in Path A. Options:
-   - Fieldset `order` plus within-fieldset field `order` (two-level sort).
-   - Interleave everything by a single per-field order (needs a rule
-     for cross-fieldset conflicts).
-3. Duplicate fields (same CustomField in two attached fieldsets in
-   Path A). They share a `db_column`, so the stored value is fine,
-   but the form would render the field twice. Need to de-dupe when
-   merging the field list.
-4. Backward-compat API window on `custom_fieldset` (singular) response
-   key. Suggest: keep it for one minor release next to the new
-   `custom_fieldsets` array, drop it on the following major.
+- Thêm `order` vào `models_custom_fields`, giữ `default_value`.
+- Giảm vai trò của CustomFieldset thành template tái sử dụng.
+- Model đến field trở thành direct relation; fieldset chỉ là tiện ích UI để attach hàng loạt.
+- Loại bỏ tầng `model -> fieldset -> pivot -> field` trong mọi consumer.
+
+## Câu hỏi chưa giải quyết khi dừng lại
+
+1. Chọn A hay B: tùy quyết định của Snipe-IT; B sạch hơn nhưng A triển khai nhanh hơn.
+2. Sắp xếp field giữa các fieldset khi dùng A: cần có `order` ở fieldset và `order` trong từng field.
+3. Trùng field: nếu cùng một CustomField nằm trong hai fieldset, form có thể render duplicate. Cần de-dupe khi merge danh sách field.
+4. Khoảng API tương thích ngược về khóa `custom_fieldset` singular. Nên giữ lâu một minor release cùng `custom_fieldsets` array rồi bỏ ở release sau.

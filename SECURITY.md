@@ -1,48 +1,37 @@
-# Security Policy
+# Chính sách bảo mật
 
-We take security issues very seriously, and will always attempt to address any vulnerabilities as quickly as possible.
+Chúng tôi rất coi trọng các vấn đề bảo mật và sẽ cố gắng giải quyết mọi lỗ hổng theo cách nhanh nhất có thể.
 
-## Supported Versions
+## Phiên bản được hỗ trợ
 
-We try to make a reasonable effort to support older versions of Snipe-IT, however there are times when library
-dependencies and/or PHP/MySQL dependencies make it impossible to backport security fixes on older versions.
+Chúng tôi nỗ lực hỗ trợ các phiên bản cũ của Snipe-IT theo mức hợp lý, nhưng trong một số trường hợp các dependency, PHP hoặc MySQL có thể khiến việc backport bản sửa lỗi an toàn đối với phiên bản cũ trở nên không khả thi.
 
-| Version | Supported          |
-|---------|--------------------|
-| 8.x     | :white_check_mark: |
-| 7.x     | :x:                |
-| 6.x     | :x:                |
-| 5.1.x   | :x:                |
-| 5.0.x   | :x:                |
-| 4.0.x   | :x:                |
-| < 4.0   | :x:                |
+| Phiên bản | Hỗ trợ |
+| --- | --- |
+| 8.x | ✅ |
+| 7.x | ❌ |
+| 6.x | ❌ |
+| 5.1.x | ❌ |
+| 5.0.x | ❌ |
+| 4.0.x | ❌ |
+| < 4.0 | ❌ |
 
-## Reporting a Vulnerability
+## Báo cáo lỗ hổng
 
-__Security vulnerabilities should be reported [via a new GHSA](https://github.com/grokability/snipe-it/security) or via
-email security@snipeitapp.com.__
+__Các lỗ hổng bảo mật nên được báo cáo qua [GHSA mới](https://github.com/grokability/snipe-it/security) hoặc qua email security@snipeitapp.com.__
 
-If we find that your security report is valid but has been reported in a previous GHSA that is currently still in draft
-mode (therefore currently invisible to you), we will add your Github username to the original GHSA so that you can be
-credited for your discovery.
+Nếu chúng tôi xác định rằng báo cáo của bạn hợp lệ nhưng đã được gửi trong một GHSA cũ đang ở trạng thái draft và chưa hiển thị cho bạn, chúng tôi sẽ thêm tên người dùng GitHub của bạn vào GHSA gốc để ghi nhận đóng góp phát hiện lỗ hổng.
 
-When creating a GHSA, please leave the "package" field blank. Snipe-IT is not a package, so we will just have to blank
-that field out when reviewing your GHSA.
+Khi tạo GHSA, vui lòng để trống trường "package". Snipe-IT không phải là một package, do đó chúng tôi sẽ xóa trường này khi xem xét báo cáo.
 
-You can typically expect a response within five business days, and we typically have fixes out in under a week from the
-initial disclosure.
+Bạn có thể kỳ vọng nhận phản hồi trong vòng năm ngày làm việc, và thường thì bản sửa lỗi sẽ được phát hành trong vòng ít hơn một tuần kể từ khi báo cáo ban đầu.
 
-This obviously varies based on the severity of the security issue and the difficulty in remediation, but those have
-historically been the timelines we work around.
+Thời gian thực tế phụ thuộc vào mức độ nghiêm trọng của vấn đề và độ khó sửa lỗi, nhưng đây là khoảng thời gian mà chúng tôi thường hướng tới.
 
-__We do ask that you do not disclose the vulnerability publicly until we have had a chance to address it and tag a
-release__ so that we can protect our users, and we will work with you to coordinate a public disclosure once we have a
-fix out.
+__Chúng tôi yêu cầu bạn không công khai lỗ hổng trước khi chúng tôi có cơ hội xử lý và phát hành bản release__ để bảo vệ người dùng. Chúng tôi sẽ hợp tác với bạn để phối hợp công bố công khai khi bản sửa đã có sẵn.
 
-If you alert us to the security issue via security@snipeitapp.com, please provide a GitHub username or other
-information if you would like to be credited, or please let us know if you would like to remain anonymous.
+Nếu bạn báo cáo vấn đề bảo mật qua email security@snipeitapp.com, vui lòng cung cấp tên người dùng GitHub hoặc thông tin khác nếu bạn muốn được ghi nhận, hoặc cho biết nếu bạn muốn giữ ẩn danh.
 
-For responsible disclosure, we ask that you give us at least __90 days__ to address the issue before disclosing it
-publicly, but we will work with you if you need to disclose it sooner than that.
+Với mô hình disclosure có trách nhiệm, chúng tôi yêu cầu bạn cho chúng tôi tối thiểu __90 ngày__ để xử lý vấn đề trước khi công khai, nhưng chúng tôi sẽ hợp tác nếu bạn cần công bố sớm hơn.
 
-For a full breakdown of our security policies, please see https://snipeitapp.com/security.
+Để xem chi tiết đầy đủ về chính sách bảo mật, hãy truy cập https://snipeitapp.com/security.

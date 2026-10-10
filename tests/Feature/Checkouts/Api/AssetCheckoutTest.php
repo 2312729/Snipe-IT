@@ -10,7 +10,7 @@ use App\Models\Statuslabel;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
-use Notification;
+use Illuminate\Support\Facades\Notification;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\MakesWatsonValidationLoud;
 use Tests\TestCase;
@@ -31,12 +31,16 @@ class AssetCheckoutTest extends TestCase
         Notification::fake();
         $requestable = Asset::factory()->requestable()->create();
         $nonRequestable = Asset::factory()->nonrequestable()->create();
+        /** @var User $requester */
+        $requester = User::factory()->create();
 
-        $this->actingAsForApi(User::factory()->create())
+        $this->actingAsForApi($requester)
             ->post(route('api.assets.requests.store', $requestable->id))
             ->assertStatusMessageIs('success');
 
-        $this->actingAsForApi(User::factory()->create())
+        /** @var User $anotherRequester */
+        $anotherRequester = User::factory()->create();
+        $this->actingAsForApi($anotherRequester)
             ->post(route('api.assets.requests.store', $nonRequestable->id))
             ->assertStatusMessageIs('error');
 
@@ -51,7 +55,10 @@ class AssetCheckoutTest extends TestCase
 
     public function test_checking_out_asset_requires_correct_permission()
     {
-        $this->actingAsForApi(User::factory()->create())
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        $this->actingAsForApi($user)
             ->postJson(route('api.asset.checkout', Asset::factory()->create()), [
                 'checkout_to_type' => 'user',
                 'assigned_user' => User::factory()->create()->id,
@@ -116,6 +123,36 @@ class AssetCheckoutTest extends TestCase
 
         $asset->refresh();
         $this->assertTrue($asset->assignedTo()->is($user));
+    }
+
+    public function test_asset_can_be_checked_out_and_checked_back_in_through_api()
+    {
+        $asset = Asset::factory()->create();
+        $assignedUser = User::factory()->create();
+        $actor = User::factory()->checkoutAssets()->checkinAssets()->create();
+
+        $this->actingAsForApi($actor)
+            ->postJson(route('api.asset.checkout', $asset), [
+                'checkout_to_type' => 'user',
+                'assigned_user' => $assignedUser->id,
+            ])
+            ->assertOk()
+            ->assertStatusMessageIs('success');
+
+        $asset->refresh();
+        $this->assertTrue($asset->assignedTo()->is($assignedUser));
+        $this->assertEquals(1, $asset->checkout_counter);
+
+        $this->postJson(route('api.asset.checkin', $asset))
+            ->assertOk()
+            ->assertStatusMessageIs('success');
+
+        $asset->refresh();
+        $this->assertNull($asset->assigned_to);
+        $this->assertNull($asset->assigned_type);
+        $this->assertEquals(1, $asset->checkin_counter);
+        $this->assertNotNull($asset->last_checkout);
+        $this->assertNotNull($asset->last_checkin);
     }
 
     public function test_asset_checkout_infers_asset_target_when_checkout_to_type_omitted()
@@ -312,7 +349,7 @@ class AssetCheckoutTest extends TestCase
     }
 
     #[DataProvider('checkoutTargets')]
-    public function test_asset_can_be_checked_out($data)
+    public function test_asset_can_be_checked_out(callable $data)
     {
         ['checkout_type' => $type, 'target' => $target, 'expected_location' => $expectedLocation] = $data();
 

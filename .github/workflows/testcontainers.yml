@@ -1,0 +1,57 @@
+name: Testcontainers Integration
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checkout-checkin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2.37.2
+        with:
+          php-version: "8.2"
+          extensions: curl, exif, fileinfo, gd, mbstring, pdo_mysql, sodium, zip
+          coverage: none
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Prepare Laravel test environment
+        run: cp .env.testing.example .env
+
+      - name: Install PHP dependencies
+        run: composer install --no-ansi --no-interaction --no-progress --prefer-dist --no-scripts
+
+      - name: Install Node dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Run checkout and checkin integration test
+        run: >-
+          npm run test:integration:testcontainers --
+          tests/Feature/Checkouts/Api/AssetCheckoutTest.php
+          --filter=test_asset_can_be_checked_out_and_checked_back_in_through_api
+
+      - name: Upload Laravel logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: testcontainers-laravel-logs-${{ github.run_attempt }}
+          path: storage/logs/*.log
+          if-no-files-found: ignore
+          retention-days: 7

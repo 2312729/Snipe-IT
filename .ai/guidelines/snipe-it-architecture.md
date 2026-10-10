@@ -1,38 +1,38 @@
-# Snipe-IT Architecture
+# Kiến trúc Snipe-IT
 
-## Controllers
+## Các controller
 
-Two parallel controller trees:
+Có hai nhánh controller song song:
 
-- `app/Http/Controllers/` — web/UI controllers returning Blade views.
-- `app/Http/Controllers/Api/` — REST API controllers returning JSON, consumed by datatables and select2.
+- `app/Http/Controllers/` — controller giao diện web trả về Blade view.
+- `app/Http/Controllers/Api/` — controller REST API trả về JSON, được datatables và select2 tiêu thụ.
 
-Both trees use the same subdirectory groupings: `Assets/`, `Licenses/`, `Users/`, `Accessories/`, `Consumables/`, `Components/`, `Kits/`, `Account/`, `Auth/`.
+Cả hai nhánh dùng cùng nhóm thư mục: `Assets/`, `Licenses/`, `Users/`, `Accessories/`, `Consumables/`, `Components/`, `Kits/`, `Account/`, `Auth/`.
 
-## API Transformers
+## Transformer API
 
-Every API controller returns data through a **Transformer** in `app/Http/Transformers/`. Never return raw model attributes from an API controller. `DatatablesTransformer` wraps paginated results.
+Mọi controller API đều trả dữ liệu qua một **Transformer** trong `app/Http/Transformers/`. Không trả raw model attributes trực tiếp từ API controller. `DatatablesTransformer` bọc kết quả phân trang.
 
 ```php
 return (new AssetsTransformer)->transformAssets($assets, $assets->count());
 ```
 
-## Authorization
+## Phân quyền
 
-- All authorization goes through **Policies** in `app/Policies/`.
-- `CheckoutablePermissionsPolicy` is the base for assets, licenses, accessories, and consumables.
-- Its `checkout()` / `checkin()` methods accept `$item = null`, so `@can('checkout', \App\Models\Asset::class)` works without an instance.
+- Tất cả xác thực quyền đi qua **Policies** trong `app/Policies/`.
+- `CheckoutablePermissionsPolicy` là base cho asset, license, accessory và consumable.
+- Phương thức `checkout()` / `checkin()` chấp nhận `$item = null`, nên `@can('checkout', \App\Models\Asset::class)` hoạt động mà không cần instance.
 
-## Routes
+## Route
 
-- UI routes live in `routes/web.php` **and** in the per-entity files under `routes/web/` (`hardware.php`, `users.php`, `licenses.php`, `accessories.php`, `components.php`, `consumables.php`, `kits.php`, `models.php`, `fields.php`, `locations.php`). Check both when adding or locating a UI route.
-- API routes are in `routes/api.php`.
-- Breadcrumbs are defined inline with `->breadcrumbs(fn (Trail $trail) => ...)` from `tabuna/breadcrumbs`. **Every UI route should have a breadcrumb.**
-- Some route names contain slashes rather than dots. For example, use `route('reports/unaccepted_assets')`.
+- Route UI nằm trong `routes/web.php` **và** các file theo entity trong `routes/web/` (`hardware.php`, `users.php`, `licenses.php`, `accessories.php`, `components.php`, `consumables.php`, `kits.php`, `models.php`, `fields.php`, `locations.php`). Kiểm tra cả hai nơi khi thêm hoặc tìm route.
+- Route API nằm trong `routes/api.php`.
+- Breadcrumbs được định nghĩa inline bằng `->breadcrumbs(fn (Trail $trail) => ...)` từ `tabuna/breadcrumbs`. **Mọi UI route nên có breadcrumb.**
+- Một số tên route chứa dấu gạch chéo thay vì dấu chấm. Ví dụ: `route('reports/unaccepted_assets')`.
 
-## Full Multiple Company Support (FMCS)
+## Hỗ trợ đa công ty (FMCS)
 
-`Setting::getSettings()->full_multiple_companies_support == '1'` gates company-scoped filtering. The select2 endpoints (`selectlist()` methods) accept a `companyId` query param:
+`Setting::getSettings()->full_multiple_companies_support == '1'` là điều kiện lọc theo công ty. Endpoint select2 (`selectlist()`) nhận tham số `companyId`.
 
 ```php
 if ((Setting::getSettings()->full_multiple_companies_support == '1') && ($request->filled('companyId'))) {
@@ -40,26 +40,26 @@ if ((Setting::getSettings()->full_multiple_companies_support == '1') && ($reques
 }
 ```
 
-Wire it up from Blade with `data-company-id="{{ $user->company_id }}"`.
+Kết nối từ Blade bằng `data-company-id="{{ $user->company_id }}"`.
 
 ## Select2 AJAX Dropdowns
 
-Use `class="js-data-ajax"` with `data-endpoint="hardware|licenses|consumables|..."`. `snipeit.js` auto-initializes these, forwarding `data-company-id` as `companyId` and `data-asset-status-type` as `statusType` to the API.
+Dùng `class="js-data-ajax"` với `data-endpoint="hardware|licenses|consumables|..."`. `snipeit.js` tự khởi tạo và chuyển `data-company-id` thành `companyId`, `data-asset-status-type` thành `statusType` tới API.
 
-## Checkout Redirect Flow
+## Luồng redirect sau checkout
 
-After checkout, `Helper::getRedirectOption()` reads `$request->redirect_option`. To redirect back to the assigned user, the form must set:
+Sau khi checkout, `Helper::getRedirectOption()` đọc `$request->redirect_option`. Để quay lại người dùng được gán, form phải đặt:
 
 - `redirect_option=target`
 - `checkout_to_type=user`
 - `assigned_user={{ $user->id }}`
 
-## Global View Variables
+## Biến view toàn cục
 
-`$snipeSettings` is shared with every view by `SettingsServiceProvider`. Use it directly in Blade — do not pass `Setting::getSettings()` from the controller.
+`$snipeSettings` được chia sẻ cho mọi view bởi `SettingsServiceProvider`. Dùng trực tiếp trong Blade — không truyền `Setting::getSettings()` từ controller.
 
-## Key Helper Methods (`app/Helpers/Helper.php`)
+## Helper quan trọng (`app/Helpers/Helper.php`)
 
-- `Helper::deployableStatusLabelList()` — status labels for checkout forms.
-- `Helper::defaultChartColors(int $index = 0)` — 10-color chart palette.
-- `Helper::getRedirectOption($request, $id, $table, $item_id = null)` — post-checkout redirect logic.
+- `Helper::deployableStatusLabelList()` — nhãn trạng thái cho form checkout.
+- `Helper::defaultChartColors(int $index = 0)` — 10 màu mặc định.
+- `Helper::getRedirectOption($request, $id, $table, $item_id = null)` — logic redirect sau checkout.

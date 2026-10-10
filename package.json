@@ -11,12 +11,14 @@
         "hot": "mix watch --hot",
         "prod": "npm run production",
         "production": "mix --production",
-        "screenshotter": "node .screenshotter/src/screenshotter.mjs"
+        "screenshotter": "node .screenshotter/src/screenshotter.mjs",
+        "test:integration:testcontainers": "node tests/testcontainers/run.mjs"
     },
     "engines": {
         "node": ">=0.12"
     },
     "devDependencies": {
+        "@testcontainers/mysql": "^11.7.2",
         "all-contributors-cli": "^6.26.1",
         "axios": "^1.11.0",
         "eonasdan-bootstrap-datetimepicker": "^4.17.49",

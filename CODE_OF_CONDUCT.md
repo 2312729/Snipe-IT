@@ -1,74 +1,38 @@
-# Contributor Covenant Code of Conduct
+# Quy tắc ứng xử của người đóng góp
 
-## Our Pledge
+Như một thành viên của cộng đồng Snipe-IT, chúng tôi cam kết xây dựng một môi trường cởi mở, tôn trọng, an toàn và có tính hợp tác.
 
-In the interest of fostering an open and welcoming environment, we as
-contributors and maintainers pledge to making participation in our project and
-our community a harassment-free experience for everyone, regardless of age, body
-size, disability, ethnicity, gender identity and expression, level of experience,
-nationality, personal appearance, race, religion, or sexual identity and
-orientation.
+## Cam kết của chúng tôi
 
-## Our Standards
+Chúng tôi cam kết đảm bảo rằng mọi người tham gia vào dự án đều được tôn trọng, không bị phân biệt đối xử vì giới tính, dân tộc, tuổi, ngôn ngữ, tín ngưỡng, khuynh hướng, khuyết tật, xuất thân, hoặc mọi yếu tố cá nhân khác.
 
-Examples of behavior that contributes to creating a positive environment
-include:
+## Tiêu chuẩn của chúng tôi
 
-* Using welcoming and inclusive language
-* Being respectful of differing viewpoints and experiences
-* Gracefully accepting constructive criticism
-* Focusing on what is best for the community
-* Showing empathy towards other community members
+Các hành vi góp phần tạo nên môi trường tích cực bao gồm:
 
-Examples of unacceptable behavior by participants include:
+- Tôn trọng lẫn nhau và sự khác biệt về quan điểm
+- Cung cấp và tiếp nhận phản hồi mang tính xây dựng
+- Chịu trách nhiệm với những sai sót và học hỏi từ chúng
+- Tập trung vào lợi ích của cộng đồng và dự án
 
-* The use of sexualized language or imagery and unwelcome sexual attention or
-advances
-* Trolling, insulting/derogatory comments, and personal or political attacks
-* Public or private harassment
-* Publishing others' private information, such as a physical or electronic
-  address, without explicit permission
-* Other conduct which could reasonably be considered inappropriate in a
-  professional setting
+Các hành vi không được chấp nhận bao gồm:
 
-## Our Responsibilities
+- Quấy rối, công kích hoặc lăng mạ
+- Tham gia xâm phạm quyền riêng tư hoặc mang tính đe dọa
+- Vi phạm các quyền, sự tôn trọng hay sự an toàn của người khác
 
-Project maintainers are responsible for clarifying the standards of acceptable
-behavior and are expected to take appropriate and fair corrective action in
-response to any instances of unacceptable behavior.
+## Trách nhiệm thực thi
 
-Project maintainers have the right and responsibility to remove, edit, or
-reject comments, commits, code, wiki edits, issues, and other contributions
-that are not aligned to this Code of Conduct, or to ban temporarily or
-permanently any contributor for other behaviors that they deem inappropriate,
-threatening, offensive, or harmful.
+Người duy trì dự án có quyền và nghĩa vụ loại bỏ, chỉnh sửa hoặc từ chối các đóng góp không phù hợp, gây hiểu lầm hoặc có hại cho cộng đồng.
 
-## Scope
+## Phạm vi áp dụng
 
-This Code of Conduct applies both within project spaces and in public spaces
-when an individual is representing the project or its community. Examples of
-representing a project or community include using an official project e-mail
-address, posting via an official social media account, or acting as an appointed
-representative at an online or offline event. Representation of a project may be
-further defined and clarified by project maintainers.
+Quy tắc này áp dụng trong tất cả không gian cộng đồng của dự án, cũng như khi đại diện cho dự án trong môi trường công cộng.
 
-## Enforcement
+## Báo cáo vi phạm
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported by contacting the project team at abuse@snipeitapp.com. All
-complaints will be reviewed and investigated and will result in a response that
-is deemed necessary and appropriate to the circumstances. The project team is
-obligated to maintain confidentiality with regard to the reporter of an incident.
-Further details of specific enforcement policies may be posted separately.
+Nếu bạn gặp trường hợp vi phạm quy tắc ứng xử, vui lòng liên hệ với nhóm duy trì qua các kênh được ủy quyền của dự án. Mọi báo cáo sẽ được xem xét và giải quyết phù hợp.
 
-Project maintainers who do not follow or enforce the Code of Conduct in good
-faith may face temporary or permanent repercussions as determined by other
-members of the project's leadership.
+## Định nghĩa
 
-## Attribution
-
-This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4,
-available at [http://contributor-covenant.org/version/1/4][version]
-
-[homepage]: http://contributor-covenant.org
-[version]: http://contributor-covenant.org/version/1/4/
+Quy tắc này được xây dựng dựa trên nguyên tắc cộng đồng an toàn, tôn trọng và hợp tác. Mục tiêu là tạo môi trường phát triển lành mạnh cho mọi đóng góp.

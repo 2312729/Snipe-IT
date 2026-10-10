@@ -1,32 +1,32 @@
-# Snipe-IT Stack & Tooling
+# Stack và công cụ Snipe-IT
 
-## Frontend Is Laravel Mix, Not Vite
+## Frontend là Laravel Mix, không phải Vite
 
-- Assets are built with **Laravel Mix (webpack)** via `webpack.mix.js`. This project has no `vite.config.js` and no Vite manifest.
-- There is **no `npm run build` script**. Ignore any generic guidance that tells you to run it. Use:
-    - `npm run dev` — development build
-    - `npm run watch` — rebuild on change
-    - `npm run prod` — production build
-- If the user doesn't see a frontend change, ask them to run `npm run dev` or `npm run watch`.
+- Assets được build bằng **Laravel Mix (webpack)** thông qua `webpack.mix.js`. Dự án không có `vite.config.js` và không có Vite manifest.
+- Không có script `npm run build`. Bỏ qua hướng dẫn chung nói chạy nó. Dùng:
+  - `npm run dev` — build phát triển
+  - `npm run watch` — build liên tục khi có thay đổi
+  - `npm run prod` — build production
+- Nếu người dùng không thấy thay đổi trên giao diện, hãy yêu cầu chạy `npm run dev` hoặc `npm run watch`.
 
-## UI Layer
+## Lớp UI
 
-- **AdminLTE 2 / Bootstrap 3** Blade views. There is no Inertia.
-- **Livewire v4 is installed** and used for discrete widgets in `app/Livewire` (e.g. `Importer`, `CustomFieldEditor`, `LdapSettings`). It is not the primary UI layer.
-- Default to a Blade view plus a standard controller. Only reach for Livewire when extending an existing Livewire component or when the user asks for it.
+- **AdminLTE 2 / Bootstrap 3** cho Blade view. Không có Inertia.
+- **Livewire v4** được cài đặt và dùng cho các widget nhỏ trong `app/Livewire` (ví dụ `Importer`, `CustomFieldEditor`, `LdapSettings`). Nó không phải tầng UI chính.
+- Mặc định dùng Blade view + controller chuẩn. Chỉ dùng Livewire khi mở rộng component đã có hoặc khi người dùng yêu cầu.
 
-## Charts
+## Biểu đồ
 
-- **Chart.js v2.9.4**, bundled at `public/js/dist/Chart.min.js`.
-- Use the **v2 API**, not v3. For example, the chart type is `horizontalBar` (v3 removed it in favor of `indexAxis`).
-- Use `Helper::defaultChartColors()` for the 10-color palette.
+- **Chart.js v2.9.4**, nằm trong `public/js/dist/Chart.min.js`.
+- Dùng **API v2**, không dùng v3. Ví dụ kiểu chart là `horizontalBar` (v3 đã bỏ nó theo `indexAxis`).
+- Dùng `Helper::defaultChartColors()` cho bảng 10 màu.
 
-## Commands
+## Lệnh thường dùng
 
 ```bash
-# Clear caches after config/route changes
+# Xóa cache sau khi thay đổi config/route
 php artisan optimize:clear
 
-# Coverage reports (served by Laravel Herd)
+# Báo cáo coverage (do Laravel Herd phục vụ)
 herd coverage
 ```
