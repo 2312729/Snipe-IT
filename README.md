@@ -1,41 +1,44 @@
-![snipe-it-by-grok](https://github.com/grokability/snipe-it/assets/197404/b515673b-c7c8-4d9a-80f5-9fa58829a602)
-
-[![Crowdin](https://d322cqt584bo4o.cloudfront.net/snipe-it/localized.svg)](https://crowdin.com/project/snipe-it) [![Docker Pulls](https://img.shields.io/docker/pulls/snipe/snipe-it.svg)](https://hub.docker.com/r/snipe/snipe-it/)  [![Tests in MySQL](https://github.com/grokability/snipe-it/actions/workflows/tests-mysql.yml/badge.svg)](https://github.com/grokability/snipe-it/actions/workflows/tests-mysql.yml)
-[![All Contributors](https://img.shields.io/badge/all_contributors-331-orange.svg?style=flat-square)](#contributing) [![Discord](https://badgen.net/badge/icon/discord?icon=discord&label)](https://discord.gg/yZFtShAcKk)
 
 ## Snipe-IT - Open Source Asset Management System
 
+[](https://github.com/Bee-Max-Ne/Snipe-IT#snipe-it---open-source-asset-management-system)
+
 This is a FOSS project for asset management in IT Operations. Knowing who has which laptop, when it was purchased in order to depreciate it correctly, handling software licenses, etc.
 
-It is built on [Laravel 12](http://laravel.com).
+It is built on [Laravel 12](http://laravel.com/).
 
 Snipe-IT is actively developed and we [release quite frequently](https://github.com/grokability/snipe-it/releases). ([Check out the live demo here](https://snipeitapp.com/demo/).)
 
-> [!TIP]
-> __This is web-based software__. This means there is no executable file (aka no .exe files), and it must be run on a web server and accessed through a web browser. It runs on any Mac OSX, any flavor of Linux, as well as Windows, and we have a [Docker image](https://snipe-it.readme.io/docs/docker) available if that's what you're into.
+Tip
+
+ **This is web-based software** . This means there is no executable file (aka no .exe files), and it must be run on a web server and accessed through a web browser. It runs on any Mac OSX, any flavor of Linux, as well as Windows, and we have a [Docker image](https://snipe-it.readme.io/docs/docker) available if that's what you're into.
 
 ---
 
 ### Table of Contents
 
-* [Installation](#installation)
-* [Tổng quan chức năng và mã nguồn](#tong-quan-chuc-nang-va-ma-nguon)
-* [Kiến trúc hệ thống](#kien-truc-he-thong)
-* [Hướng dẫn tiếp nhận nhà phát triển](#huong-dan-tiep-nhan-nha-phat-trien)
-* [Kế hoạch triển khai K16 Testcontainers](#ke-hoach-trien-khai-k16-testcontainers)
-* [User&#39;s Manual](#users-manual)
-* [Bug Reports &amp; Feature Requests](#bug-reports--feature-requests)
-* [Security](#security)
-* [Upgrading](#upgrading)
-* [Translations!](#translations-)
-* [Libraries, Modules &amp; Related Projects](#libraries-modules--related-projects)
-* [Join the Community!](#join-the-community)
-* [Contributing](#contributing)
-* [Announcement List](#announcement-list)
+[](https://github.com/Bee-Max-Ne/Snipe-IT#table-of-contents)
+
+* [Installation](https://github.com/Bee-Max-Ne/Snipe-IT#installation)
+* [Tổng quan chức năng và mã nguồn](https://github.com/Bee-Max-Ne/Snipe-IT#tong-quan-chuc-nang-va-ma-nguon)
+* [Kiến trúc hệ thống](https://github.com/Bee-Max-Ne/Snipe-IT#kien-truc-he-thong)
+* [Hướng dẫn tiếp nhận nhà phát triển](https://github.com/Bee-Max-Ne/Snipe-IT#huong-dan-tiep-nhan-nha-phat-trien)
+* [Kế hoạch triển khai K16 Testcontainers](https://github.com/Bee-Max-Ne/Snipe-IT#ke-hoach-trien-khai-k16-testcontainers)
+* [User&#39;s Manual](https://github.com/Bee-Max-Ne/Snipe-IT#users-manual)
+* [Bug Reports &amp; Feature Requests](https://github.com/Bee-Max-Ne/Snipe-IT#bug-reports--feature-requests)
+* [Security](https://github.com/Bee-Max-Ne/Snipe-IT#security)
+* [Upgrading](https://github.com/Bee-Max-Ne/Snipe-IT#upgrading)
+* [Translations!](https://github.com/Bee-Max-Ne/Snipe-IT#translations-)
+* [Libraries, Modules &amp; Related Projects](https://github.com/Bee-Max-Ne/Snipe-IT#libraries-modules--related-projects)
+* [Join the Community!](https://github.com/Bee-Max-Ne/Snipe-IT#join-the-community)
+* [Contributing](https://github.com/Bee-Max-Ne/Snipe-IT#contributing)
+* [Announcement List](https://github.com/Bee-Max-Ne/Snipe-IT#announcement-list)
 
 ---
 
 ### Installation
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#installation)
 
 For instructions on installing and configuring Snipe-IT on your server, check out the [installation manual](https://snipe-it.readme.io/docs). (Please see the [requirements documentation](https://snipe-it.readme.io/docs/requirements) for full requirements.)
 
@@ -47,9 +50,13 @@ If you're having trouble with the installation, please check the [Common Issues]
 
 ## Tổng quan chức năng và mã nguồn
 
+[](https://github.com/Bee-Max-Ne/Snipe-IT#t%E1%BB%95ng-quan-ch%E1%BB%A9c-n%C4%83ng-v%C3%A0-m%C3%A3-ngu%E1%BB%93n)
+
 Snipe-IT là ứng dụng web mã nguồn mở dùng để quản lý vòng đời tài sản CNTT. Quản trị viên theo dõi tài sản, thiết bị đang được cấp cho ai, thông tin mua sắm, bảo hành và khấu hao; người dùng có thể xem tài sản được cấp, gửi yêu cầu mượn và xác nhận nhận/trả tài sản tùy theo quyền được cấp.
 
 ### Chức năng chính
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#ch%E1%BB%A9c-n%C4%83ng-ch%C3%ADnh)
 
 | Nhóm chức năng          | Nội dung                                                                                                                            |
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
@@ -62,20 +69,22 @@ Snipe-IT là ứng dụng web mã nguồn mở dùng để quản lý vòng đ�
 
 ### Các vị trí mã nguồn thường dùng
 
-| Đường dẫn                                                                             | Vai trò                                                                   |
-| ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `app/Http/Controllers/`                                                                 | Nhận và điều phối yêu cầu giao diện web                            |
-| `app/Http/Controllers/Api/`                                                             | Xử lý các yêu cầu REST API                                            |
-| `app/Http/Transformers/`                                                                | Định dạng dữ liệu trả về từ API                                    |
-| `app/Models/`, `app/Policies/`                                                        | Model dữ liệu, quan hệ và kiểm tra quyền                             |
-| `app/Actions/`, `app/Services/`, `app/Jobs/`                                        | Nghiệp vụ, tích hợp và tác vụ nền                                  |
-| `app/Livewire/`                                                                         | Một số thành phần tương tác phía máy chủ                         |
-| `routes/web.php`, `routes/web/`, `routes/api.php`                                   | Khai báo tuyến giao diện web và API                                    |
-| `resources/views/`                                                                      | Giao diện Blade;`resources/js/`, `resources/less/` chứa mã frontend |
-| `database/migrations/`, `database/factories/`, `database/seeders/`                  | Cấu trúc, dữ liệu mẫu và hỗ trợ kiểm thử                         |
-| `config/`, `.env.example`                                                             | Cấu hình mặc định và danh sách biến môi trường mẫu             |
-| `tests/Unit/`, `tests/Feature/`                                                       | Kiểm thử đơn vị và kiểm thử chức năng                            |
-| `Dockerfile`, `Dockerfile.alpine`, `docker-compose.yml`, `dev.docker-compose.yml` | Xây dựng image và chạy các cấu hình Docker                          |
+[](https://github.com/Bee-Max-Ne/Snipe-IT#c%C3%A1c-v%E1%BB%8B-tr%C3%AD-m%C3%A3-ngu%E1%BB%93n-th%C6%B0%E1%BB%9Dng-d%C3%B9ng)
+
+| Đường dẫn                                                                          | Vai trò                                                                 |
+| -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `app/Http/Controllers/`                                                              | Nhận và điều phối yêu cầu giao diện web                          |
+| `app/Http/Controllers/Api/`                                                          | Xử lý các yêu cầu REST API                                          |
+| `app/Http/Transformers/`                                                             | Định dạng dữ liệu trả về từ API                                  |
+| `app/Models/`,`app/Policies/`                                                      | Model dữ liệu, quan hệ và kiểm tra quyền                           |
+| `app/Actions/`,`app/Services/`,`app/Jobs/`                                       | Nghiệp vụ, tích hợp và tác vụ nền                                |
+| `app/Livewire/`                                                                      | Một số thành phần tương tác phía máy chủ                       |
+| `routes/web.php`,`routes/web/`,`routes/api.php`                                  | Khai báo tuyến giao diện web và API                                  |
+| `resources/views/`                                                                   | Giao diện Blade;`resources/js/`,`resources/less/`chứa mã frontend |
+| `database/migrations/`,`database/factories/`,`database/seeders/`                 | Cấu trúc, dữ liệu mẫu và hỗ trợ kiểm thử                       |
+| `config/`,`.env.example`                                                           | Cấu hình mặc định và danh sách biến môi trường mẫu           |
+| `tests/Unit/`,`tests/Feature/`                                                     | Kiểm thử đơn vị và kiểm thử chức năng                          |
+| `Dockerfile`,`Dockerfile.alpine`,`docker-compose.yml`,`dev.docker-compose.yml` | Xây dựng image và chạy các cấu hình Docker                        |
 
 Luồng cấp phát điển hình: quản trị viên tạo tài sản và gán trạng thái có thể cấp phát → checkout tài sản cho người dùng → hệ thống ghi người nhận và lịch sử → checkin khi tài sản được trả. Thao tác thực tế phụ thuộc quyền của tài khoản và trạng thái tài sản.
 
@@ -85,65 +94,23 @@ Luồng cấp phát điển hình: quản trị viên tạo tài sản và gán 
 
 ## Kiến trúc hệ thống
 
+[](https://github.com/Bee-Max-Ne/Snipe-IT#ki%E1%BA%BFn-tr%C3%BAc-h%E1%BB%87-th%E1%BB%91ng)
+
 Phần này mô tả kiến trúc của mã nguồn trong kho mã, không chỉ kiến trúc của image Snipe-IT phát hành trên Docker Hub. Dự án là ứng dụng quản lý tài sản CNTT theo mô hình Laravel MVC: giao diện web được kết xuất phía máy chủ bằng Blade; REST API được cung cấp riêng; nghiệp vụ và quyền truy cập nằm ở các lớp ứng dụng, model và policy; dữ liệu được thao tác qua Eloquent và cơ sở dữ liệu.
 
 ### Sơ đồ kiến trúc tổng thể
 
-```mermaid
-flowchart LR
-    Browser["Trình duyệt quản trị"]
-    Client["Ứng dụng di động và API client"]
+[](https://github.com/Bee-Max-Ne/Snipe-IT#s%C6%A1-%C4%91%E1%BB%93-ki%E1%BA%BFn-tr%C3%BAc-t%E1%BB%95ng-th%E1%BB%83)
 
-    subgraph Entry["Tầng tiếp nhận và bảo vệ yêu cầu"]
-        WebRoutes["Tuyến giao diện web"]
-        ApiRoutes["Tuyến API v1"]
-        Middleware["Middleware: session, CSRF, xác thực, giới hạn tần suất, header"]
-        Guards["Cơ chế xác thực: web, Passport API, OIDC"]
-    end
+<details class="details-reset details-overlay details-overlay-dark"><summary role="button" aria-label="Open dialog" class="btn my-2 mr-2 p-0 d-inline-flex" aria-haspopup="dialog"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="octicon m-2"></svg></summary>
 
-    subgraph Application["Tầng giao diện và điều phối nghiệp vụ"]
-        Blade["Giao diện Blade và AdminLTE"]
-        Livewire["Thành phần Livewire"]
-        WebControllers["Bộ điều khiển giao diện web"]
-        ApiControllers["Bộ điều khiển API"]
-        Transformers["Bộ chuyển đổi dữ liệu API"]
-    end
+</details>
 
-    subgraph Domain["Tầng nghiệp vụ"]
-        Policies["Policy và quyền truy cập"]
-        Actions["Action, service, job, event"]
-        Models["Model Eloquent, trait, observer"]
-    end
-
-    subgraph Infrastructure["Tầng hạ tầng"]
-        Database[("MySQL, MariaDB, PostgreSQL hoặc SQLite")]
-        Files["Lưu trữ tệp cục bộ hoặc S3"]
-        Integrations["Thư điện tử, LDAP, SAML, OIDC, SCIM và bộ đồng bộ"]
-        Queue["Hàng đợi, bộ nhớ đệm và session"]
-    end
-
-    Browser --> WebRoutes
-    Client --> ApiRoutes
-    WebRoutes --> Middleware
-    ApiRoutes --> Middleware
-    Middleware --> Guards
-    Guards --> WebControllers
-    Guards --> ApiControllers
-    WebControllers --> Blade
-    WebControllers --> Livewire
-    ApiControllers --> Transformers
-    WebControllers --> Policies
-    ApiControllers --> Policies
-    Policies --> Actions
-    Policies --> Models
-    Actions --> Models
-    Models --> Database
-    Models --> Files
-    Actions --> Integrations
-    Actions --> Queue
-```
+<iframe title="File display" role="presentation" class="render-viewer" sandbox="allow-scripts allow-same-origin allow-top-navigation allow-popups" src="https://viewscreen.githubusercontent.com/markdown/mermaid?docs_host=https%3A%2F%2Fdocs.github.com&color_mode=light#d498bb5d-5306-4050-a8d3-0a5388eabbac" name="d498bb5d-5306-4050-a8d3-0a5388eabbac" data-content="{"data":"flowchart LR\n    Browser[\"Trình duyệt quản trị\"]\n    Client[\"Ứng dụng di động và API client\"]\n\n    subgraph Entry[\"Tầng tiếp nhận và bảo vệ yêu cầu\"]\n        WebRoutes[\"Tuyến giao diện web\"]\n        ApiRoutes[\"Tuyến API v1\"]\n        Middleware[\"Middleware: session, CSRF, xác thực, giới hạn tần suất, header\"]\n        Guards[\"Cơ chế xác thực: web, Passport API, OIDC\"]\n    end\n\n    subgraph Application[\"Tầng giao diện và điều phối nghiệp vụ\"]\n        Blade[\"Giao diện Blade và AdminLTE\"]\n        Livewire[\"Thành phần Livewire\"]\n        WebControllers[\"Bộ điều khiển giao diện web\"]\n        ApiControllers[\"Bộ điều khiển API\"]\n        Transformers[\"Bộ chuyển đổi dữ liệu API\"]\n    end\n\n    subgraph Domain[\"Tầng nghiệp vụ\"]\n        Policies[\"Policy và quyền truy cập\"]\n        Actions[\"Action, service, job, event\"]\n        Models[\"Model Eloquent, trait, observer\"]\n    end\n\n    subgraph Infrastructure[\"Tầng hạ tầng\"]\n        Database[(\"MySQL, MariaDB, PostgreSQL hoặc SQLite\")]\n        Files[\"Lưu trữ tệp cục bộ hoặc S3\"]\n        Integrations[\"Thư điện tử, LDAP, SAML, OIDC, SCIM và bộ đồng bộ\"]\n        Queue[\"Hàng đợi, bộ nhớ đệm và session\"]\n    end\n\n    Browser --> WebRoutes\n    Client --> ApiRoutes\n    WebRoutes --> Middleware\n    ApiRoutes --> Middleware\n    Middleware --> Guards\n    Guards --> WebControllers\n    Guards --> ApiControllers\n    WebControllers --> Blade\n    WebControllers --> Livewire\n    ApiControllers --> Transformers\n    WebControllers --> Policies\n    ApiControllers --> Policies\n    Policies --> Actions\n    Policies --> Models\n    Actions --> Models\n    Models --> Database\n    Models --> Files\n    Actions --> Integrations\n    Actions --> Queue\n"}"></iframe>
 
 ### Các tầng và trách nhiệm
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#c%C3%A1c-t%E1%BA%A7ng-v%C3%A0-tr%C3%A1ch-nhi%E1%BB%87m)
 
 1. **Tầng trình bày:** `resources/views/` chứa các mẫu Blade theo nhóm nghiệp vụ; giao diện hiện dùng AdminLTE 2 và Bootstrap 3. `app/Livewire/` chứa một số thành phần tương tác, không thay thế mô hình Blade/controller của toàn ứng dụng.
 2. **Tuyến và HTTP:** `app/Providers/RouteServiceProvider.php` nạp tuyến API từ `routes/api.php`; tuyến giao diện web được chia theo chức năng trong `routes/web/` rồi kết hợp với `routes/web.php`. `app/Http/Kernel.php` định nghĩa middleware toàn cục và các nhóm `web`, `api`.
@@ -154,14 +121,18 @@ flowchart LR
 
 ### Nhóm nghiệp vụ chính
 
-- **Tài sản và danh mục:** tài sản, model tài sản, nhãn trạng thái, danh mục, nhà sản xuất, nhà cung cấp, khấu hao và bảo trì.
-- **Cấp phát:** checkout/checkin, lịch sử thao tác, yêu cầu mượn, xác nhận nhận tài sản và ngày hẹn trả.
-- **Kho vật tư và cấp phép:** phụ kiện, vật tư tiêu hao, linh kiện, giấy phép, chỗ cấp phép và bộ kit.
-- **Tổ chức và truy cập:** người dùng, công ty, phòng ban, vị trí, nhóm, quyền và giới hạn dữ liệu theo công ty.
-- **Quản trị và vận hành:** trường tùy chỉnh/bộ trường, nhập dữ liệu, báo cáo, nhãn/mã QR, lịch, thiết lập, tải tệp lên và sao lưu.
-- **Tích hợp:** REST API v1, Passport, OIDC, SAML, SCIM, LDAP tùy cấu hình, thư điện tử và bộ đồng bộ.
+[](https://github.com/Bee-Max-Ne/Snipe-IT#nh%C3%B3m-nghi%E1%BB%87p-v%E1%BB%A5-ch%C3%ADnh)
+
+* **Tài sản và danh mục:** tài sản, model tài sản, nhãn trạng thái, danh mục, nhà sản xuất, nhà cung cấp, khấu hao và bảo trì.
+* **Cấp phát:** checkout/checkin, lịch sử thao tác, yêu cầu mượn, xác nhận nhận tài sản và ngày hẹn trả.
+* **Kho vật tư và cấp phép:** phụ kiện, vật tư tiêu hao, linh kiện, giấy phép, chỗ cấp phép và bộ kit.
+* **Tổ chức và truy cập:** người dùng, công ty, phòng ban, vị trí, nhóm, quyền và giới hạn dữ liệu theo công ty.
+* **Quản trị và vận hành:** trường tùy chỉnh/bộ trường, nhập dữ liệu, báo cáo, nhãn/mã QR, lịch, thiết lập, tải tệp lên và sao lưu.
+* **Tích hợp:** REST API v1, Passport, OIDC, SAML, SCIM, LDAP tùy cấu hình, thư điện tử và bộ đồng bộ.
 
 ### Luồng yêu cầu điển hình
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#lu%E1%BB%93ng-y%C3%AAu-c%E1%BA%A7u-%C4%91i%E1%BB%83n-h%C3%ACnh)
 
 **Giao diện web:** trình duyệt → tuyến web → middleware `web` và session/xác thực → bộ điều khiển → policy kiểm tra quyền → model/service/action → cơ sở dữ liệu hoặc hệ thống tích hợp → phản hồi Blade.
 
@@ -169,36 +140,44 @@ flowchart LR
 
 ### Bản đồ mã nguồn
 
-| Thư mục                                          | Chức năng                                                                                    |
-| -------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `app/Http/Controllers/`                          | Điều phối yêu cầu giao diện web                                                          |
-| `app/Http/Controllers/Api/`                      | Bộ điều khiển REST API                                                                     |
-| `app/Http/Transformers/`                         | Định dạng phản hồi API                                                                    |
-| `app/Models/`                                    | Model Eloquent và quan hệ nghiệp vụ                                                        |
-| `app/Policies/`                                  | Phân quyền theo model/tài nguyên                                                           |
-| `app/Actions/`, `app/Services/`, `app/Jobs/` | Nghiệp vụ, tích hợp và công việc nền                                                   |
-| `app/Livewire/`                                  | Thành phần giao diện tương tác                                                           |
-| `routes/`                                        | Tuyến web, API, SCIM và tuyến theo nhóm tài nguyên                                       |
-| `resources/views/`                               | Mẫu Blade và thành phần giao diện                                                         |
-| `database/migrations/`                           | Thay đổi cấu trúc cơ sở dữ liệu theo phiên bản                                       |
-| `tests/Unit/`, `tests/Feature/`                | Kiểm thử đơn vị và kiểm thử chức năng                                                |
-| `docker-compose.yml`                             | Chạy image phát hành cùng MariaDB để sử dụng ứng dụng                                |
-| `dev.docker-compose.yml`                         | Môi trường Docker phát triển, dùng Dockerfile trong kho mã và các dịch vụ phụ trợ |
+[](https://github.com/Bee-Max-Ne/Snipe-IT#b%E1%BA%A3n-%C4%91%E1%BB%93-m%C3%A3-ngu%E1%BB%93n)
+
+| Thư mục                                        | Chức năng                                                                                    |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `app/Http/Controllers/`                        | Điều phối yêu cầu giao diện web                                                          |
+| `app/Http/Controllers/Api/`                    | Bộ điều khiển REST API                                                                     |
+| `app/Http/Transformers/`                       | Định dạng phản hồi API                                                                    |
+| `app/Models/`                                  | Model Eloquent và quan hệ nghiệp vụ                                                        |
+| `app/Policies/`                                | Phân quyền theo model/tài nguyên                                                           |
+| `app/Actions/`,`app/Services/`,`app/Jobs/` | Nghiệp vụ, tích hợp và công việc nền                                                   |
+| `app/Livewire/`                                | Thành phần giao diện tương tác                                                           |
+| `routes/`                                      | Tuyến web, API, SCIM và tuyến theo nhóm tài nguyên                                       |
+| `resources/views/`                             | Mẫu Blade và thành phần giao diện                                                         |
+| `database/migrations/`                         | Thay đổi cấu trúc cơ sở dữ liệu theo phiên bản                                       |
+| `tests/Unit/`,`tests/Feature/`               | Kiểm thử đơn vị và kiểm thử chức năng                                                |
+| `docker-compose.yml`                           | Chạy image phát hành cùng MariaDB để sử dụng ứng dụng                                |
+| `dev.docker-compose.yml`                       | Môi trường Docker phát triển, dùng Dockerfile trong kho mã và các dịch vụ phụ trợ |
 
 `<a id="huong-dan-tiep-nhan-nha-phat-trien"></a>`
 
 ## Hướng dẫn tiếp nhận nhà phát triển
 
+[](https://github.com/Bee-Max-Ne/Snipe-IT#h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn-ti%E1%BA%BFp-nh%E1%BA%ADn-nh%C3%A0-ph%C3%A1t-tri%E1%BB%83n)
+
 ### Yêu cầu môi trường
 
-- PHP **8.2 trở lên**, Composer 2 và các PHP extensions khai báo trong `composer.json` (trong đó có `curl`, `exif`, `fileinfo`, `iconv`, `json`, `mbstring`, `pdo`).
-- Một hệ quản trị cơ sở dữ liệu được ứng dụng hỗ trợ. Khi phát triển/kiểm thử hành vi đặc thù của cơ sở dữ liệu, ưu tiên MySQL/MariaDB thay vì chỉ dựa vào SQLite.
-- Node.js và npm để biên dịch giao diện bằng Laravel Mix (`webpack.mix.js`).
-- Git; Docker Desktop là tùy chọn nếu muốn chạy trong container.
+[](https://github.com/Bee-Max-Ne/Snipe-IT#y%C3%AAu-c%E1%BA%A7u-m%C3%B4i-tr%C6%B0%E1%BB%9Dng)
+
+* PHP  **8.2 trở lên** , Composer 2 và các PHP extensions khai báo trong `composer.json` (trong đó có `curl`, `exif`, `fileinfo`, `iconv`, `json`, `mbstring`, `pdo`).
+* Một hệ quản trị cơ sở dữ liệu được ứng dụng hỗ trợ. Khi phát triển/kiểm thử hành vi đặc thù của cơ sở dữ liệu, ưu tiên MySQL/MariaDB thay vì chỉ dựa vào SQLite.
+* Node.js và npm để biên dịch giao diện bằng Laravel Mix (`webpack.mix.js`).
+* Git; Docker Desktop là tùy chọn nếu muốn chạy trong container.
 
 Phiên bản gói và thư viện phụ thuộc được khóa trong `composer.lock` và `package-lock.json`. Không sửa trực tiếp `config/database.php` để thay cấu hình cá nhân; hãy đặt cấu hình môi trường trong `.env`.
 
 ### Lấy mã nguồn và cài thư viện phụ thuộc
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#l%E1%BA%A5y-m%C3%A3-ngu%E1%BB%93n-v%C3%A0-c%C3%A0i-th%C6%B0-vi%E1%BB%87n-ph%E1%BB%A5-thu%E1%BB%99c)
 
 Chạy các lệnh sau từ thư mục gốc của kho mã:
 
@@ -213,6 +192,8 @@ npm ci
 Nếu đã có bản mã nguồn trên máy, bỏ qua `git clone` và `Set-Location`. Nếu kho mã không có `package-lock.json` tương ứng với `package.json`, dùng `npm install` thay cho `npm ci`.
 
 ### Cấu hình cơ sở dữ liệu và ứng dụng
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#c%E1%BA%A5u-h%C3%ACnh-c%C6%A1-s%E1%BB%9F-d%E1%BB%AF-li%E1%BB%87u-v%C3%A0-%E1%BB%A9ng-d%E1%BB%A5ng)
 
 1. Tạo cơ sở dữ liệu và người dùng riêng cho môi trường trên máy cá nhân. Không dùng cơ sở dữ liệu production.
 2. Sửa các biến sau trong `.env` cho khớp với cấu hình máy cá nhân:
@@ -247,6 +228,8 @@ Các migration tạo cấu trúc cơ sở dữ liệu của ứng dụng; không
 
 ### Khởi chạy và hoàn tất thiết lập ban đầu
 
+[](https://github.com/Bee-Max-Ne/Snipe-IT#kh%E1%BB%9Fi-ch%E1%BA%A1y-v%C3%A0-ho%C3%A0n-t%E1%BA%A5t-thi%E1%BA%BFt-l%E1%BA%ADp-ban-%C4%91%E1%BA%A7u)
+
 Mở một cửa sổ dòng lệnh và chạy:
 
 ```powershell
@@ -256,6 +239,8 @@ php artisan serve --host=127.0.0.1 --port=8000
 Mở `http://127.0.0.1:8000`, làm theo màn hình thiết lập để tạo tài khoản quản trị và hoàn thành cấu hình ban đầu. Không dùng tài khoản hoặc mật khẩu mặc định trên môi trường công khai. Trước khi triển khai thực tế, hãy cấu hình SMTP, HTTPS, sao lưu, hàng đợi và lưu trữ phù hợp.
 
 ### Chạy bằng Docker Compose có sẵn
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#ch%E1%BA%A1y-b%E1%BA%B1ng-docker-compose-c%C3%B3-s%E1%BA%B5n)
 
 `docker-compose.yml` là cấu hình dùng **image phát hành** `snipe/snipe-it` cùng MariaDB; MinIO là dịch vụ tùy chọn. Cách này thuận tiện để chạy thử Snipe-IT, nhưng không tự động chạy mã PHP đang sửa trong bản mã nguồn trên máy. Dockerfile của dự án cài driver MySQL cho PHP, không phải driver PostgreSQL; vì vậy cấu hình này dùng MariaDB. `DATABASE_URL` và `JWT_KEY` không thay thế các biến cấu hình mà Snipe-IT/Laravel đọc.
 
@@ -273,6 +258,8 @@ Tệp `.env.docker` có các giá trị mẫu dành cho môi trường trên má
 Các thông tin PostgreSQL/JWT được cung cấp cho ứng dụng khác không được dùng trong cấu hình Snipe-IT này. Để chạy Snipe-IT qua Compose, kết nối cơ sở dữ liệu vẫn là MariaDB; Laravel dùng `APP_KEY`, còn kết nối lưu trữ riêng dùng các biến `PRIVATE_AWS_*` trỏ tới MinIO.
 
 #### Chạy mã nguồn hiện tại bằng Docker trên Windows
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#ch%E1%BA%A1y-m%C3%A3-ngu%E1%BB%93n-hi%E1%BB%87n-t%E1%BA%A1i-b%E1%BA%B1ng-docker-tr%C3%AAn-windows)
 
 Để kiểm tra thay đổi đang có trong thư mục mã nguồn (thay vì chạy image phát hành), xây dựng image từ thư mục gốc của dự án rồi khởi động riêng dịch vụ ứng dụng. Các lệnh này giữ nguyên volume cơ sở dữ liệu và volume dữ liệu ứng dụng:
 
@@ -294,6 +281,8 @@ docker compose logs --tail=100 app
 Không chạy `docker compose down -v` trong quá trình cập nhật nếu muốn giữ dữ liệu. Không chạy đồng thời `docker-compose.yml` và `dev.docker-compose.yml` nếu cùng sử dụng cổng trên máy, vì cấu hình phát triển cũng công bố cổng MariaDB `3306`.
 
 #### Dùng MySQL đang chạy trên máy Windows
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#d%C3%B9ng-mysql-%C4%91ang-ch%E1%BA%A1y-tr%C3%AAn-m%C3%A1y-windows)
 
 Nếu muốn container ứng dụng kết nối tới MySQL cài trên máy Windows thay cho MariaDB trong Compose, đặt các biến kết nối trong `.env` như sau:
 
@@ -317,69 +306,88 @@ Không chạy lệnh này nếu chưa sao lưu dữ liệu cần thiết trong c
 
 ### Kiểm thử và quy trình đóng góp
 
-Hướng dẫn chi tiết nằm trong [`TESTING.md`](TESTING.md). Cách chạy kiểm thử cơ bản:
+[](https://github.com/Bee-Max-Ne/Snipe-IT#ki%E1%BB%83m-th%E1%BB%AD-v%C3%A0-quy-tr%C3%ACnh-%C4%91%C3%B3ng-g%C3%B3p)
+
+Hướng dẫn chi tiết nằm trong [`TESTING.md`](https://github.com/Bee-Max-Ne/Snipe-IT/blob/main/TESTING.md). Cách chạy kiểm thử cơ bản:
 
 ```powershell
 Copy-Item .env.testing.example .env.testing
 php artisan test
 ```
 
-Các bộ kiểm thử hiện nằm trong `tests/Unit/` và `tests/Feature/`; `phpunit.xml` cấu hình môi trường kiểm thử. Dự án có kết nối `sqlite_testing` chạy trong bộ nhớ; quy trình [tests-mysql.yml](.github/workflows/tests-mysql.yml) chạy PHPUnit với MySQL và nhiều phiên bản PHP. SQLite chạy nhanh nhưng không thay thế được việc kiểm thử các hành vi riêng của MySQL/MariaDB.
+Các bộ kiểm thử hiện nằm trong `tests/Unit/` và `tests/Feature/`; `phpunit.xml` cấu hình môi trường kiểm thử. Dự án có kết nối `sqlite_testing` chạy trong bộ nhớ; quy trình [tests-mysql.yml](https://github.com/Bee-Max-Ne/Snipe-IT/blob/main/.github/workflows/tests-mysql.yml) chạy PHPUnit với MySQL và nhiều phiên bản PHP. SQLite chạy nhanh nhưng không thay thế được việc kiểm thử các hành vi riêng của MySQL/MariaDB.
 
 Trước khi gửi thay đổi, hãy chạy các kiểm thử liên quan; nếu sửa giao diện, hãy biên dịch giao diện; nếu sửa PHP, hãy chạy Pint theo quy định của kho mã. Không đưa `.env`, thông tin xác thực, bản sao cơ sở dữ liệu, bộ nhớ đệm hoặc tệp biên dịch không liên quan vào Git.
 
 ### Xử lý sự cố thiết lập
 
-| Hiện tượng                                         | Cách kiểm tra                                                                                                                                                                                                                                                                             |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Không nhận diện được `php` hoặc `composer` | Mở cửa sổ dòng lệnh mới; kiểm tra PHP 8.2 trở lên và Composer đã có trong `PATH`; bật các tiện ích mở rộng PHP bắt buộc                                                                                                                                              |
-| Lỗi kết nối cơ sở dữ liệu                      | Xác minh dịch vụ cơ sở dữ liệu đang chạy và kiểm tra máy chủ, cổng, tên cơ sở dữ liệu, người dùng, mật khẩu cùng `DB_CONNECTION`. Nếu ứng dụng chạy trong Docker, máy chủ cơ sở dữ liệu thường là tên dịch vụ `db`, không phải `127.0.0.1` |
-| Trang chưa phản hồi sau `docker compose up -d`   | Xem `docker compose ps` và `docker compose logs --tail=100 app db`; chờ migration hoàn tất và xử lý lỗi đầu tiên trong nhật ký                                                                                                                                             |
-| Cổng 8000 đang được sử dụng                    | Đổi `APP_PORT` trong `.env` Docker sang một cổng còn trống rồi tạo lại container ứng dụng                                                                                                                                                                                    |
-| Đã sửa PHP nhưng giao diện không đổi          | Xác nhận ứng dụng đang chạy image được tạo từ mã nguồn, không phải `snipe/snipe-it:latest`; nếu sửa giao diện, chạy `npm run dev`                                                                                                                                    |
-| `/.env` trả về nội dung cấu hình               | Ngừng cho phép truy cập công khai ngay; cấu hình máy chủ web chặn tệp ẩn, đánh giá thông tin bí mật có thể đã lộ và thay mới các thông tin xác thực. Không chỉ dựa vào bước kiểm tra của ứng dụng                                                     |
+[](https://github.com/Bee-Max-Ne/Snipe-IT#x%E1%BB%AD-l%C3%BD-s%E1%BB%B1-c%E1%BB%91-thi%E1%BA%BFt-l%E1%BA%ADp)
+
+| Hiện tượng                                        | Cách kiểm tra                                                                                                                                                                                                                                                                             |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Không nhận diện được `php`hoặc `composer` | Mở cửa sổ dòng lệnh mới; kiểm tra PHP 8.2 trở lên và Composer đã có trong `PATH`; bật các tiện ích mở rộng PHP bắt buộc                                                                                                                                              |
+| Lỗi kết nối cơ sở dữ liệu                     | Xác minh dịch vụ cơ sở dữ liệu đang chạy và kiểm tra máy chủ, cổng, tên cơ sở dữ liệu, người dùng, mật khẩu cùng `DB_CONNECTION`. Nếu ứng dụng chạy trong Docker, máy chủ cơ sở dữ liệu thường là tên dịch vụ `db`, không phải `127.0.0.1` |
+| Trang chưa phản hồi sau `docker compose up -d`  | Xem `docker compose ps`và `docker compose logs --tail=100 app db`; chờ migration hoàn tất và xử lý lỗi đầu tiên trong nhật ký                                                                                                                                              |
+| Cổng 8000 đang được sử dụng                   | Đổi `APP_PORT`trong `.env`Docker sang một cổng còn trống rồi tạo lại container ứng dụng                                                                                                                                                                                      |
+| Đã sửa PHP nhưng giao diện không đổi         | Xác nhận ứng dụng đang chạy image được tạo từ mã nguồn, không phải `snipe/snipe-it:latest`; nếu sửa giao diện, chạy `npm run dev`                                                                                                                                    |
+| `/.env`trả về nội dung cấu hình               | Ngừng cho phép truy cập công khai ngay; cấu hình máy chủ web chặn tệp ẩn, đánh giá thông tin bí mật có thể đã lộ và thay mới các thông tin xác thực. Không chỉ dựa vào bước kiểm tra của ứng dụng                                                     |
 
 `<a id="ke-hoach-trien-khai-k16-testcontainers"></a>`
 
 ## Kế hoạch triển khai K16 Testcontainers
 
+[](https://github.com/Bee-Max-Ne/Snipe-IT#k%E1%BA%BF-ho%E1%BA%A1ch-tri%E1%BB%83n-khai-k16-testcontainers)
+
 ### Mục tiêu và hiện trạng
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#m%E1%BB%A5c-ti%C3%AAu-v%C3%A0-hi%E1%BB%87n-tr%E1%BA%A1ng)
 
 Mục tiêu K16 là bổ sung một lớp kiểm thử tích hợp dùng cơ sở dữ liệu thật trong container tạm thời cho mỗi lần chạy. Testcontainers khác với việc dùng một cơ sở dữ liệu chung lâu dài: bộ điều phối kiểm thử tự tạo container, chờ cơ sở dữ liệu sẵn sàng, truyền địa chỉ kết nối được cấp động cho Laravel, chạy kiểm thử rồi dọn container kể cả khi kiểm thử thất bại. Cách làm này giảm khác biệt môi trường và tránh phụ thuộc vào dữ liệu từ lần chạy trước.
 
 **Hiện trạng đã xác nhận trong kho mã:**
 
-- PHPUnit 11 được khai báo trong `composer.json`; `phpunit.xml` định nghĩa các bộ kiểm thử `Unit` và `Feature`.
-- `config/database.php` định nghĩa `sqlite_testing` dùng SQLite `:memory:` để kiểm thử nhanh.
-- `TESTING.md` hướng dẫn dùng SQLite trong bộ nhớ hoặc tự cấu hình MySQL.
-- Quy trình [tests-mysql.yml](.github/workflows/tests-mysql.yml) hiện chạy CI với dịch vụ MySQL 5.7 và ma trận PHP 8.2–8.5.
-- `docker-compose.yml` và `dev.docker-compose.yml` hiện dùng để chạy ứng dụng/dịch vụ; chúng **không phải bộ điều phối Testcontainers**.
-- Chưa tìm thấy thư viện, công cụ hỗ trợ hay bài kiểm thử nào dùng Testcontainers trong kho mã. Vì vậy nội dung dưới đây là **kế hoạch đề xuất, chưa được triển khai**.
+* PHPUnit 11 được khai báo trong `composer.json`; `phpunit.xml` định nghĩa các bộ kiểm thử `Unit` và `Feature`.
+* `config/database.php` định nghĩa `sqlite_testing` dùng SQLite `:memory:` để kiểm thử nhanh.
+* `TESTING.md` hướng dẫn dùng SQLite trong bộ nhớ hoặc tự cấu hình MySQL.
+* Quy trình [tests-mysql.yml](https://github.com/Bee-Max-Ne/Snipe-IT/blob/main/.github/workflows/tests-mysql.yml) hiện chạy CI với dịch vụ MySQL 5.7 và ma trận PHP 8.2–8.5.
+* `docker-compose.yml` và `dev.docker-compose.yml` hiện dùng để chạy ứng dụng/dịch vụ; chúng  **không phải bộ điều phối Testcontainers** .
+* Kiểm thử Testcontainers đã được triển khai bằng Node.js trong `tests/testcontainers/run.mjs`, dùng image MySQL `8.0.36`; test checkout/checkin nằm trong `tests/Feature/Checkouts/Api/AssetCheckoutTest.php`, và workflow riêng ở `.github/workflows/testcontainers.yml`.
+* Đã ghi nhận người dùng chạy test checkout/checkin thành công: 1 test, 11 assertions. Đây là kết quả test mục tiêu, không phải kết quả của toàn bộ suite hoặc GitHub Actions.
+
+**Trạng thái K16:** runner, test checkout/checkin và cấu hình CI đã có trong mã nguồn. Những bước xác minh GitHub Actions, ảnh/log demo UI, thử chạy lặp và đo độ ổn định vẫn cần thực hiện trước khi tuyên bố hoàn tất toàn bộ kế hoạch. Các giai đoạn bên dưới là roadmap mở rộng; không phải mô tả rằng mọi đầu việc đều còn chưa bắt đầu.
 
 ### Phạm vi dự kiến
 
-- Giữ các kiểm thử đơn vị và kiểm thử chức năng phù hợp với SQLite để có phản hồi nhanh.
-- Chỉ bổ sung kiểm thử tích hợp cho hành vi phụ thuộc vào cơ sở dữ liệu thật: migration, khóa ngoại, giao dịch/hoàn tác, quy tắc đối chiếu ký tự/ràng buộc duy nhất, kiểu dữ liệu và truy vấn quan trọng.
-- Ưu tiên MariaDB 11.4.7, phiên bản đang được dùng trong Docker Compose, làm container đầu tiên; duy trì quy trình MySQL hiện có cho đến khi đánh giá xong phạm vi tương thích và thời gian chạy.
-- Không tạo container mới cho từng phương thức kiểm thử. Tạo một lần cho mỗi bộ kiểm thử/job hoặc nhóm kiểm thử tích hợp, đồng thời cô lập dữ liệu bằng giao dịch hoặc cơ sở dữ liệu riêng theo cách đã xác minh với Laravel.
-- Không đưa container cơ sở dữ liệu kiểm thử vào quy trình production và không gắn dữ liệu production vào container kiểm thử.
+[](https://github.com/Bee-Max-Ne/Snipe-IT#ph%E1%BA%A1m-vi-d%E1%BB%B1-ki%E1%BA%BFn)
+
+* Giữ các kiểm thử đơn vị và kiểm thử chức năng phù hợp với SQLite để có phản hồi nhanh.
+* Chỉ bổ sung kiểm thử tích hợp cho hành vi phụ thuộc vào cơ sở dữ liệu thật: migration, khóa ngoại, giao dịch/hoàn tác, quy tắc đối chiếu ký tự/ràng buộc duy nhất, kiểu dữ liệu và truy vấn quan trọng.
+* Runner Testcontainers hiện ghim MySQL `8.0.36`; `dev.docker-compose.yml` dùng MariaDB `11.4.7`. Đây là hai môi trường khác nhau, không nên xem kết quả MySQL là chứng minh tương thích MariaDB.
+* Không tạo container mới cho từng phương thức kiểm thử. Tạo một lần cho mỗi bộ kiểm thử/job hoặc nhóm kiểm thử tích hợp, đồng thời cô lập dữ liệu bằng giao dịch hoặc cơ sở dữ liệu riêng theo cách đã xác minh với Laravel.
+* Không đưa container cơ sở dữ liệu kiểm thử vào quy trình production và không gắn dữ liệu production vào container kiểm thử.
 
 ### Kế hoạch theo giai đoạn
 
-| Giai đoạn                                               | Công việc                                                                                                                                                                                                                                                                                                                                       | Sản phẩm bàn giao/điều kiện hoàn tất                                                                                                                           |
-| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **K16.0 — Ghi nhận hiện trạng và phân loại** | Ghi lại lệnh kiểm thử hiện hành, phiên bản PHP/PHPUnit, thời gian chạy; chọn nhóm kiểm thử thực sự cần cơ sở dữ liệu thật; xác định phiên bản cơ sở dữ liệu mục tiêu và giới hạn CI.                                                                                                                          | Danh sách kiểm thử đơn vị/chức năng/tích hợp; kết quả ban đầu có thể lặp lại; tiêu chí không làm bộ kiểm thử mặc định chậm quá mức.     |
-| **K16.1 — Thử nghiệm công nghệ**               | Thử một thư viện Testcontainers cho PHP tương thích PHP 8.2–8.5, PHPUnit 11 và Docker Engine; xác minh cách chọn image, cấp cổng máy chủ động, kiểm tra trạng thái sẵn sàng, đọc nhật ký khi lỗi, đặt thời hạn chờ và dọn container. So sánh với dịch vụ container hiện có trong CI.                     | Bản thử nghiệm cô lập; có căn cứ chọn thư viện và được duyệt trước khi thêm dependency vào `require-dev`; ghi nhận giới hạn trên Windows/CI. |
-| **K16.2 — Bộ điều phối dùng chung**           | Tạo cấu hình/công cụ kiểm thử chỉ chạy khi bật nhóm tích hợp; khởi tạo container cơ sở dữ liệu cùng thông tin xác thực ngẫu nhiên; chờ kiểm tra sức khỏe; nạp biến môi trường Laravel trước khi khởi tạo ứng dụng; chạy migration; dọn container bằng `finally` hoặc móc vòng đời tương ứng. | Chạy được một kiểm thử tích hợp từ bản mã nguồn sạch bằng một lệnh; không dùng cổng cố định hoặc thông tin xác thực production.             |
-| **K16.3 — Bộ kiểm thử trọng điểm**           | Bổ sung hoặc chuyển các kiểm thử migration và hành vi truy vấn/ràng buộc cần cơ sở dữ liệu thật; kiểm tra cấu trúc và các tình huống lỗi quan trọng; giữ các kiểm thử logic không liên quan trên SQLite.                                                                                                         | Kiểm thử mới xác minh khác biệt thực tế giữa SQLite và MariaDB/MySQL; không sao chép toàn bộ bộ kiểm thử sang container.                              |
-| **K16.4 — Tích hợp CI**                          | Thêm job riêng cho kiểm thử tích hợp, bật Docker, ghim phiên bản image cơ sở dữ liệu, giới hạn chạy song song/thời gian; lưu nhật ký container và Laravel khi lỗi; giữ quy trình MySQL hiện tại làm ma trận tương thích trong giai đoạn đầu.                                                                   | CI tái tạo được kết quả trên máy phát triển; lỗi có thông tin chẩn đoán; chưa xóa job cũ trước khi nhóm chấp thuận.                           |
-| **K16.5 — Ổn định và chuyển giao**            | Chạy lặp để phát hiện lỗi chập chờn, đo thời gian, kiểm tra việc dọn container khi kiểm thử thất bại/bị hủy; hướng dẫn chạy, lọc kiểm thử, đổi image và xử lý lỗi.                                                                                                                                               | Đạt tiêu chí nghiệm thu; bổ sung hướng dẫn vào `TESTING.md`; có người tiếp nhận và đánh dấu K16 hoàn tất.                                       |
+[](https://github.com/Bee-Max-Ne/Snipe-IT#k%E1%BA%BF-ho%E1%BA%A1ch-theo-giai-%C4%91o%E1%BA%A1n)
+
+| Giai đoạn                                               | Công việc                                                                                                                                                                                                                                                                                                                                      | Sản phẩm bàn giao/điều kiện hoàn tất                                                                                                                           |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **K16.0 — Ghi nhận hiện trạng và phân loại** | Ghi lại lệnh kiểm thử hiện hành, phiên bản PHP/PHPUnit, thời gian chạy; chọn nhóm kiểm thử thực sự cần cơ sở dữ liệu thật; xác định phiên bản cơ sở dữ liệu mục tiêu và giới hạn CI. | Đã ghi nhận một lần chạy cả file checkout (29 tests, 134 assertions, 1 incomplete) và một lần chạy test mục tiêu (1 test, 11 assertions); cần giữ rõ phạm vi từng kết quả. |
+| **K16.1 — Thử nghiệm công nghệ** | Đánh giá Node.js Testcontainers với PHPUnit hiện hữu, Docker Engine, image ghim phiên bản, cổng động và dọn container. | Đã triển khai runner Node.js dùng `@testcontainers/mysql`; Windows được hỗ trợ qua `PHP_BINARY` hoặc đường dẫn XAMPP mặc định. |
+| **K16.2 — Bộ điều phối dùng chung** | Khởi tạo container DB với database/mật khẩu ngẫu nhiên; truyền cấu hình vào tiến trình PHPUnit và dọn container kể cả khi test lỗi. | Đã có trong `tests/testcontainers/run.mjs`; Passport RSA keys chỉ tồn tại trong môi trường của tiến trình test. |
+| **K16.3 — Bộ kiểm thử trọng điểm** | Bổ sung test API checkout/checkin tài sản và giữ các test khác trong suite hiện hành. | Test checkout rồi checkin đã chạy thành công cục bộ; chưa chứng minh khác biệt bao phủ giữa SQLite và MySQL. |
+| **K16.4 — Tích hợp CI** | Chạy test tích hợp trong workflow riêng, giới hạn thời gian và giữ log khi lỗi. | Đã thêm `.github/workflows/testcontainers.yml`; trạng thái chạy thực tế trên GitHub cần được xác minh sau khi push/PR. |
+| **K16.5 — Ổn định và chuyển giao** | Chạy lặp, thu bằng chứng UI, ghi nhận CI, giới hạn và hướng dẫn vận hành. | `TESTING.md` đã được cập nhật; ảnh/log UI và kết quả CI từ xa vẫn còn thiếu, vì vậy chưa đánh dấu toàn bộ K16 hoàn tất. |
 
 ### Mô tả chi tiết các giai đoạn cần thực thi
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#m%C3%B4-t%E1%BA%A3-chi-ti%E1%BA%BFt-c%C3%A1c-giai-%C4%91o%E1%BA%A1n-c%E1%BA%A7n-th%E1%BB%B1c-thi)
 
 Các giai đoạn dưới đây đi theo thứ tự K16.0 → K16.5. Không chuyển sang giai đoạn kế tiếp nếu điều kiện hoàn tất của giai đoạn hiện tại chưa đạt; nếu thử nghiệm công nghệ không đạt, cần ghi nhận nguyên nhân và điều chỉnh phương án trước khi thêm dependency hoặc thay đổi CI.
 
 #### K16.0 — Ghi nhận hiện trạng và phân loại kiểm thử
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#k160--ghi-nh%E1%BA%ADn-hi%E1%BB%87n-tr%E1%BA%A1ng-v%C3%A0-ph%C3%A2n-lo%E1%BA%A1i-ki%E1%BB%83m-th%E1%BB%AD)
 
 **Mục tiêu:** xác định chính xác vấn đề cần giải quyết bằng cơ sở dữ liệu thật và giữ được đường cơ sở để so sánh trước/sau.
 
@@ -389,7 +397,7 @@ Các giai đoạn dưới đây đi theo thứ tự K16.0 → K16.5. Không chuy
 2. Chạy bộ kiểm thử hiện hành theo hướng dẫn trong `TESTING.md`; lưu lệnh, kết quả thành công/thất bại và thời gian chạy. Không thay đổi bộ kiểm thử cũ chỉ để làm cho kết quả đường cơ sở đẹp hơn.
 3. Lập danh sách các kiểm thử hiện phụ thuộc SQLite, kiểm thử đang dùng MySQL/MariaDB và các lỗi đã biết liên quan khác biệt SQL/schema/kiểu dữ liệu.
 4. Chọn một số trường hợp có lý do kỹ thuật rõ ràng cần cơ sở dữ liệu thật, chẳng hạn migration, ràng buộc khóa ngoại/duy nhất, giao dịch hoặc truy vấn có hành vi khác giữa SQLite và MariaDB/MySQL.
-5. Chốt phạm vi image cơ sở dữ liệu đầu tiên. Ưu tiên MariaDB `11.4.7` để gần với Compose của repository; ghi riêng các yêu cầu tương thích MySQL để không nhầm một image MariaDB là bằng chứng hỗ trợ toàn bộ MySQL.
+5. Ghi nhận image đã chọn cho runner là MySQL `8.0.36`; ghi riêng MariaDB `11.4.7` trong Compose để không nhầm kết quả của một engine là bằng chứng hỗ trợ engine còn lại.
 
 **Đầu ra:** bảng phân loại kiểm thử (giữ SQLite / cần DB thật / chưa đủ căn cứ), kết quả chạy ban đầu và danh sách ứng viên kiểm thử tích hợp có mô tả rủi ro cần xác minh.
 
@@ -397,38 +405,44 @@ Các giai đoạn dưới đây đi theo thứ tự K16.0 → K16.5. Không chuy
 
 #### K16.1 — Thử nghiệm công nghệ và quyết định thư viện
 
-**Mục tiêu:** chứng minh một phương án Testcontainers hoạt động trong đúng môi trường dự án trước khi sửa `composer.json`.
+[](https://github.com/Bee-Max-Ne/Snipe-IT#k161--th%E1%BB%AD-nghi%E1%BB%87m-c%C3%B4ng-ngh%E1%BB%87-v%C3%A0-quy%E1%BA%BFt-%C4%91%E1%BB%8Bnh-th%C6%B0-vi%E1%BB%87n)
+
+**Mục tiêu:** ghi nhận phương án Testcontainers đã được triển khai và các kiểm tra còn cần thiết để đánh giá khả năng vận hành.
 
 **Các việc cần làm:**
 
-1. Lập tiêu chí đánh giá: tương thích PHP `8.2–8.5`, PHPUnit 11, Docker Desktop trên Windows và runner CI; khả năng ghim image, lấy cổng động, chờ readiness, đặt timeout và thu log.
-2. Khảo sát thư viện PHP khả dụng, giấy phép, trạng thái bảo trì, yêu cầu Docker/API và cách xử lý container khi tiến trình kiểm thử kết thúc bất thường.
-3. Tạo spike tách biệt khỏi luồng kiểm thử chính: khởi động một MariaDB được ghim phiên bản, đợi healthcheck, thực hiện kết nối thật, chạy một truy vấn đơn giản và dọn container.
-4. Thử ít nhất các tình huống lỗi: Docker không chạy, image không tải được, container không sẵn sàng đúng hạn và thông tin kết nối sai. Lỗi phải báo nguyên nhân, không bị chuyển thành kết quả thành công giả.
-5. Ghi lại thời gian khởi động, lệnh chạy, log cần thiết, giới hạn của Windows/CI và so sánh với cách CI hiện cấp dịch vụ MySQL.
+1. Đã chọn package `@testcontainers/mysql` ở phía Node.js để điều phối runner, không thêm một package Testcontainers cho PHP.
+2. Runner đã ghim MySQL `8.0.36`, lấy host/cổng ánh xạ, truyền cấu hình DB và khóa Passport tạm vào PHPUnit, rồi dừng container khi tiến trình kết thúc.
+3. Test checkout/checkin xác nhận luồng API chạy được qua runner; bản thân kết quả này chưa kiểm chứng lỗi Docker/image pull, hết thời gian chờ hoặc hủy tiến trình.
+4. Tiếp tục kiểm tra các nhánh lỗi và lưu log chẩn đoán khi có kết quả; không dùng cơ sở dữ liệu local/shared làm fallback.
+5. Giữ riêng giới hạn Windows/CI và khác biệt MySQL/MariaDB; workflow đã được cấu hình nhưng cần xác minh kết quả trên GitHub.
 
-**Đầu ra:** bản spike có thể bỏ riêng, bảng so sánh phương án và quyết định chọn/không chọn thư viện kèm lý do.
+**Đầu ra:** runner dùng chung đã có trong `tests/testcontainers/run.mjs`; lựa chọn Node.js được thể hiện trong `package.json` và `package-lock.json`.
 
-**Điều kiện hoàn tất:** container được tạo, kết nối, kiểm tra readiness và dọn dẹp được lặp lại; nhóm xác nhận dependency và chi phí vận hành chấp nhận được. Nếu không đạt, dừng tại đây và đánh giá lại phương án dịch vụ DB CI hiện có, không thêm package chưa được chứng minh.
+**Điều kiện hoàn tất còn lại:** chạy kiểm tra lặp lại và xác minh các nhánh lỗi cùng workflow từ xa; không tuyên bố CI đạt chỉ dựa trên việc đã tạo file workflow.
 
 #### K16.2 — Xây dựng bộ điều phối kiểm thử tích hợp
 
-**Mục tiêu:** cung cấp một lệnh dùng chung để khởi tạo môi trường DB sạch cho một lượt kiểm thử tích hợp.
+[](https://github.com/Bee-Max-Ne/Snipe-IT#k162--x%C3%A2y-d%E1%BB%B1ng-b%E1%BB%99-%C4%91i%E1%BB%81u-ph%E1%BB%91i-ki%E1%BB%83m-th%E1%BB%AD-t%C3%ADch-h%E1%BB%A3p)
+
+**Mục tiêu:** cung cấp một lệnh dùng chung để khởi tạo môi trường DB sạch cho một lượt kiểm thử tích hợp. Runner hiện tại là `tests/testcontainers/run.mjs`.
 
 **Các việc cần làm:**
 
-1. Chốt cách kích hoạt riêng bộ tích hợp (ví dụ testsuite hoặc PHPUnit group); giữ lệnh mặc định dành cho kiểm thử hiện hành nhanh và không yêu cầu Docker nếu không chạy tích hợp.
-2. Đặt vòng đời rõ ràng: tạo thông tin xác thực ngẫu nhiên → khởi động image đã ghim → đợi readiness với timeout → lấy host/cổng động → cấu hình Laravel → chạy migration → thực thi PHPUnit → thu log nếu lỗi → dừng và xóa container.
-3. Đảm bảo cấu hình kết nối được nạp trước khi Laravel khởi tạo ứng dụng/đọc config. Không dựa vào cấu hình đã cache từ môi trường phát triển.
-4. Thiết kế cô lập cho chạy song song: mỗi job dùng container/schema riêng, hoặc giới hạn song song nếu DB/schema dùng chung không an toàn. Không dùng cổng host cố định.
-5. Bảo đảm dọn tài nguyên ở cả nhánh thành công, thất bại lúc khởi động, lỗi migration, assertion thất bại và tiến trình kiểm thử bị dừng; đưa thông tin hữu ích vào log mà không in bí mật.
-6. Viết một kiểm thử khói tối thiểu có kết nối thật và kiểm tra trạng thái/schema sau migration; dùng kiểm thử này để chứng minh bộ điều phối trước khi chuyển các ca nghiệp vụ.
+1. Chạy entrypoint tích hợp tường minh qua `npm run test:integration:testcontainers`; test thường không tự khởi chạy Docker.
+2. Runner tạo database/credential ngẫu nhiên, khởi động image đã ghim, truyền host/cổng động cùng biến môi trường cho PHPUnit, rồi dừng container bằng `finally`.
+3. Runner tạo `.env.testing` tạm từ mẫu khi chưa có file và xóa file do runner tạo; Passport RSA keys được tạo trong bộ nhớ.
+4. Mỗi lượt chạy có container/database riêng; không dùng cổng host cố định hay database ứng dụng local.
+5. Việc chạy PHPUnit trả exit code để phản ánh test pass/fail; còn cần xác minh riêng tình huống runner bị dừng đột ngột.
+6. Test checkout/checkin là test nghiệp vụ hiện có để chứng minh runner; kiểm tra migration/smoke test độc lập vẫn là phần mở rộng chưa được xác nhận trong báo cáo này.
 
-**Đầu ra:** cấu hình/harness dùng chung, một lệnh chạy kiểm thử tích hợp trên máy có Docker và hướng dẫn ngắn cho người phát triển.
+**Đầu ra:** runner và hướng dẫn chạy đã được ghi trong `TESTING.md`.
 
-**Điều kiện hoàn tất:** từ checkout sạch có dependencies, người phát triển chạy được kiểm thử khói bằng một lệnh; không cần cài DB trên host, không dùng DB ứng dụng thường ngày và container được dọn sau khi chạy.
+**Điều kiện hoàn tất còn lại:** xác minh runner từ checkout sạch và kiểm tra cleanup khi startup/migration/test thất bại hoặc khi tiến trình bị dừng.
 
 #### K16.3 — Bổ sung kiểm thử tích hợp trọng điểm
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#k163--b%E1%BB%95-sung-ki%E1%BB%83m-th%E1%BB%AD-t%C3%ADch-h%E1%BB%A3p-tr%E1%BB%8Dng-%C4%91i%E1%BB%83m)
 
 **Mục tiêu:** kiểm tra các rủi ro thực tế của SQL/schema trên MariaDB/MySQL, không nhân đôi toàn bộ bộ kiểm thử.
 
@@ -444,11 +458,15 @@ Các giai đoạn dưới đây đi theo thứ tự K16.0 → K16.5. Không chuy
 
 **Điều kiện hoàn tất:** ca kiểm thử thất bại khi cố ý làm sai hành vi liên quan DB, vượt qua khi khôi phục hành vi đúng, và chạy độc lập/lặp lại mà không dựa vào trạng thái tồn dư.
 
-#### Giai đoạn 3 của kế hoạch môn học — Xây dựng hạ tầng và viết automation test 
+#### Giai đoạn 3 của kế hoạch môn học — Xây dựng hạ tầng và viết automation test
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#giai-%C4%91o%E1%BA%A1n-3-c%E1%BB%A7a-k%E1%BA%BF-ho%E1%BA%A1ch-m%C3%B4n-h%E1%BB%8Dc--x%C3%A2y-d%E1%BB%B1ng-h%E1%BA%A1-t%E1%BA%A7ng-v%C3%A0-vi%E1%BA%BFt-automation-test)
 
 **Mục tiêu:** hoàn thiện hạ tầng chạy kiểm thử tích hợp tự động với DB ephemeral, sau đó xây dựng tối thiểu sáu kịch bản có thể tái lập. Giai đoạn này tương ứng với K16.1–K16.3 và phần chuẩn bị CI của K16.4.
 
 ##### Tuần 6 — Chốt công nghệ và chuẩn bị bộ kiểm thử
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#tu%E1%BA%A7n-6--ch%E1%BB%91t-c%C3%B4ng-ngh%E1%BB%87-v%C3%A0-chu%E1%BA%A9n-b%E1%BB%8B-b%E1%BB%99-ki%E1%BB%83m-th%E1%BB%AD)
 
 **Phụ trách chính:** Thành viên 1; Thành viên 2 và 3 cùng thống nhất kịch bản.
 
@@ -460,6 +478,8 @@ Các giai đoạn dưới đây đi theo thứ tự K16.0 → K16.5. Không chuy
 **Bàn giao tuần:** quyết định thư viện/image có căn cứ; sơ đồ vòng đời container; danh mục sáu kịch bản đã được rà soát theo model, route, policy và schema thật.
 
 ##### Tuần 7 — Dựng container DB, migrations và seed data
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#tu%E1%BA%A7n-7--d%E1%BB%B1ng-container-db-migrations-v%C3%A0-seed-data)
 
 **Phụ trách chính:** Thành viên 1.
 
@@ -473,17 +493,21 @@ Các giai đoạn dưới đây đi theo thứ tự K16.0 → K16.5. Không chuy
 
 ##### Tuần 8 — Viết kiểm thử core workflows
 
+[](https://github.com/Bee-Max-Ne/Snipe-IT#tu%E1%BA%A7n-8--vi%E1%BA%BFt-ki%E1%BB%83m-th%E1%BB%AD-core-workflows)
+
 **Phụ trách chính:** Thành viên 2.
 
-| ID                                       | Kịch bản                                                                        | Thao tác và kiểm tra bắt buộc                                                                                                                                                                                                                                                                                                                                                 |
-| ---------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **TC1 — Asset Creation**          | Tạo tài sản qua API hoặc lớp nghiệp vụ được chọn.                      | Kiểm tra phản hồi thành công; truy vấn DB xác nhận bản ghi `assets` trỏ tới đúng `models` và các trường bắt buộc (asset tag, model, trạng thái ban đầu) lưu đúng. Tạo model bằng factory/seeder của test hoặc trong chính kịch bản; không giả định model đã có sẵn.                                                                   |
-| **TC2 — Asset Checkout Workflow** | Cấp phát một tài sản đủ điều kiện cho người dùng.                    | Kiểm tra phản hồi thành công; xác nhận quan hệ người nhận/checkout trên bản ghi tài sản theo schema thật; xác nhận lịch sử cấp phát được ghi trong bảng nhật ký tương ứng (`action_logs` nếu đúng với phiên bản schema) và liên kết tới đúng tài sản/người thao tác. Không chỉ dựa vào chuỗi nhãn giao diện “Assigned”. |
-| **TC3 — Asset Checkin Workflow**  | Thu hồi tài sản đã checkout ở TC2 hoặc dữ liệu được dựng độc lập. | Kiểm tra phản hồi thành công; xác nhận quan hệ người nhận được gỡ/đóng theo thiết kế hiện hành, tài sản trở về trạng thái sẵn sàng phù hợp và lịch sử checkin được ghi. Xác minh nhất quán dữ liệu qua truy vấn DB, không chỉ kiểm tra thông báo giao diện.                                                                       |
+| ID                                       | Kịch bản                                                                        | Thao tác và kiểm tra bắt buộc                                                                                                                                                                                                                                                                                                                                                |
+| ---------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **TC1 — Asset Creation**          | Tạo tài sản qua API hoặc lớp nghiệp vụ được chọn.                      | Kiểm tra phản hồi thành công; truy vấn DB xác nhận bản ghi `assets`trỏ tới đúng `models`và các trường bắt buộc (asset tag, model, trạng thái ban đầu) lưu đúng. Tạo model bằng factory/seeder của test hoặc trong chính kịch bản; không giả định model đã có sẵn.                                                                    |
+| **TC2 — Asset Checkout Workflow** | Cấp phát một tài sản đủ điều kiện cho người dùng.                    | Kiểm tra phản hồi thành công; xác nhận quan hệ người nhận/checkout trên bản ghi tài sản theo schema thật; xác nhận lịch sử cấp phát được ghi trong bảng nhật ký tương ứng (`action_logs`nếu đúng với phiên bản schema) và liên kết tới đúng tài sản/người thao tác. Không chỉ dựa vào chuỗi nhãn giao diện “Assigned”. |
+| **TC3 — Asset Checkin Workflow**  | Thu hồi tài sản đã checkout ở TC2 hoặc dữ liệu được dựng độc lập. | Kiểm tra phản hồi thành công; xác nhận quan hệ người nhận được gỡ/đóng theo thiết kế hiện hành, tài sản trở về trạng thái sẵn sàng phù hợp và lịch sử checkin được ghi. Xác minh nhất quán dữ liệu qua truy vấn DB, không chỉ kiểm tra thông báo giao diện.                                                                      |
 
 **Bàn giao tuần:** ba test case chạy độc lập trên DB ephemeral, có assertion phản ánh dữ liệu trong DB và ghi rõ endpoint/lớp nghiệp vụ sử dụng.
 
 ##### Tuần 9 — Viết kiểm thử quyền, edge case, bulk và kiểm tra dọn dẹp
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#tu%E1%BA%A7n-9--vi%E1%BA%BFt-ki%E1%BB%83m-th%E1%BB%AD-quy%E1%BB%81n-edge-case-bulk-v%C3%A0-ki%E1%BB%83m-tra-d%E1%BB%8Dn-d%E1%BA%B9p)
 
 **Phụ trách chính:** Thành viên 3; Thành viên 1 hỗ trợ harness, Thành viên 2 hỗ trợ nghiệp vụ tài sản.
 
@@ -500,6 +524,8 @@ Sau khi viết TC4–TC6, nhóm chạy riêng từng test, chạy cả nhóm hai
 **Điều kiện đóng Giai đoạn 3:** DB được tạo sạch tự động, migrations/seeding chạy sau readiness, test kết nối đúng DB container, TC1–TC6 đạt kết quả đã đặc tả, lỗi test vẫn kích hoạt cleanup, và không có kết nối tới DB thường dùng/production.
 
 #### K16.4 — Tích hợp quy trình CI
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#k164--t%C3%ADch-h%E1%BB%A3p-quy-tr%C3%ACnh-ci)
 
 **Mục tiêu:** để CI chạy đúng cùng loại kiểm thử mà nhà phát triển chạy cục bộ, nhưng không làm mất kiểm tra tương thích đang có.
 
@@ -518,9 +544,13 @@ Sau khi viết TC4–TC6, nhóm chạy riêng từng test, chạy cả nhóm hai
 
 #### Giai đoạn 4 của kế hoạch môn học — Thu thập kết quả, báo cáo và bảo vệ (tuần 10–12)
 
+[](https://github.com/Bee-Max-Ne/Snipe-IT#giai-%C4%91o%E1%BA%A1n-4-c%E1%BB%A7a-k%E1%BA%BF-ho%E1%BA%A1ch-m%C3%B4n-h%E1%BB%8Dc--thu-th%E1%BA%ADp-k%E1%BA%BFt-qu%E1%BA%A3-b%C3%A1o-c%C3%A1o-v%C3%A0-b%E1%BA%A3o-v%E1%BB%87-tu%E1%BA%A7n-1012)
+
 **Mục tiêu:** thu thập bằng chứng chạy test có thể tái lập, phân tích defect/coverage trung thực và hoàn thiện hồ sơ kỹ thuật để nhóm khác có thể chạy lại.
 
 ##### Tuần 10 — Chạy toàn bộ suite và thu thập bằng chứng
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#tu%E1%BA%A7n-10--ch%E1%BA%A1y-to%C3%A0n-b%E1%BB%99-suite-v%C3%A0-thu-th%E1%BA%ADp-b%E1%BA%B1ng-ch%E1%BB%A9ng)
 
 **Phụ trách chính:** Thành viên 4; cả nhóm kiểm tra kết quả.
 
@@ -534,6 +564,8 @@ Sau khi viết TC4–TC6, nhóm chạy riêng từng test, chạy cả nhóm hai
 
 ##### Tuần 11 — Phân tích kết quả, defect và hoàn thiện nội dung báo cáo
 
+[](https://github.com/Bee-Max-Ne/Snipe-IT#tu%E1%BA%A7n-11--ph%C3%A2n-t%C3%ADch-k%E1%BA%BFt-qu%E1%BA%A3-defect-v%C3%A0-ho%C3%A0n-thi%E1%BB%87n-n%E1%BB%99i-dung-b%C3%A1o-c%C3%A1o)
+
 **Phụ trách chính:** Thành viên 4 tổng hợp; thành viên phát hiện lỗi chịu trách nhiệm phân tích cùng nhóm.
 
 1. Phân loại test pass/fail/error/skipped; với mỗi lỗi, lưu test case, bước tái hiện, điều kiện môi trường, kết quả mong đợi/thực tế và log liên quan.
@@ -546,11 +578,13 @@ Sau khi viết TC4–TC6, nhóm chạy riêng từng test, chạy cả nhóm hai
 
 ##### Tuần 12 — Tái lập, rà soát cuối và bảo vệ
 
+[](https://github.com/Bee-Max-Ne/Snipe-IT#tu%E1%BA%A7n-12--t%C3%A1i-l%E1%BA%ADp-r%C3%A0-so%C3%A1t-cu%E1%BB%91i-v%C3%A0-b%E1%BA%A3o-v%E1%BB%87)
+
 **Phụ trách chính:** Thành viên 4 tổng hợp; cả nhóm diễn tập.
 
 1. Trên máy mới hoặc môi trường sạch, một thành viên không viết harness làm theo README để checkout đúng commit, cài dependency, khởi động Docker và chạy lại suite.
 2. So sánh kết quả với artefact tuần 10; điều tra mọi sai khác, kiểm tra secrets đã loại bỏ và xác nhận cleanup không đụng volume ứng dụng.
-3. Hoàn thành **Phần H**: ghi cứng commit SHA và release tag/version Snipe-IT (nếu chạy trên release/tag thì ghi tag; nếu chạy source tùy chỉnh thì ghi SHA chính xác), phiên bản image DB, hướng dẫn tái lập và giới hạn môi trường.
+3. Hoàn thành  **Phần H** : ghi cứng commit SHA và release tag/version Snipe-IT (nếu chạy trên release/tag thì ghi tag; nếu chạy source tùy chỉnh thì ghi SHA chính xác), phiên bản image DB, hướng dẫn tái lập và giới hạn môi trường.
 4. Chuẩn bị phần trình bày: kiến trúc vòng đời container, lý do chọn các TC, demo ít nhất một luồng pass và một trường hợp fail có kiểm soát, số liệu/defect và giới hạn.
 5. Chốt checklist tài liệu, source, lệnh chạy, report, coverage, Defect Log và phân công trả lời; lưu trữ artefact theo yêu cầu môn học.
 
@@ -560,28 +594,34 @@ Sau khi viết TC4–TC6, nhóm chạy riêng từng test, chạy cả nhóm hai
 
 ### Phân công triển khai cho bốn thành viên
 
+[](https://github.com/Bee-Max-Ne/Snipe-IT#ph%C3%A2n-c%C3%B4ng-tri%E1%BB%83n-khai-cho-b%E1%BB%91n-th%C3%A0nh-vi%C3%AAn)
+
 Phân công dưới đây xác định một người chịu trách nhiệm chính cho từng đầu ra; các thành viên còn lại phối hợp rà soát và xác nhận kết quả. Tên “Thành viên 1–4” là vai trò trong kế hoạch, nhóm thay bằng tên thật khi đưa vào báo cáo. Không dùng việc phân công này để kết luận công việc đã hoàn thành: đầu ra chỉ được đánh dấu xong khi có mã nguồn hoặc artefact kiểm chứng được.
 
-| Thành viên | Vai trò chính | Nhiệm vụ thực hiện | Đầu ra bắt buộc |
-| --- | --- | --- | --- |
-| **Thành viên 1** | Hạ tầng Testcontainers và môi trường DB | Tuần 6: dẫn dắt thử nghiệm container, xác minh Docker Desktop/CI, image DB và readiness; tuần 7: tạo harness, cấu hình DB ephemeral, chạy migrations/seed và cleanup; tuần 8–9: hỗ trợ Thành viên 2–3 kết nối đúng DB và sửa vấn đề harness; tuần 10–12: theo dõi log/cleanup, cung cấp thông tin môi trường và hỗ trợ tái lập. | Spike và quyết định kỹ thuật; harness cùng lệnh chạy; cấu hình image/version; bằng chứng migration/seed/readiness/cleanup; hướng dẫn xử lý lỗi môi trường. |
-| **Thành viên 2** | Kiểm thử luồng nghiệp vụ cốt lõi | Tuần 6: xác minh endpoint/lớp nghiệp vụ, model, factory và trạng thái tài sản; tuần 8: triển khai TC1 Asset Creation, TC2 Asset Checkout, TC3 Asset Checkin; tuần 9: phối hợp kiểm tra schema/log và review TC5–TC6; tuần 10–12: chạy lại các ca, cung cấp kết quả và giải thích nghiệp vụ trong báo cáo/demo. | Ba test case độc lập; assertion cho phản hồi và dữ liệu DB; dữ liệu chuẩn bị qua factory; ghi chú endpoint/lớp, tiền điều kiện và kết quả mong đợi. |
-| **Thành viên 3** | Kiểm thử phân quyền, ràng buộc và thao tác hàng loạt | Tuần 6: khảo sát policy, quyền Staff, status label và hợp đồng bulk hiện có; tuần 9: triển khai TC4 RBAC, TC5 trạng thái không thể checkout, TC6 Bulk Assets Operations; phối hợp Thành viên 2 để xác minh flow và Thành viên 1 để bảo đảm DB test sạch; tuần 10–12: chạy lại ca lỗi, ghi bằng chứng và trình bày các edge case. | Ba test case độc lập; kiểm tra quyền/HTTP response; snapshot trạng thái trước-sau; assertion transaction/rollback đúng với hành vi ứng dụng thực tế. |
-| **Thành viên 4** | Điều phối, CI, số liệu và báo cáo | Tuần 6: ghi nhận đường cơ sở và quản lý danh sách test/tiêu chí; tuần 7–9: chuẩn bị job CI riêng cùng Thành viên 1 và theo dõi tiến độ/artefact; tuần 10: điều phối chiến dịch chạy, report và coverage; tuần 11: tổng hợp Defect Log, phân tích coverage/data coverage, biên tập Phần D–G; tuần 12: hoàn thiện Phần H, revision/commit SHA, hướng dẫn tái lập, tổ chức diễn tập và bàn giao. | Bảng theo dõi tiến độ; workflow CI; thư mục kết quả có version/commit; report và bảng metrics; Defect Log; báo cáo D–H; checklist bảo vệ và tái lập. |
+| Thành viên             | Vai trò chính                                                | Nhiệm vụ thực hiện                                                                                                                                                                                                                                                                                                                                                                                                                                  | Đầu ra bắt buộc                                                                                                                                                              |
+| ------------------------ | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Thành viên 1** | Hạ tầng Testcontainers và môi trường DB                  | Tuần 6: dẫn dắt thử nghiệm container, xác minh Docker Desktop/CI, image DB và readiness; tuần 7: tạo harness, cấu hình DB ephemeral, chạy migrations/seed và cleanup; tuần 8–9: hỗ trợ Thành viên 2–3 kết nối đúng DB và sửa vấn đề harness; tuần 10–12: theo dõi log/cleanup, cung cấp thông tin môi trường và hỗ trợ tái lập.                                                                               | Spike và quyết định kỹ thuật; harness cùng lệnh chạy; cấu hình image/version; bằng chứng migration/seed/readiness/cleanup; hướng dẫn xử lý lỗi môi trường. |
+| **Thành viên 2** | Kiểm thử luồng nghiệp vụ cốt lõi                        | Tuần 6: xác minh endpoint/lớp nghiệp vụ, model, factory và trạng thái tài sản; tuần 8: triển khai TC1 Asset Creation, TC2 Asset Checkout, TC3 Asset Checkin; tuần 9: phối hợp kiểm tra schema/log và review TC5–TC6; tuần 10–12: chạy lại các ca, cung cấp kết quả và giải thích nghiệp vụ trong báo cáo/demo.                                                                                                         | Ba test case độc lập; assertion cho phản hồi và dữ liệu DB; dữ liệu chuẩn bị qua factory; ghi chú endpoint/lớp, tiền điều kiện và kết quả mong đợi.       |
+| **Thành viên 3** | Kiểm thử phân quyền, ràng buộc và thao tác hàng loạt | Tuần 6: khảo sát policy, quyền Staff, status label và hợp đồng bulk hiện có; tuần 9: triển khai TC4 RBAC, TC5 trạng thái không thể checkout, TC6 Bulk Assets Operations; phối hợp Thành viên 2 để xác minh flow và Thành viên 1 để bảo đảm DB test sạch; tuần 10–12: chạy lại ca lỗi, ghi bằng chứng và trình bày các edge case.                                                                             | Ba test case độc lập; kiểm tra quyền/HTTP response; snapshot trạng thái trước-sau; assertion transaction/rollback đúng với hành vi ứng dụng thực tế.            |
+| **Thành viên 4** | Điều phối, CI, số liệu và báo cáo                      | Tuần 6: ghi nhận đường cơ sở và quản lý danh sách test/tiêu chí; tuần 7–9: chuẩn bị job CI riêng cùng Thành viên 1 và theo dõi tiến độ/artefact; tuần 10: điều phối chiến dịch chạy, report và coverage; tuần 11: tổng hợp Defect Log, phân tích coverage/data coverage, biên tập Phần D–G; tuần 12: hoàn thiện Phần H, revision/commit SHA, hướng dẫn tái lập, tổ chức diễn tập và bàn giao. | Bảng theo dõi tiến độ; workflow CI; thư mục kết quả có version/commit; report và bảng metrics; Defect Log; báo cáo D–H; checklist bảo vệ và tái lập.         |
 
 #### Ma trận trách nhiệm theo tuần
 
-| Tuần | Thành viên 1 | Thành viên 2 | Thành viên 3 | Thành viên 4 |
-| --- | --- | --- | --- | --- |
-| **6** | Thử nghiệm Testcontainers, Docker và DB image | Đặc tả TC1–TC3, xác minh luồng tạo/cấp phát/thu hồi | Đặc tả TC4–TC6, xác minh policy/trạng thái/bulk | Ghi đường cơ sở; chốt biểu mẫu test case, lịch và tiêu chí báo cáo |
-| **7** | Dựng harness, readiness, migrations, seed, cleanup | Chuẩn bị factory và xác minh schema phục vụ core workflows | Chuẩn bị actor/permission/status/fixture cho edge cases | Theo dõi tiến độ, ghi lệnh/setup và chuẩn bị phương án CI |
-| **8** | Hỗ trợ xử lý kết nối và ổn định DB container | Viết và chạy TC1–TC3 | Review TC1–TC3; hoàn thiện fixtures TC4–TC6 | Lưu kết quả sơ bộ, cập nhật bảng tiến độ và xác minh artefact |
-| **9** | Kiểm thử cleanup khi lỗi, hoàn tất hướng dẫn harness | Review nghiệp vụ và kết quả DB của TC4–TC6 | Viết và chạy TC4–TC6; kiểm tra rollback/bulk | Chạy suite tổng hợp, chuẩn bị CI và chốt bàn giao Giai đoạn 3 |
-| **10** | Cung cấp log/phiên bản môi trường, xử lý lỗi container | Chạy lại TC1–TC3 và xác nhận dữ liệu | Chạy lại TC4–TC6 và xác nhận các ca bị từ chối | Điều phối full suite; lưu log, report, coverage và commit/image metadata |
-| **11** | Giải thích lỗi môi trường/harness, cung cấp bằng chứng kỹ thuật | Phân tích defect nghiệp vụ liên quan TC1–TC3 | Phân tích defect quyền/edge/bulk liên quan TC4–TC6 | Tổng hợp Defect Log, metrics và biên tập Phần D–G |
-| **12** | Hỗ trợ thành viên khác tái lập harness và cleanup | Diễn tập demo core workflows, kiểm tra nội dung nghiệp vụ | Diễn tập RBAC/edge/bulk và kiểm tra nội dung test | Chốt Phần H, SHA/tag, hướng dẫn máy mới, artefact và điều phối bảo vệ |
+[](https://github.com/Bee-Max-Ne/Snipe-IT#ma-tr%E1%BA%ADn-tr%C3%A1ch-nhi%E1%BB%87m-theo-tu%E1%BA%A7n)
+
+| Tuần        | Thành viên 1                                                             | Thành viên 2                                                   | Thành viên 3                                            | Thành viên 4                                                                     |
+| ------------ | -------------------------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| **6**  | Thử nghiệm Testcontainers, Docker và DB image                           | Đặc tả TC1–TC3, xác minh luồng tạo/cấp phát/thu hồi    | Đặc tả TC4–TC6, xác minh policy/trạng thái/bulk    | Ghi đường cơ sở; chốt biểu mẫu test case, lịch và tiêu chí báo cáo   |
+| **7**  | Dựng harness, readiness, migrations, seed, cleanup                        | Chuẩn bị factory và xác minh schema phục vụ core workflows | Chuẩn bị actor/permission/status/fixture cho edge cases | Theo dõi tiến độ, ghi lệnh/setup và chuẩn bị phương án CI               |
+| **8**  | Hỗ trợ xử lý kết nối và ổn định DB container                     | Viết và chạy TC1–TC3                                         | Review TC1–TC3; hoàn thiện fixtures TC4–TC6           | Lưu kết quả sơ bộ, cập nhật bảng tiến độ và xác minh artefact         |
+| **9**  | Kiểm thử cleanup khi lỗi, hoàn tất hướng dẫn harness               | Review nghiệp vụ và kết quả DB của TC4–TC6                | Viết và chạy TC4–TC6; kiểm tra rollback/bulk         | Chạy suite tổng hợp, chuẩn bị CI và chốt bàn giao Giai đoạn 3            |
+| **10** | Cung cấp log/phiên bản môi trường, xử lý lỗi container            | Chạy lại TC1–TC3 và xác nhận dữ liệu                     | Chạy lại TC4–TC6 và xác nhận các ca bị từ chối  | Điều phối full suite; lưu log, report, coverage và commit/image metadata      |
+| **11** | Giải thích lỗi môi trường/harness, cung cấp bằng chứng kỹ thuật | Phân tích defect nghiệp vụ liên quan TC1–TC3               | Phân tích defect quyền/edge/bulk liên quan TC4–TC6   | Tổng hợp Defect Log, metrics và biên tập Phần D–G                           |
+| **12** | Hỗ trợ thành viên khác tái lập harness và cleanup                  | Diễn tập demo core workflows, kiểm tra nội dung nghiệp vụ  | Diễn tập RBAC/edge/bulk và kiểm tra nội dung test    | Chốt Phần H, SHA/tag, hướng dẫn máy mới, artefact và điều phối bảo vệ |
 
 #### Quy tắc phối hợp và nghiệm thu đầu việc cá nhân
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#quy-t%E1%BA%AFc-ph%E1%BB%91i-h%E1%BB%A3p-v%C3%A0-nghi%E1%BB%87m-thu-%C4%91%E1%BA%A7u-vi%E1%BB%87c-c%C3%A1-nh%C3%A2n)
 
 1. Người phụ trách chính tạo đầu việc/nhánh thay đổi và nộp đầu ra có thể chạy hoặc kiểm tra được; không chỉ ghi “đã làm” trong bảng tiến độ.
 2. Mỗi test case phải được một thành viên khác review: Thành viên 2 review nghiệp vụ của TC4–TC6; Thành viên 3 review assertion quyền/trạng thái khi phù hợp; Thành viên 1 kiểm tra test trỏ đúng container; Thành viên 4 kiểm tra khả năng lưu report và tái lập.
@@ -591,6 +631,8 @@ Phân công dưới đây xác định một người chịu trách nhiệm chí
 6. Nếu phát hiện lỗi trong Snipe-IT, tách lỗi sản phẩm khỏi lỗi test/hạ tầng; sửa lỗi sản phẩm theo phạm vi được nhóm duyệt, sau đó chạy lại ca hồi quy và ghi riêng commit chứa bản sửa với commit của revision được kiểm thử ban đầu.
 
 #### K16.5 — Ổn định, đo lường và chuyển giao
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#k165--%E1%BB%95n-%C4%91%E1%BB%8Bnh-%C4%91o-l%C6%B0%E1%BB%9Dng-v%C3%A0-chuy%E1%BB%83n-giao)
 
 **Mục tiêu:** bảo đảm giải pháp ổn định khi chạy lặp và người khác có thể vận hành, chẩn đoán.
 
@@ -609,6 +651,8 @@ Phân công dưới đây xác định một người chịu trách nhiệm chí
 
 #### Trình tự chuyển giai đoạn và quản lý thay đổi
 
+[](https://github.com/Bee-Max-Ne/Snipe-IT#tr%C3%ACnh-t%E1%BB%B1-chuy%E1%BB%83n-giai-%C4%91o%E1%BA%A1n-v%C3%A0-qu%E1%BA%A3n-l%C3%BD-thay-%C4%91%E1%BB%95i)
+
 | Cổng quyết định | Chỉ chuyển tiếp khi                                                              | Nếu chưa đạt                                                                                     |
 | ------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | K16.0 → K16.1      | Có đường cơ sở lặp lại được và danh sách rủi ro DB cụ thể           | Bổ sung log/lệnh/ca ứng viên; chưa chọn package                                                |
@@ -620,6 +664,8 @@ Phân công dưới đây xác định một người chịu trách nhiệm chí
 
 ### Thiết kế kỹ thuật mục tiêu
 
+[](https://github.com/Bee-Max-Ne/Snipe-IT#thi%E1%BA%BFt-k%E1%BA%BF-k%E1%BB%B9-thu%E1%BA%ADt-m%E1%BB%A5c-ti%C3%AAu)
+
 1. **Chưa chốt phiên bản thư viện trước khi thử nghiệm.** `composer.json` hiện chưa khai báo Testcontainers. Chỉ chọn thư viện PHP sau khi xác minh hỗ trợ Docker API, PHP 8.2–8.5, PHPUnit 11 và cơ chế dọn dẹp; không thêm dependency chỉ dựa vào tên gói.
 2. **Vòng đời container rõ ràng:** khởi chạy container → chờ kiểm tra sức khỏe/trạng thái sẵn sàng với thời hạn hữu hạn → lấy máy chủ/cổng được cấp động → truyền cấu hình cơ sở dữ liệu vào Laravel → chạy migration/kiểm thử → thu nhật ký khi lỗi → dừng và xóa container trong mọi nhánh kết thúc.
 3. **Cô lập kiểm thử:** dùng cơ sở dữ liệu/container riêng cho mỗi job; tạo dữ liệu cần thiết bằng factory/fixture; tránh phụ thuộc thứ tự và tránh để nhiều kiểm thử sửa cùng một bản ghi. Nếu chạy song song, mỗi tiến trình phải có cấu trúc/cơ sở dữ liệu riêng hoặc cần giới hạn chạy song song để tránh tranh chấp.
@@ -629,23 +675,29 @@ Phân công dưới đây xác định một người chịu trách nhiệm chí
 
 ### Tiêu chí nghiệm thu K16
 
-- Từ một bản mã nguồn sạch có Docker, chạy được bộ kiểm thử tích hợp bằng một lệnh mà không cần cài cơ sở dữ liệu cục bộ.
-- Kiểm thử chỉ bắt đầu sau khi container cơ sở dữ liệu sẵn sàng; lỗi chờ sẵn sàng/migration phải báo rõ nguyên nhân và có nhật ký hữu ích.
-- Bộ kiểm thử tự dọn container sau khi thành công, khi kiểm thử lỗi hoặc khi khởi tạo thất bại.
-- Chạy bộ kiểm thử tích hợp hai lần liên tiếp cho cùng kết quả; không phụ thuộc dữ liệu sót lại, cổng cố định hoặc thứ tự kiểm thử.
-- Bộ kiểm thử đơn vị/SQLite hiện tại vẫn chạy được; CI đang có tiếp tục hoạt động trong giai đoạn chuyển tiếp.
-- README/`TESTING.md` ghi đúng lệnh, phiên bản image, điều kiện tiên quyết và cách xử lý lỗi đã được xác minh.
+[](https://github.com/Bee-Max-Ne/Snipe-IT#ti%C3%AAu-ch%C3%AD-nghi%E1%BB%87m-thu-k16)
+
+* Từ một bản mã nguồn sạch có Docker, chạy được bộ kiểm thử tích hợp bằng một lệnh mà không cần cài cơ sở dữ liệu cục bộ.
+* Kiểm thử chỉ bắt đầu sau khi container cơ sở dữ liệu sẵn sàng; lỗi chờ sẵn sàng/migration phải báo rõ nguyên nhân và có nhật ký hữu ích.
+* Bộ kiểm thử tự dọn container sau khi thành công, khi kiểm thử lỗi hoặc khi khởi tạo thất bại.
+* Chạy bộ kiểm thử tích hợp hai lần liên tiếp cho cùng kết quả; không phụ thuộc dữ liệu sót lại, cổng cố định hoặc thứ tự kiểm thử.
+* Bộ kiểm thử đơn vị/SQLite hiện tại vẫn chạy được; CI đang có tiếp tục hoạt động trong giai đoạn chuyển tiếp.
+* README/`TESTING.md` ghi đúng lệnh, phiên bản image, điều kiện tiên quyết và cách xử lý lỗi đã được xác minh.
 
 ### Rủi ro và cách giảm thiểu
 
-- **Khác biệt cơ sở dữ liệu:** MariaDB, MySQL và SQLite không hoàn toàn tương đương. Giữ kiểm thử SQLite cho logic dùng chung và chạy kiểm thử đặc thù trên image đã ghim phiên bản; không kết luận hỗ trợ mọi hệ quản trị chỉ từ một image.
-- **Độ ổn định CI:** tải image, thời gian khởi động và chạy kiểm thử song song có thể làm job chậm/chập chờn. Dùng healthcheck/trạng thái sẵn sàng, lưu image đệm nếu runner hỗ trợ, đặt thời hạn hữu hạn và chỉ tạo container một lần cho mỗi bộ kiểm thử.
-- **Dependency mới:** thư viện Testcontainers cho PHP có thể khác nhau về độ hoàn thiện và giao diện lập trình. Chỉ thêm sau khi thử nghiệm, rà soát giấy phép/bảo trì và xác minh tương thích.
-- **Nhầm lẫn môi trường:** Compose hiện chạy image ứng dụng phát hành; container kiểm thử tích hợp là dịch vụ tạm thời dành cho PHPUnit. Tách tên, mạng và vòng đời để tránh vô tình kết nối nhầm tới cơ sở dữ liệu ứng dụng.
+[](https://github.com/Bee-Max-Ne/Snipe-IT#r%E1%BB%A7i-ro-v%C3%A0-c%C3%A1ch-gi%E1%BA%A3m-thi%E1%BB%83u)
+
+* **Khác biệt cơ sở dữ liệu:** MariaDB, MySQL và SQLite không hoàn toàn tương đương. Giữ kiểm thử SQLite cho logic dùng chung và chạy kiểm thử đặc thù trên image đã ghim phiên bản; không kết luận hỗ trợ mọi hệ quản trị chỉ từ một image.
+* **Độ ổn định CI:** tải image, thời gian khởi động và chạy kiểm thử song song có thể làm job chậm/chập chờn. Dùng healthcheck/trạng thái sẵn sàng, lưu image đệm nếu runner hỗ trợ, đặt thời hạn hữu hạn và chỉ tạo container một lần cho mỗi bộ kiểm thử.
+* **Dependency mới:** thư viện Testcontainers cho PHP có thể khác nhau về độ hoàn thiện và giao diện lập trình. Chỉ thêm sau khi thử nghiệm, rà soát giấy phép/bảo trì và xác minh tương thích.
+* **Nhầm lẫn môi trường:** Compose hiện chạy image ứng dụng phát hành; container kiểm thử tích hợp là dịch vụ tạm thời dành cho PHPUnit. Tách tên, mạng và vòng đời để tránh vô tình kết nối nhầm tới cơ sở dữ liệu ứng dụng.
 
 ---
 
 ### User's Manual
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#users-manual)
 
 For help using Snipe-IT, check out the [user&#39;s manual](https://snipe-it.readme.io/docs/overview).
 
@@ -653,21 +705,29 @@ For help using Snipe-IT, check out the [user&#39;s manual](https://snipe-it.read
 
 ### Bug Reports & Feature Requests
 
+[](https://github.com/Bee-Max-Ne/Snipe-IT#bug-reports--feature-requests)
+
 Feel free to check out the [GitHub Issues for this project](https://github.com/grokability/snipe-it/issues) to open a bug report or see what open issues you can help with. Please search through existing issues (open *and* closed) to see if your question has already been answered before opening a new issue.
 
-> [!IMPORTANT]
-> **PLEASE see the [Getting Help Guidelines](https://snipe-it.readme.io/docs/getting-help) and [Common Issues](https://snipe-it.readme.io/docs/common-issues) before opening a ticket, and be sure to complete all of the questions in the Github Issue template to help us to help you as quickly as possible.**
+Important
+
+**PLEASE see the [Getting Help Guidelines](https://snipe-it.readme.io/docs/getting-help) and [Common Issues](https://snipe-it.readme.io/docs/common-issues) before opening a ticket, and be sure to complete all of the questions in the Github Issue template to help us to help you as quickly as possible.**
 
 ---
 
 ### Security
 
-> [!IMPORTANT]
-> **To report a security vulnerability, please email security@snipeitapp.com instead of using the issue tracker.**
+[](https://github.com/Bee-Max-Ne/Snipe-IT#security)
+
+Important
+
+**To report a security vulnerability, please email [security@snipeitapp.com](mailto:security@snipeitapp.com) instead of using the issue tracker.**
 
 ---
 
 ### Upgrading
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#upgrading)
 
 Please see the [upgrading documentation](https://snipe-it.readme.io/docs/upgrading) for instructions on upgrading Snipe-IT.
 
@@ -675,65 +735,77 @@ Please see the [upgrading documentation](https://snipe-it.readme.io/docs/upgradi
 
 ### Translations!
 
+[](https://github.com/Bee-Max-Ne/Snipe-IT#translations)
+
 Please see the [translations documentation](https://snipe-it.readme.io/docs/translations) for information about available languages and how to add translations to Snipe-IT.
 
 ---
 
 ### Libraries, Modules & Related Projects
 
+[](https://github.com/Bee-Max-Ne/Snipe-IT#libraries-modules--related-projects)
+
 Since the release of the JSON REST API, several third-party developers have been developing modules and libraries to work with Snipe-IT.
 
-> [!NOTE]
-> As these were created by third-parties, Snipe-IT cannot provide support for these project, and you should contact the developers directly if you need assistance. Additionally, Snipe-IT makes no guarantees as to the reliability, accuracy or maintainability of these libraries. Use at your own risk. :)
+Note
+
+As these were created by third-parties, Snipe-IT cannot provide support for these project, and you should contact the developers directly if you need assistance. Additionally, Snipe-IT makes no guarantees as to the reliability, accuracy or maintainability of these libraries. Use at your own risk. :)
 
 #### Libraries & Modules
 
-- [SnipeScheduler](https://github.com/JSY-Ben/SnipeScheduler) by [@JSY-Ben](https://github.com/JSY-Ben) - An Asset Reservation/Checkout System for Snipe-IT
-- [Snipe-IT MCP Server](https://github.com/jameshgordy/snipeit-mcp) by [@jameshgordy](https://github.com/jameshgordy) - A Model Context Protocol (MCP) server for managing Snipe-IT inventory systems
-- [SnipeSharp - .NET module in C#](https://github.com/barrycarey/SnipeSharp) by [@barrycarey](https://github.com/barrycarey)
-- [SnipeitPS](https://github.com/snazy2000/SnipeitPS) by [@snazy2000](https://github.com/snazy2000) - Powershell API Wrapper for Snipe-it
-- [jamf2snipe](https://github.com/grokability/jamf2snipe) - Python script to sync assets between a JAMFPro instance and a Snipe-IT instance
-- [jamf-snipe-rename](https://macblog.org/jamf-snipe-rename/) - Python script to rename computers in Jamf from Snipe-IT
-- [Snipe-IT plugin for Jira Service Desk](https://marketplace.atlassian.com/apps/1220964/snipe-it-for-jira)
-- [Rudder2Snipe](https://github.com/norbertoaquino/rudder2snipe) by [@norbertoaquino](https://github.com/norbertoaquino) - Rudder.io integration for Snipe-IT
-- [Python 3 CSV importer](https://github.com/gastamper/snipeit-csvimporter) - allows importing assets into Snipe-IT based on Item Name rather than Asset Tag.
-- [Snipe-IT Kubernetes Helm Chart](https://github.com/t3n/helm-charts/tree/master/snipeit) - For more information, [click here](https://hub.helm.sh/charts/t3n/snipeit).
-- [Snipe-IT Bulk Edit](https://github.com/bricelabelle/snipe-it-bulkedit) - Google Script files to use Google Sheets as a bulk checkout/checkin/edit tool for Snipe-IT.
-- [MosyleSnipeSync](https://github.com/RodneyLeeBrands/MosyleSnipeSync) by [@Karpadiem](https://github.com/Karpadiem) - Python script to synchronize information between Mosyle and Snipe-IT.
-- [WWW::SnipeIT](https://github.com/SEDC/perl-www-snipeit) by [@SEDC](https://github.com/SEDC) - perl module for accessing the API
-- [UniFi to Snipe-IT](https://www.edtechirl.com/p/snipe-it-and-azure-asset-management) originally by [@karpadiem](https://github.com/karpadiem) - Python script that synchronizes UniFi devices with Snipe-IT.
-- [Kandji2Snipe](https://github.com/grokability/kandji2snipe) by [@briangoldstein](https://github.com/briangoldstein) - Python script that synchronizes Kandji with Snipe-IT.
-- [SnipeAgent](https://github.com/ReticentRobot/SnipeAgent) by [@ReticentRobot](https://github.com/ReticentRobot) - Windows agent for Snipe-IT.
-- [Gate Pass Generator](https://github.com/cha7uraAE/snipe-it-gate-pass-system) by [@cha7uraAE](https://github.com/cha7uraAE) - A Streamlit application for generating gate passes based on hardware data from a Snipe-IT API.
-- [InQRy (archived)](https://github.com/Microsoft/InQRy) by [@Microsoft](https://github.com/Microsoft)
-- [Marksman (archived)](https://github.com/Scope-IT/marksman) - A Windows agent for Snipe-IT
-- [Python Module (archived)](https://github.com/jbloomer/SnipeIT-PythonAPI) by [@jbloomer](https://github.com/jbloomer)
-  [IT-Tools](https://github.com/chrisnox/Snipeit-it-tools) by @chrisnox - Browser bookmarklets for PDF handover/return protocols, digital signatures, label printing (Zebra ZD410), AirWatch MDM sync and Lansweeper CSV import.
+[](https://github.com/Bee-Max-Ne/Snipe-IT#libraries--modules)
+
+* [SnipeScheduler](https://github.com/JSY-Ben/SnipeScheduler) by [@JSY-Ben](https://github.com/JSY-Ben) - An Asset Reservation/Checkout System for Snipe-IT
+* [Snipe-IT MCP Server](https://github.com/jameshgordy/snipeit-mcp) by [@jameshgordy](https://github.com/jameshgordy) - A Model Context Protocol (MCP) server for managing Snipe-IT inventory systems
+* [SnipeSharp - .NET module in C#](https://github.com/barrycarey/SnipeSharp) by [@barrycarey](https://github.com/barrycarey)
+* [SnipeitPS](https://github.com/snazy2000/SnipeitPS) by [@snazy2000](https://github.com/snazy2000) - Powershell API Wrapper for Snipe-it
+* [jamf2snipe](https://github.com/grokability/jamf2snipe) - Python script to sync assets between a JAMFPro instance and a Snipe-IT instance
+* [jamf-snipe-rename](https://macblog.org/jamf-snipe-rename/) - Python script to rename computers in Jamf from Snipe-IT
+* [Snipe-IT plugin for Jira Service Desk](https://marketplace.atlassian.com/apps/1220964/snipe-it-for-jira)
+* [Rudder2Snipe](https://github.com/norbertoaquino/rudder2snipe) by [@norbertoaquino](https://github.com/norbertoaquino) - Rudder.io integration for Snipe-IT
+* [Python 3 CSV importer](https://github.com/gastamper/snipeit-csvimporter) - allows importing assets into Snipe-IT based on Item Name rather than Asset Tag.
+* [Snipe-IT Kubernetes Helm Chart](https://github.com/t3n/helm-charts/tree/master/snipeit) - For more information, [click here](https://hub.helm.sh/charts/t3n/snipeit).
+* [Snipe-IT Bulk Edit](https://github.com/bricelabelle/snipe-it-bulkedit) - Google Script files to use Google Sheets as a bulk checkout/checkin/edit tool for Snipe-IT.
+* [MosyleSnipeSync](https://github.com/RodneyLeeBrands/MosyleSnipeSync) by [@Karpadiem](https://github.com/Karpadiem) - Python script to synchronize information between Mosyle and Snipe-IT.
+* [WWW::SnipeIT](https://github.com/SEDC/perl-www-snipeit) by [@SEDC](https://github.com/SEDC) - perl module for accessing the API
+* [UniFi to Snipe-IT](https://www.edtechirl.com/p/snipe-it-and-azure-asset-management) originally by [@karpadiem](https://github.com/karpadiem) - Python script that synchronizes UniFi devices with Snipe-IT.
+* [Kandji2Snipe](https://github.com/grokability/kandji2snipe) by [@briangoldstein](https://github.com/briangoldstein) - Python script that synchronizes Kandji with Snipe-IT.
+* [SnipeAgent](https://github.com/ReticentRobot/SnipeAgent) by [@ReticentRobot](https://github.com/ReticentRobot) - Windows agent for Snipe-IT.
+* [Gate Pass Generator](https://github.com/cha7uraAE/snipe-it-gate-pass-system) by [@cha7uraAE](https://github.com/cha7uraAE) - A Streamlit application for generating gate passes based on hardware data from a Snipe-IT API.
+* [InQRy (archived)](https://github.com/Microsoft/InQRy) by [@Microsoft](https://github.com/Microsoft)
+* [Marksman (archived)](https://github.com/Scope-IT/marksman) - A Windows agent for Snipe-IT
+* [Python Module (archived)](https://github.com/jbloomer/SnipeIT-PythonAPI) by [@jbloomer](https://github.com/jbloomer) [IT-Tools](https://github.com/chrisnox/Snipeit-it-tools) by @chrisnox - Browser bookmarklets for PDF handover/return protocols, digital signatures, label printing (Zebra ZD410), AirWatch MDM sync and Lansweeper CSV import.
 
 We also have a handful of [Google Apps scripts](https://github.com/grokability/google-apps-scripts-for-snipe-it) to help with various tasks.
 
 #### Mobile Apps
 
+[](https://github.com/Bee-Max-Ne/Snipe-IT#mobile-apps)
+
 We're currently working on our own mobile app, but in the meantime, check out these third-party apps that work with Snipe-IT:
 
-- [SnipeMate](https://snipemate.app/) (iOS, Google Play, Huawei AppGallery) by Mars Technology
-- [Snipe-Scan](https://apps.apple.com/do/app/snipe-scan/id6744179400?uo=2) (iOS) by Nicolas Maton
-- [Snipe-IT Assets Management](https://play.google.com/store/apps/details?id=com.diegogarciadev.assetsmanager.snipeit&hl=en&pli=1) (Google Play) by DiegoGarciaDEV
-- [AssetX](https://apps.apple.com/my/app/assetx-for-snipe-it/id6741996196?uo=2) (iOS) for Snipe-IT by Rishi Gupta
+* [SnipeMate](https://snipemate.app/) (iOS, Google Play, Huawei AppGallery) by Mars Technology
+* [Snipe-Scan](https://apps.apple.com/do/app/snipe-scan/id6744179400?uo=2) (iOS) by Nicolas Maton
+* [Snipe-IT Assets Management](https://play.google.com/store/apps/details?id=com.diegogarciadev.assetsmanager.snipeit&hl=en&pli=1) (Google Play) by DiegoGarciaDEV
+* [AssetX](https://apps.apple.com/my/app/assetx-for-snipe-it/id6741996196?uo=2) (iOS) for Snipe-IT by Rishi Gupta
 
 ---
 
 ### Join the Community!
 
-- **[Join our Discord](https://discord.gg/yZFtShAcKk)!** It’s full of great people. We even wrote about it [here](https://grokstar.dev/culture/2024/06/the-unlikely-rise-of-discord-as-a-support-channel/)!
-- **Follow us on Bluesky** at [@snipeitapp.com](https://bsky.app/profile/snipeitapp.com)
-- **Follow us on Mastodon** at [hachyderm.io/@grokability](https://hachyderm.io/@grokability)
-- **Follow our blog** at [Grokstar.Dev](https://grokstar.dev)
-- **Subscribe here** on Github for notifications about new releases. (We recommend selecting "Releases" only for most users - this repo can get noisy.)
+[](https://github.com/Bee-Max-Ne/Snipe-IT#join-the-community)
+
+* **[Join our Discord](https://discord.gg/yZFtShAcKk)!** It’s full of great people. We even wrote about it [here](https://grokstar.dev/culture/2024/06/the-unlikely-rise-of-discord-as-a-support-channel/)!
+* **Follow us on Bluesky** at [@snipeitapp.com](https://bsky.app/profile/snipeitapp.com)
+* **Follow us on Mastodon** at [hachyderm.io/@grokability](https://hachyderm.io/@grokability)
+* **Follow our blog** at [Grokstar.Dev](https://grokstar.dev/)
+* **Subscribe here** on Github for notifications about new releases. (We recommend selecting "Releases" only for most users - this repo can get noisy.)
 
 ---
 
 ### Contributing
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#contributing)
 
 **Please refrain from submitting issues or pull requests generated by fully-automated tools. Maintainers reserve the right, at their sole discretion, to close such submissions and to block any account responsible for them.** Please see our [AI Contribution Policy](https://snipe-it.readme.io/docs/contributing-overview#ai-usage-policy) for more information.
 
@@ -741,15 +813,17 @@ Contributions should follow from a human-to-human discussion in the form of an i
 
 Please see the complete documentation on [contributing and developing for Snipe-IT](https://snipe-it.readme.io/docs/contributing-overview).
 
-This project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+This project is released with a [Contributor Code of Conduct](https://github.com/Bee-Max-Ne/Snipe-IT/blob/main/CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
 The ERD is available [online here](https://drawsql.app/templates/snipe-it).
 
-Be sure to check out all of the [amazing people](CONTRIBUTORS.md) that have contributed to Snipe-IT over the years!
+Be sure to check out all of the [amazing people](https://github.com/Bee-Max-Ne/Snipe-IT/blob/main/CONTRIBUTORS.md) that have contributed to Snipe-IT over the years!
 
 ---
 
 ### Announcement List
+
+[](https://github.com/Bee-Max-Ne/Snipe-IT#announcement-list)
 
 To be notified of important news (such as new releases, security advisories, etc), [sign up for our list](http://eepurl.com/XyZKz). We'll never sell or give away your info, and we'll only email you when it's important.
 
