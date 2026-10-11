@@ -405,6 +405,49 @@ class UserTest extends TestCase
 
     /**
      * WBS Member 4 (Nguyễn Thành Minh - 2312691):
+     * TC-SEC-04: Tích lũy kế thừa quyền hạn từ nhiều nhóm (Multi-Group Aggregation).
+     * Xác minh khi một nhân sự tham gia nhiều nhóm vai trò, họ sẽ kế thừa phép hội (Union)
+     * của tất cả các quyền được cấp phép từ các nhóm đó.
+     */
+    public function test_tc_sec_04_user_inherits_union_of_permissions_from_multiple_groups(): void
+    {
+        $groupAuditors = Group::factory()->create([
+            'name' => 'Auditors Group ' . uniqid(),
+            'permissions' => json_encode([
+                'assets.view' => '1',
+                'assets.audit' => '1',
+            ]),
+        ]);
+
+        $groupLicenseManagers = Group::factory()->create([
+            'name' => 'License Managers Group ' . uniqid(),
+            'permissions' => json_encode([
+                'licenses.view' => '1',
+                'licenses.checkout' => '1',
+            ]),
+        ]);
+
+        $user = User::factory()->create([
+            'permissions' => '',
+        ]);
+
+        $user->groups()->attach([$groupAuditors->id, $groupLicenseManagers->id]);
+
+        // Kế thừa quyền từ Group 1
+        $this->assertTrue($user->hasAccess('assets.view'), 'User should inherit assets.view from Group 1');
+        $this->assertTrue($user->hasAccess('assets.audit'), 'User should inherit assets.audit from Group 1');
+
+        // Kế thừa quyền từ Group 2
+        $this->assertTrue($user->hasAccess('licenses.view'), 'User should inherit licenses.view from Group 2');
+        $this->assertTrue($user->hasAccess('licenses.checkout'), 'User should inherit licenses.checkout from Group 2');
+
+        // Quyền không nằm trong bất kỳ nhóm nào phải bị từ chối
+        $this->assertFalse($user->hasAccess('users.delete'), 'User should not have users.delete');
+        $this->assertFalse($user->hasAccess('admin'), 'User should not have admin access');
+    }
+
+    /**
+     * WBS Member 4 (Nguyễn Thành Minh - 2312691):
      * Kiểm thử chính sách bảo mật UserPolicy ngăn chặn leo thang đặc quyền.
      */
     public function test_user_policy_prevents_privilege_escalation(): void
