@@ -21,7 +21,13 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        
+        $isSqlite = DB::getDriverName() === 'sqlite';
+        if ($isSqlite) {
+            DB::statement('PRAGMA foreign_keys = OFF');
+        } else {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        }
 
         $this->reportMemory('DatabaseSeeder start');
 
@@ -114,7 +120,11 @@ class DatabaseSeeder extends Seeder
         // tool for production databases that need drift correction.
 
         Model::reguard();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        if ($isSqlite) {
+            DB::statement('PRAGMA foreign_keys = ON');
+        } else {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        }
 
         $this->call(ImportSeeder::class);
         $this->reportMemory('after ImportSeeder');
