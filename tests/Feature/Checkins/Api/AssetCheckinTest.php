@@ -36,6 +36,36 @@ class AssetCheckinTest extends TestCase
             ->assertStatusMessageIs('error');
     }
 
+    public function test_checkin_cannot_be_repeated_without_mutating_asset(): void
+    {
+        Event::fake([CheckoutableCheckedIn::class]);
+
+        $asset = Asset::factory()->assignedToUser()->create();
+        $actor = User::factory()->checkinAssets()->create();
+
+        $this->actingAsForApi($actor)
+            ->postJson(route('api.asset.checkin', $asset))
+            ->assertOk()
+            ->assertStatusMessageIs('success');
+
+        $asset->refresh();
+        $checkinCounterAfterFirstRequest = $asset->checkin_counter;
+        $lastCheckinAfterFirstRequest = $asset->last_checkin;
+        $this->assertNull($asset->assigned_to);
+        $this->assertNull($asset->assigned_type);
+
+        $this->postJson(route('api.asset.checkin', $asset))
+            ->assertOk()
+            ->assertStatusMessageIs('error');
+
+        $asset->refresh();
+        $this->assertNull($asset->assigned_to);
+        $this->assertNull($asset->assigned_type);
+        $this->assertEquals($checkinCounterAfterFirstRequest, $asset->checkin_counter);
+        $this->assertEquals($lastCheckinAfterFirstRequest, $asset->last_checkin);
+        Event::assertDispatched(CheckoutableCheckedIn::class, 1);
+    }
+
     public function test_asset_can_be_checked_in()
     {
         Event::fake([CheckoutableCheckedIn::class]);

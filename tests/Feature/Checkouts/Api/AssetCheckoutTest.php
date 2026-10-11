@@ -785,6 +785,36 @@ class AssetCheckoutTest extends TestCase
         $this->assertEquals(0, $asset->checkout_counter);
     }
 
+    public function test_invalid_checkout_target_does_not_mutate_asset_or_create_checkout_log(): void
+    {
+        $asset = Asset::factory()->create();
+        $originalLocationId = $asset->location_id;
+        $originalStatusId = $asset->status_id;
+        $admin = User::factory()->checkoutAssets()->create();
+
+        $this->actingAsForApi($admin)
+            ->postJson(route('api.asset.checkout', $asset), [
+                'checkout_to_type' => 'user',
+                'assigned_user' => 999999,
+                'status_id' => Statuslabel::factory()->create(['deployable' => 1])->id,
+            ])
+            ->assertOk()
+            ->assertStatusMessageIs('error');
+
+        $asset->refresh();
+        $this->assertNull($asset->assigned_to);
+        $this->assertNull($asset->assigned_type);
+        $this->assertEquals($originalLocationId, $asset->location_id);
+        $this->assertEquals($originalStatusId, $asset->status_id);
+        $this->assertEquals(0, $asset->checkout_counter);
+        $this->assertDatabaseMissing('action_logs', [
+            'item_type' => Asset::class,
+            'item_id' => $asset->id,
+            'action_type' => 'checkout',
+        ]);
+        Event::assertNotDispatched(CheckoutableCheckedOut::class);
+    }
+
     /**
      * TC-CO-04: KIỂM TRA CƠ CHẾ CHẶN TRUY CẬP KHI THIẾU BEARER TOKEN (SECURITY GATE)
      * Phương thức: test_checkout_fails_without_oauth_passport_token
@@ -831,4 +861,3 @@ class AssetCheckoutTest extends TestCase
             ->assertStatusMessageIs('error');
     }
 }
-

@@ -262,18 +262,101 @@ flowchart TD
 
 ## 5. 4 PHÂN VÙNG KIỂM THỬ TRỌNG TÂM ỨNG DỤNG K16 EPHEMERAL DATABASE
 
-### 5.1 Phân vùng 1: API Checkout, Checkin & Khóa Tranh chấp Đồng thời
+### 5.1 Phân vùng 1: API Checkout, Checkin & Quy trình Cấp phát / Thu hồi
 - **Chủ trì:** Phạm Nguyễn Ngọc Phước (2312718)
-- **Tập tin kiểm thử:** [AssetCheckoutTest.php](file:///d:/KIEM_THU_PHAN_MEM/Do_An/snipe-it-master/tests/Feature/Checkouts/Api/AssetCheckoutTest.php) và [AssetCheckinTest.php](file:///d:/KIEM_THU_PHAN_MEM/Do_An/snipe-it-master/tests/Feature/Checkins/Api/AssetCheckinTest.php).
-- **Cơ chế K16 cốt lõi:**
-  - Sử dụng giao dịch cơ sở dữ liệu `DB::transaction()` kết hợp `lockForUpdate()` trên MySQL InnoDB:
-    ```php
-    DB::transaction(function () use ($asset, $target) {
-        $lockedAsset = Asset::where('id', $asset->id)->lockForUpdate()->first();
-        // Kiểm tra tính sẵn sàng và cấp phát an toàn
-    });
-    ```
-  - Kiểm chứng phản hồi API (200 OK, 400 Bad Request, 401 Unauthorized, 422 Unprocessable Entity) và kiểm tra tính toàn vẹn bản ghi `action_logs` trên CSDL MySQL thật.
+- **Tệp kiểm thử checkout:** [AssetCheckoutTest.php](tests/Feature/Checkouts/Api/AssetCheckoutTest.php).
+- **Tệp kiểm thử checkin:** [AssetCheckinTest.php](tests/Feature/Checkins/Api/AssetCheckinTest.php).
+- **Mục tiêu:** kiểm chứng hợp đồng API, quyền truy cập, quy tắc trạng thái tài sản, quan hệ đối tượng nhận, tính toàn vẹn của assignment/counter/timestamp/action log và khả năng khôi phục vị trí khi thu hồi.
+- **Lưu ý về concurrency:** mã checkout hiện dùng `DB::transaction()` cùng `lockForUpdate()` và kiểm tra lại trạng thái trên hàng đã khóa. Chưa có test với hai request/worker chạy đồng thời; các test tuần tự không được xem là bằng chứng đã kiểm thử race condition.
+
+## 6. PHÂN VÙNG 1: MODULE API CHECKOUT, CHECKIN & QUY TRÌNH CẤP PHÁT / THU HỒI
+
+### 6.1 Tổng quan phân vùng & đối tượng kiểm thử (SUT)
+
+#### 6.1.1 Mục tiêu kiểm thử
+
+- Xác nhận người dùng đủ quyền có thể cấp phát tài sản sẵn sàng cho user, asset hoặc location hợp lệ.
+- Xác nhận tài sản không sẵn sàng, đã được cấp phát, target không hợp lệ hoặc thiếu quyền không làm sai trạng thái tài sản.
+- Kiểm chứng luồng checkin giải phóng quan hệ gán, cập nhật bộ đếm/thời điểm và trả tài sản về vị trí mặc định hoặc vị trí được chỉ định.
+- Kiểm tra tác dụng phụ liên quan như event `CheckoutableCheckedOut`, event `CheckoutableCheckedIn` và `action_logs`.
+- Chạy các test tích hợp được chọn trên MySQL 8.0.36 tạm thời bằng K16; không suy diễn rằng tất cả test của hai tệp đều đã chạy trên K16.
+
+#### 6.1.2 Danh mục thành phần hệ thống thuộc phạm vi kiểm thử (SUT Components)
+
+| Thành phần | Vai trò trong luồng | Cách được kiểm tra |
+| --- | --- | --- |
+| `routes/api.php` | Đăng ký các endpoint API v1 checkout/checkin | Gọi bằng route name `api.asset.checkout`, `api.asset.checkin` |
+| `App\Http\Controllers\Api\AssetsController` | Xử lý checkout, checkin, kiểm tra target và trạng thái | Feature test gửi request JSON và kiểm tra response |
+| `AssetCheckoutRequest` / middleware / policy | Xác thực dữ liệu, xác thực caller và phân quyền | Test thiếu token, thiếu quyền, thiếu hoặc sai target |
+| `Asset` và quan hệ `assignedTo` | Lưu trạng thái gán đa hình, location, counters và thời điểm | `refresh()` rồi assertion trên MySQL |
+| `AssetObserver`, events và `action_logs` | Ghi nhận tác dụng phụ/audit của nghiệp vụ | Assertion event và bản ghi log ở các ca phù hợp |
+| `tests/testcontainers/run.mjs` | Tạo DB MySQL dùng riêng cho lần chạy test | Kiểm thử runner qua lệnh npm; container được dừng trong `finally` |
+
+### 6.2 Bối cảnh nghiệp vụ & cơ chế kỹ thuật nền tảng
+
+#### 6.2.1 Vòng đời trạng thái tài sản
+
+`Sẵn sàng, chưa gán` → **Checkout thành công** → `Đã gán cho User/Asset/Location` → **Checkin thành công** → `Không còn đối tượng gán, trở về RTD location hoặc location được yêu cầu`.
+
+Nếu checkout/checkin bị từ chối, trạng thái gán hiện tại phải được giữ nguyên. Với checkout tới user/location, `assigned_type` và `assigned_to` biểu diễn quan hệ đa hình; location hiện tại có thể được cập nhật theo đối tượng nhận. Checkin xóa `assigned_to`/`assigned_type`, xóa `expected_checkin`, cập nhật `last_checkin` và đặt `location_id` về `rtd_location_id` trừ khi request chỉ định location khác.
+
+#### 6.2.2 Các cơ chế kỹ thuật trọng yếu được kiểm tra
+
+- **Authentication/Authorization:** API không có xác thực nhận 401; người dùng đã xác thực nhưng không có quyền checkout/checkin bị từ chối theo Policy.
+- **Validation và quy tắc nghiệp vụ:** chỉ cấp phát asset có thể checkout; target phải tồn tại, hợp lệ và chỉ có một target.
+- **Giao dịch/khóa hàng:** checkout hiện chạy trong `DB::transaction()`, lấy lại asset bằng `lockForUpdate()` rồi kiểm tra `availableForCheckout()` trên hàng đã khóa.
+- **Tính toàn vẹn dữ liệu:** `assigned_to`, `assigned_type`, `location_id`, `status_id`, counters, timestamp và audit/event được kiểm tra sau request.
+- **FMCS:** các test hiện có bao phủ một số tổ hợp công ty, membership qua pivot và floater mode.
+- **Giới hạn bằng chứng:** chưa có kiểm thử hai worker checkout đồng thời; test khóa hàng tuần tự không chứng minh cơ chế chống race condition.
+
+### 6.3 Môi trường thực thi & chiến lược kiểm thử tự động
+
+#### 6.3.1 Thiết lập hạ tầng cô lập với Testcontainers
+
+Runner `tests/testcontainers/run.mjs` dùng `@testcontainers/mysql` với image `mysql:8.0.36`, tên database/mật khẩu ngẫu nhiên, sinh khóa Passport RSA trong bộ nhớ, truyền biến môi trường cho PHPUnit rồi dừng container trong `finally`. Cần Docker daemon, Node.js từ 18 trở lên, PHP CLI cùng `pdo_mysql`, Composer dependencies và npm dependencies.
+
+Mỗi lệnh gọi runner tạo container riêng. Trong workflow hiện tại, smoke test checkout-checkin và từng test mới được gọi ở các bước riêng; sự tồn tại của test trong repository không đồng nghĩa toàn bộ suite đã được thực thi.
+
+### 6.4 Đặc tả chi tiết các test case
+
+Các mã dưới đây là mã tài liệu của Phân vùng 1. “Đã có trong mã nguồn” nói về sự hiện diện của test; trạng thái chạy K16 phải đối chiếu kết quả CI, không suy ra từ việc test được khai báo.
+
+| Mã | Phương thức kiểm thử | Tình huống và điều kiện chính | Assertions trọng tâm | Hiện trạng |
+| --- | --- | --- | --- | --- |
+| TC-CO-01 | `test_asset_can_be_checked_out_through_api` | Asset chưa gán; admin có quyền; user nhận hợp lệ | HTTP 200/status `success`; assignment, status, counter và event checkout chính xác | Đã có |
+| TC-CO-01A | `test_asset_can_be_checked_out` (Data Provider) | Checkout tới user/location/asset, gồm target có/không location | Quan hệ nhận, name/status, checkout date, expected checkin và event | Đã có; Data Provider gồm 5 biến thể |
+| TC-CO-02 | `test_asset_can_be_checked_out_and_checked_back_in_through_api` | Thực hiện checkout rồi checkin liên tiếp | Cả hai response success; assignment rỗng sau checkin; counter, thời điểm và RTD location đúng | Đã có; workflow K16 chọn chạy |
+| TC-CO-03 | `test_asset_cannot_be_checked_out_if_not_deployable` | Asset dùng status không deployable | Status message error; assignment rỗng; counter không tăng | Đã có |
+| TC-CO-04 | `test_checkout_fails_without_oauth_passport_token` | Gọi API không xác thực | HTTP 401 Unauthorized | Đã có |
+| TC-CO-05 | `test_checkout_request_approval_workflow` và `test_checkout_request` | Gửi yêu cầu cho asset requestable và thử asset non-requestable | Request hợp lệ success, log `requested`; non-requestable bị từ chối | Đã có; **chưa kiểm tra bước admin duyệt** |
+| TC-CO-06 | `test_checkout_fails_if_asset_already_checked_out` | Asset hiện đang gán cho user khác | Status message error; assignment ban đầu không bị ghi đè | Đã có |
+| TC-CO-07 | `test_checkout_to_location_instead_of_user` | Checkout asset trực tiếp cho location | `assigned_type`, `assigned_to`, `location_id`, counter và response đúng | Đã có |
+| TC-CO-08 | `test_invalid_checkout_target_does_not_mutate_asset_or_create_checkout_log` | Target user không tồn tại; gửi thêm status ID | Error; status/location/assignment/counter không đổi; không có checkout log/event | Đã thêm; CI được cấu hình chạy |
+| TC-CI-01 | `test_checkin_cannot_be_repeated_without_mutating_asset` | Checkin thành công rồi gửi checkin lần hai | Lần hai error; assignment vẫn rỗng; counter/timestamp không đổi; event chỉ phát một lần | Đã thêm; CI được cấu hình chạy |
+
+Các tệp còn có những test riêng về quyền, asset không tồn tại, nhiều target, FMCS, location khi checkin, license seats, child assets, legacy location, pending acceptance, ngày checkin và tên tài sản. Đây là các test nền hiện hữu; không có nghĩa mọi trường hợp đều được chọn chạy trong workflow K16.
+
+**Không gán mã HTTP 400/422 cho lỗi nghiệp vụ nếu chưa phù hợp với hợp đồng thực tế:** nhiều API checkout trả HTTP 200 cùng JSON `status: error`; ca thiếu bearer token trả 401; ca thiếu quyền trả 403.
+
+#### Lệnh chạy trong K16
+
+```powershell
+# Smoke test checkout-checkin khép kín
+npm run test:integration:testcontainers -- tests/Feature/Checkouts/Api/AssetCheckoutTest.php --filter=test_asset_can_be_checked_out_and_checked_back_in_through_api
+
+# Test checkout target không hợp lệ
+npm run test:integration:testcontainers -- tests/Feature/Checkouts/Api/AssetCheckoutTest.php --filter=test_invalid_checkout_target_does_not_mutate_asset_or_create_checkout_log
+
+# Test checkin lặp
+npm run test:integration:testcontainers -- tests/Feature/Checkins/Api/AssetCheckinTest.php --filter=test_checkin_cannot_be_repeated_without_mutating_asset
+```
+
+#### Tiêu chí pass/fail và phần chưa bao phủ
+
+- **Pass:** tiến trình PHPUnit exit code 0; response và dữ liệu MySQL thỏa assertions; event/log đúng; Testcontainers dọn container sau chạy.
+- **Fail:** assertion sai, test lỗi hoặc flaky, request thất bại làm thay đổi dữ liệu ngoài dự kiến, hay container không được dừng.
+- **Chưa bao phủ:** hai checkout đồng thời cho cùng một asset. Đây là hạng mục tiếp theo; cần hai kết nối/worker thực sự độc lập, đồng bộ hóa request và fixture nhìn thấy được từ cả hai worker.
+- **Trạng thái thực thi:** sandbox hiện không cho chạy lệnh trong thư mục repo; chỉ có thể xác nhận test và workflow đã được thêm vào mã nguồn, chưa tuyên bố test K16 đã pass.
 
 ### 5.2 Phân vùng 2: Tài sản Phần cứng, Ràng buộc Unique & Khấu hao
 - **Chủ trì:** Nguyễn Văn Quốc (2312729)

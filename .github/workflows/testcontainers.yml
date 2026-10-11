@@ -16,12 +16,12 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
         with:
           persist-credentials: false
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2.37.2
+        uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
           extensions: curl, exif, fileinfo, gd, mbstring, pdo_mysql, sodium, zip
@@ -47,9 +47,16 @@ jobs:
           tests/Feature/Checkouts/Api/AssetCheckoutTest.php
           --filter=test_asset_can_be_checked_out_and_checked_back_in_through_api
 
+      - name: Run checkout rejection and repeated checkin tests
+        run: >-
+          npm run test:integration:testcontainers --
+          tests/Feature/Checkouts/Api/AssetCheckoutTest.php
+          tests/Feature/Checkins/Api/AssetCheckinTest.php
+          --filter='test_invalid_checkout_target_does_not_mutate_asset_or_create_checkout_log|test_checkin_cannot_be_repeated_without_mutating_asset'
+
       - name: Upload Laravel logs
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: testcontainers-laravel-logs-${{ github.run_attempt }}
           path: storage/logs/*.log
