@@ -320,6 +320,36 @@ class UserTest extends TestCase
 
     /**
      * WBS Member 4 (Nguyễn Thành Minh - 2312691):
+     * TC-SEC-02: Kiểm tra quyền phân tầng đơn lẻ (Fine-grained Granular Permission).
+     * Xác minh tài khoản có quyền cụ thể chỉ được thực thi đúng quyền đó,
+     * các hành vi chưa cấp hoặc đặt '0' phải bị từ chối tuyệt đối.
+     */
+    public function test_tc_sec_02_user_with_granular_permissions_is_strictly_bounded(): void
+    {
+        // 1. User được cấu hình quyền granular qua JSON permissions
+        $user = User::factory()->create([
+            'permissions' => json_encode([
+                'users.view' => '1',
+                'users.create' => '0',
+            ]),
+        ]);
+
+        $this->assertTrue($user->hasAccess('users.view'), 'User should have access to users.view');
+        $this->assertFalse($user->hasAccess('users.create'), 'Permission set to "0" must be denied');
+        $this->assertFalse($user->hasAccess('users.delete'), 'Unassigned permission must be denied');
+        $this->assertFalse($user->hasAccess('admin'), 'User must not have admin access');
+        $this->assertFalse($user->isSuperUser(), 'User must not be superuser');
+
+        // 2. Kiểm tra với Factory state viewUsers()
+        $viewerUser = User::factory()->viewUsers()->create();
+        $this->assertTrue($viewerUser->hasAccess('users.view'), 'Viewer must have users.view');
+        $this->assertFalse($viewerUser->hasAccess('users.delete'), 'Viewer must not have users.delete');
+        $this->assertFalse($viewerUser->hasAccess('users.create'), 'Viewer must not have users.create');
+        $this->assertFalse($viewerUser->hasAccess('assets.checkout'), 'Viewer must not have assets.checkout');
+    }
+
+    /**
+     * WBS Member 4 (Nguyễn Thành Minh - 2312691):
      * Kiểm thử chính sách bảo mật UserPolicy ngăn chặn leo thang đặc quyền.
      */
     public function test_user_policy_prevents_privilege_escalation(): void
