@@ -12,6 +12,7 @@ class LicenseTest extends TestCase
 {
     public function test_adding_seats_is_logged_when_updating()
     {
+        /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -33,6 +34,7 @@ class LicenseTest extends TestCase
 
     public function test_removing_seats_is_logged_when_updating()
     {
+        /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -115,7 +117,7 @@ class LicenseTest extends TestCase
                 }
             };
 
-            $license->purchase_date = '2025-01-01';
+            $license->purchase_date = Carbon::parse('2025-01-01');
 
             $this->assertSame(50.0, $license->depreciationProgressPercent());
         } finally {
@@ -136,5 +138,28 @@ class LicenseTest extends TestCase
         $license->purchase_date = null;
 
         $this->assertSame(0.0, $license->depreciationProgressPercent());
+    }
+
+    /**
+     * WBS Member 3 (Nguyễn Đình Thạch - 2314506):
+     * Kiểm thử logic kiểm soát giới hạn số ghế bản quyền phần mềm khả dụng (availCount()).
+     */
+    public function test_avail_count_returns_only_unassigned_reassignable_seats(): void
+    {
+        $license = License::factory()->create(['seats' => 3]);
+        $seats = $license->licenseseats()->get();
+        $this->assertCount(3, $seats);
+
+        // Cả 3 ghế ban đầu đều khả dụng
+        $this->assertEquals(3, $license->availSeatsCount);
+
+        // Gán 1 ghế cho User
+        /** @var User $user */
+        $user = User::factory()->create();
+        $seats[0]->assigned_to = $user->id;
+        $seats[0]->save();
+
+        $license->refresh();
+        $this->assertEquals(2, $license->availSeatsCount);
     }
 }

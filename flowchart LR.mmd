@@ -1,0 +1,16 @@
+flowchart LR
+    Browser[Trình duyệt] --> WebRoutes[Tuyến web]
+    APIClient[Client/API] --> ApiRoutes[Tuyến API]
+    WebRoutes --> Middleware[Middleware: session, auth, csrf, rate limit]
+    ApiRoutes --> Middleware
+    Middleware --> WebControllers[Controller web]
+    Middleware --> ApiControllers[Controller API]
+    WebControllers --> Blade[Blade views]
+    WebControllers --> Livewire[Livewire components]
+    ApiControllers --> Transformers[Transformers]
+    WebControllers --> Policies[Policies]
+    ApiControllers --> Policies
+    Policies --> Actions[Actions / Services / Jobs]
+    Actions --> Models[Models + Eloquent]
+    Models --> Database[(MySQL/MariaDB/PostgreSQL/SQLite)]
+    Actions --> Integrations[LDAP / SAML / OIDC / SCIM / Email / S3]

@@ -437,4 +437,17 @@ class AssetTest extends TestCase
         $this->assertEquals(0, $freshAsset->components->sum('calculated_purchase_cost'));
         $this->assertSame(0.0, $freshAsset->getComponentCost());
     }
+
+    /**
+     * WBS Member 2 (Nguyễn Văn Quốc - 2312729):
+     * Kiểm thử ràng buộc duy nhất (UNIQUE constraint) của mã định danh tài sản (asset_tag) chống trùng lặp dữ liệu.
+     */
+    public function test_asset_tag_unique_constraint_prevents_duplicate_tag(): void
+    {
+        $tag = 'UNIQUE-TAG-TEST-2026';
+        Asset::factory()->create(['asset_tag' => $tag]);
+
+        $this->expectException(\Illuminate\Database\QueryException::class);
+        Asset::factory()->create(['asset_tag' => $tag]);
+    }
 }

@@ -125,12 +125,22 @@ class AssetCheckoutTest extends TestCase
         $this->assertTrue($asset->assignedTo()->is($user));
     }
 
+    /**
+     * TC-CO-02: LUỒNG TÍCH HỢP KHÉP KÍN TOÀN TRÌNH (CHECKOUT ➔ CHECKIN)
+     * Phương thức: test_asset_can_be_checked_out_and_checked_back_in_through_api
+     * Loại kiểm thử: End-to-End Integration Testing
+     */
     public function test_asset_can_be_checked_out_and_checked_back_in_through_api()
     {
-        $asset = Asset::factory()->create();
+        $warehouseLocation = Location::factory()->create();
+        $asset = Asset::factory()->create([
+            'rtd_location_id' => $warehouseLocation->id,
+            'location_id' => $warehouseLocation->id,
+        ]);
         $assignedUser = User::factory()->create();
         $actor = User::factory()->checkoutAssets()->checkinAssets()->create();
 
+        // 1. Checkout tài sản cho assignedUser
         $this->actingAsForApi($actor)
             ->postJson(route('api.asset.checkout', $asset), [
                 'checkout_to_type' => 'user',
@@ -143,6 +153,7 @@ class AssetCheckoutTest extends TestCase
         $this->assertTrue($asset->assignedTo()->is($assignedUser));
         $this->assertEquals(1, $asset->checkout_counter);
 
+        // 2. Checkin thu hồi tài sản về kho ban đầu
         $this->postJson(route('api.asset.checkin', $asset))
             ->assertOk()
             ->assertStatusMessageIs('success');
@@ -153,6 +164,7 @@ class AssetCheckoutTest extends TestCase
         $this->assertEquals(1, $asset->checkin_counter);
         $this->assertNotNull($asset->last_checkout);
         $this->assertNotNull($asset->last_checkin);
+        $this->assertEquals($warehouseLocation->id, $asset->location_id);
     }
 
     public function test_asset_checkout_infers_asset_target_when_checkout_to_type_omitted()
@@ -652,4 +664,171 @@ class AssetCheckoutTest extends TestCase
 
         $this->assertEquals($companiedTarget->id, $nullCompanyAsset->fresh()->assigned_to);
     }
+
+    /**
+     * TC-CO-06: Chặn cấp phát tài sản đang được mượn bởi người khác mà chưa hoàn tất Checkin
+     * Phương thức: test_checkout_fails_if_asset_already_checked_out
+     * Loại kiểm thử: Negative Testing / State Conflict Prevention
+     */
+    public function test_checkout_fails_if_asset_already_checked_out(): void
+    {
+        $initialUser = User::factory()->create();
+        $targetUser = User::factory()->create();
+        $asset = Asset::factory()->assignedToUser($initialUser)->create();
+
+        $admin = User::factory()->checkoutAssets()->create();
+
+        $response = $this->actingAsForApi($admin)
+            ->postJson(route('api.asset.checkout', $asset), [
+                'checkout_to_type' => 'user',
+                'assigned_user' => $targetUser->id,
+            ]);
+
+        $response->assertOk()
+            ->assertStatusMessageIs('error')
+            ->assertMessagesAre(trans('admin/hardware/message.checkout.not_available'));
+
+        $asset->refresh();
+        $this->assertEquals($initialUser->id, $asset->assigned_to);
+        $this->assertTrue($asset->assignedTo()->is($initialUser));
+    }
+
+    /**
+     * TC-CO-07: Cấp phát tài sản trực tiếp cho Địa điểm (Location) thay vì Người dùng
+     * Phương thức: test_checkout_to_location_instead_of_user
+     * Loại kiểm thử: Positive Testing / Polymorphic Target
+     */
+    public function test_checkout_to_location_instead_of_user(): void
+    {
+        $asset = Asset::factory()->create();
+        $targetLocation = Location::factory()->create();
+        $admin = User::factory()->checkoutAssets()->create();
+
+        $response = $this->actingAsForApi($admin)
+            ->postJson(route('api.asset.checkout', $asset), [
+                'checkout_to_type' => 'location',
+                'assigned_location' => $targetLocation->id,
+                'note' => 'Checkout directly to location',
+            ]);
+
+        $response->assertOk()
+            ->assertStatusMessageIs('success');
+
+        $asset->refresh();
+        $this->assertTrue($asset->assignedTo()->is($targetLocation));
+        $this->assertEquals(Location::class, $asset->assigned_type);
+        $this->assertEquals($targetLocation->id, $asset->assigned_to);
+        $this->assertEquals($targetLocation->id, $asset->location_id);
+        $this->assertEquals(1, $asset->checkout_counter);
+    }
+
+    /**
+     * TC-CO-01: CẤP PHÁT TÀI SẢN THÀNH CÔNG CHO NGƯỜI DÙNG QUA API
+     * Phương thức: test_asset_can_be_checked_out_through_api
+     * Loại kiểm thử: Functional/Positive Testing
+     */
+    public function test_asset_can_be_checked_out_through_api(): void
+    {
+        $asset = Asset::factory()->create([
+            'assigned_to' => null,
+            'assigned_type' => null,
+        ]);
+        $targetUser = User::factory()->create();
+        $admin = User::factory()->checkoutAssets()->create();
+        $newStatus = Statuslabel::factory()->create(['deployable' => 1]);
+
+        $response = $this->actingAsForApi($admin)
+            ->postJson(route('api.asset.checkout', $asset), [
+                'checkout_to_type' => 'user',
+                'assigned_user' => $targetUser->id,
+                'status_id' => $newStatus->id,
+                'checkout_at' => '2026-10-11',
+                'note' => 'Cấp phát máy làm việc',
+            ]);
+
+        $response->assertOk()
+            ->assertStatusMessageIs('success');
+
+        $asset->refresh();
+        $this->assertEquals($targetUser->id, $asset->assigned_to);
+        $this->assertTrue($asset->assignedTo()->is($targetUser));
+        $this->assertEquals($newStatus->id, $asset->status_id);
+        $this->assertEquals(1, $asset->checkout_counter);
+        Event::assertDispatched(CheckoutableCheckedOut::class);
+    }
+
+    /**
+     * TC-CO-03: CHẶN CẤP PHÁT TÀI SẢN KHÔNG Ở TRẠNG THÁI SẴN SÀNG (UNDEPLOYABLE)
+     * Phương thức: test_asset_cannot_be_checked_out_if_not_deployable
+     * Loại kiểm thử: Negative Testing / Business Rule Enforcement
+     */
+    public function test_asset_cannot_be_checked_out_if_not_deployable(): void
+    {
+        $undeployableStatus = Statuslabel::factory()->create(['deployable' => 0]);
+        $asset = Asset::factory()->create(['status_id' => $undeployableStatus->id]);
+        $targetUser = User::factory()->create();
+        $admin = User::factory()->checkoutAssets()->create();
+
+        $response = $this->actingAsForApi($admin)
+            ->postJson(route('api.asset.checkout', $asset), [
+                'checkout_to_type' => 'user',
+                'assigned_user' => $targetUser->id,
+            ]);
+
+        $response->assertOk()
+            ->assertStatusMessageIs('error')
+            ->assertMessagesAre(trans('admin/hardware/message.checkout.not_available'));
+
+        $asset->refresh();
+        $this->assertNull($asset->assigned_to);
+        $this->assertNull($asset->assigned_type);
+        $this->assertEquals(0, $asset->checkout_counter);
+    }
+
+    /**
+     * TC-CO-04: KIỂM TRA CƠ CHẾ CHẶN TRUY CẬP KHI THIẾU BEARER TOKEN (SECURITY GATE)
+     * Phương thức: test_checkout_fails_without_oauth_passport_token
+     * Loại kiểm thử: Security & Authentication Testing
+     */
+    public function test_checkout_fails_without_oauth_passport_token(): void
+    {
+        $asset = Asset::factory()->create();
+        $targetUser = User::factory()->create();
+
+        // Gửi trực tiếp request không qua actingAsForApi (không có Bearer Token)
+        $response = $this->postJson(route('api.asset.checkout', $asset), [
+            'checkout_to_type' => 'user',
+            'assigned_user' => $targetUser->id,
+        ]);
+
+        $response->assertUnauthorized();
+    }
+
+    /**
+     * TC-CO-05: KIỂM TRA LUỒNG GỬI YÊU CẦU MƯỢN VÀ PHÊ DUYỆT (REQUEST APPROVAL WORKFLOW)
+     * Phương thức: test_checkout_request_approval_workflow
+     * Loại kiểm thử: Business Workflow / Role-based Transition
+     */
+    public function test_checkout_request_approval_workflow(): void
+    {
+        Notification::fake();
+        $requestableAsset = Asset::factory()->requestable()->create();
+        $nonRequestableAsset = Asset::factory()->nonrequestable()->create();
+        $requester = User::factory()->create();
+
+        // 1. Gửi yêu cầu mượn trên tài sản requestable
+        $this->actingAsForApi($requester)
+            ->post(route('api.assets.requests.store', $requestableAsset->id))
+            ->assertStatusMessageIs('success');
+
+        // Ghi vết requested trong nhật ký kiểm toán
+        $this->assertHasTheseActionLogs($requestableAsset, ['create', 'requested']);
+
+        // 2. Chặn yêu cầu mượn trên tài sản non-requestable
+        $anotherRequester = User::factory()->create();
+        $this->actingAsForApi($anotherRequester)
+            ->post(route('api.assets.requests.store', $nonRequestableAsset->id))
+            ->assertStatusMessageIs('error');
+    }
 }
+

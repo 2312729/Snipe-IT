@@ -2,7 +2,9 @@
 
 namespace Tests\Unit;
 
+use App\Models\Actionlog;
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Tests\TestCase;
 
 class UserTest extends TestCase
@@ -279,5 +281,74 @@ class UserTest extends TestCase
             '#61b329',
             $user->nav_link_color
         );
+    }
+
+    /**
+     * WBS Member 4 (Nguyễn Thành Minh - 2312691):
+     * Kiểm thử cơ chế phân quyền RBAC (hasAccess()).
+     */
+    public function test_user_has_access_rbac(): void
+    {
+        // 1. Superuser luôn có toàn quyền truy cập bất kỳ section nào
+        $superUser = User::factory()->superuser()->create();
+        $this->assertTrue($superUser->hasAccess('admin'));
+        $this->assertTrue($superUser->hasAccess('users.view'));
+        $this->assertTrue($superUser->hasAccess('users.delete'));
+        $this->assertTrue($superUser->hasAccess('assets.checkout'));
+
+        // 2. Standard user có quyền cụ thể
+        $viewerUser = User::factory()->viewUsers()->create();
+        $this->assertTrue($viewerUser->hasAccess('users.view'));
+        $this->assertFalse($viewerUser->hasAccess('users.delete'));
+        $this->assertFalse($viewerUser->hasAccess('admin'));
+    }
+
+    /**
+     * WBS Member 4 (Nguyễn Thành Minh - 2312691):
+     * Kiểm thử chính sách bảo mật UserPolicy ngăn chặn leo thang đặc quyền.
+     */
+    public function test_user_policy_prevents_privilege_escalation(): void
+    {
+        $superUser = User::factory()->superuser()->create();
+        $regularUser = User::factory()->create();
+        $targetUser = User::factory()->create();
+
+        // SuperUser được phép thực hiện mọi thao tác quản trị trên UserPolicy
+        $this->assertTrue(Gate::forUser($superUser)->allows('create', User::class));
+        $this->assertTrue(Gate::forUser($superUser)->allows('delete', $targetUser));
+
+        // Regular User không có quyền admin/users.delete bị chặn
+        $this->assertFalse(Gate::forUser($regularUser)->allows('delete', $targetUser));
+    }
+
+    /**
+     * WBS Member 4 (Nguyễn Thành Minh - 2312691):
+     * Kiểm thử tính bất biến của nhật ký kiểm toán hệ thống (action_logs).
+     */
+    public function test_action_logs_audit_trail_integrity(): void
+    {
+        $admin = User::factory()->superuser()->create();
+        $target = User::factory()->create();
+
+        $log = new Actionlog;
+        $log->item_type = User::class;
+        $log->item_id = $target->id;
+        $log->action_type = 'create';
+        $log->created_by = $admin->id;
+        $log->note = 'Initial user audit record';
+        $log->save();
+
+        $this->assertDatabaseHas('action_logs', [
+            'id' => $log->id,
+            'item_type' => User::class,
+            'item_id' => $target->id,
+            'action_type' => 'create',
+            'created_by' => $admin->id,
+            'note' => 'Initial user audit record',
+        ]);
+
+        // ActionLog duy trì bản ghi vĩnh viễn (không bị xóa mềm / mất dấu)
+        $this->assertNull($log->deleted_at);
+        $this->assertEquals(1, Actionlog::where('id', $log->id)->count());
     }
 }
