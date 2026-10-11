@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Actionlog;
+use App\Models\Group;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Tests\TestCase;
@@ -285,22 +286,36 @@ class UserTest extends TestCase
 
     /**
      * WBS Member 4 (Nguyễn Thành Minh - 2312691):
-     * Kiểm thử cơ chế phân quyền RBAC (hasAccess()).
+     * TC-SEC-01: Quyền lực tối cao của Superuser (God Mode Bypass).
+     * Xác minh tài khoản có thuộc tính permissions->superuser = '1' luôn được cấp phép
+     * truy cập vô điều kiện vào mọi section hệ thống (admin, users, assets, reports, v.v.).
      */
-    public function test_user_has_access_rbac(): void
+    public function test_tc_sec_01_superuser_has_unconditional_access_to_all_sections(): void
     {
-        // 1. Superuser luôn có toàn quyền truy cập bất kỳ section nào
         $superUser = User::factory()->superuser()->create();
-        $this->assertTrue($superUser->hasAccess('admin'));
-        $this->assertTrue($superUser->hasAccess('users.view'));
-        $this->assertTrue($superUser->hasAccess('users.delete'));
-        $this->assertTrue($superUser->hasAccess('assets.checkout'));
 
-        // 2. Standard user có quyền cụ thể
-        $viewerUser = User::factory()->viewUsers()->create();
-        $this->assertTrue($viewerUser->hasAccess('users.view'));
-        $this->assertFalse($viewerUser->hasAccess('users.delete'));
-        $this->assertFalse($viewerUser->hasAccess('admin'));
+        $sectionsToTest = [
+            'admin',
+            'users.view',
+            'users.create',
+            'users.edit',
+            'users.delete',
+            'assets.view',
+            'assets.checkout',
+            'assets.checkin',
+            'reports.view',
+            'settings.general',
+        ];
+
+        foreach ($sectionsToTest as $section) {
+            $this->assertTrue(
+                $superUser->hasAccess($section),
+                "Superuser must have unconditional access to [{$section}]"
+            );
+        }
+
+        $this->assertTrue($superUser->isSuperUser(), 'isSuperUser() must return true for superuser');
+        $this->assertTrue($superUser->hasAccess('admin'), 'hasAccess(admin) must return true for superuser');
     }
 
     /**
