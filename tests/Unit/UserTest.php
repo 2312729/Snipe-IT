@@ -448,6 +448,38 @@ class UserTest extends TestCase
 
     /**
      * WBS Member 4 (Nguyễn Thành Minh - 2312691):
+     * TC-SEC-05: Mặc định từ chối khi không có quyền (Default Deny Baseline).
+     * Chứng minh tài khoản người dùng thông thường mới tạo (chưa gán quyền, chưa tham gia nhóm)
+     * tuyệt đối không thể truy cập bất kỳ chức năng quản trị nào của hệ thống.
+     */
+    public function test_tc_sec_05_user_with_no_permissions_and_no_groups_is_denied_everything(): void
+    {
+        // 1. User với chuỗi permissions rỗng
+        $userEmptyStr = User::factory()->create([
+            'permissions' => '',
+        ]);
+
+        $this->assertFalse($userEmptyStr->hasAccess('admin'), 'Empty permissions user must not have admin access');
+        $this->assertFalse($userEmptyStr->hasAccess('users.view'), 'Empty permissions user must not have users.view');
+        $this->assertFalse($userEmptyStr->hasAccess('users.create'), 'Empty permissions user must not have users.create');
+        $this->assertFalse($userEmptyStr->hasAccess('users.delete'), 'Empty permissions user must not have users.delete');
+        $this->assertFalse($userEmptyStr->hasAccess('assets.checkout'), 'Empty permissions user must not have assets.checkout');
+        $this->assertFalse($userEmptyStr->hasAccess('reports.view'), 'Empty permissions user must not have reports.view');
+        $this->assertFalse($userEmptyStr->isSuperUser(), 'Empty permissions user must not be superuser');
+        $this->assertFalse($userEmptyStr->isAdmin(), 'Empty permissions user must not be admin');
+
+        // 2. User với JSON permissions rỗng
+        $userEmptyJson = User::factory()->create([
+            'permissions' => json_encode([]),
+        ]);
+
+        $this->assertFalse($userEmptyJson->hasAccess('admin'), 'Empty JSON permissions user must not have admin');
+        $this->assertFalse($userEmptyJson->hasAccess('users.view'), 'Empty JSON permissions user must not have users.view');
+        $this->assertFalse($userEmptyJson->isSuperUser(), 'Empty JSON permissions user must not be superuser');
+    }
+
+    /**
+     * WBS Member 4 (Nguyễn Thành Minh - 2312691):
      * Kiểm thử chính sách bảo mật UserPolicy ngăn chặn leo thang đặc quyền.
      */
     public function test_user_policy_prevents_privilege_escalation(): void
