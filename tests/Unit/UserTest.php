@@ -350,6 +350,61 @@ class UserTest extends TestCase
 
     /**
      * WBS Member 4 (Nguyễn Thành Minh - 2312691):
+     * TC-SEC-03: Giải quyết xung đột — Phủ quyết đích danh thắng cấp phép từ nhóm (Explicit Deny Overrides Group Allow).
+     * Xác minh nguyên tắc an ninh cốt lõi trong RBAC:
+     * Khi Group cấp quyền '1', nhưng User có thuộc tính '-1', hệ thống BẮT BUỘC phải từ chối.
+     */
+    public function test_tc_sec_03_explicit_user_deny_overrides_group_permission_allow(): void
+    {
+        $group = Group::factory()->create([
+            'name' => 'Asset Managers Group ' . uniqid(),
+            'permissions' => json_encode([
+                'users.delete' => '1',
+                'users.view' => '1',
+                'assets.edit' => '1',
+            ]),
+        ]);
+
+        $user = User::factory()->create([
+            'permissions' => json_encode([
+                'users.delete' => '-1', // Phủ quyết đích danh
+                'assets.create' => '1',  // Cấp phép riêng lẻ
+            ]),
+        ]);
+
+        $user->groups()->attach($group->id);
+
+        // 1. Explicit Deny (-1) đè Group Allow (1)
+        $this->assertFalse(
+            $user->hasAccess('users.delete'),
+            'Explicit deny (-1) on user MUST strictly override group allow (1)'
+        );
+
+        // 2. Quyền không xung đột từ nhóm (1) vẫn được kế thừa
+        $this->assertTrue(
+            $user->hasAccess('users.view'),
+            'Non-conflicting group permission (1) should be inherited'
+        );
+        $this->assertTrue(
+            $user->hasAccess('assets.edit'),
+            'Non-conflicting group permission assets.edit should be inherited'
+        );
+
+        // 3. Quyền cấp riêng cho User không phụ thuộc vào nhóm
+        $this->assertTrue(
+            $user->hasAccess('assets.create'),
+            'Direct user permission assets.create (1) must be allowed'
+        );
+
+        // 4. Quyền không thuộc nhóm và không thuộc user bị từ chối
+        $this->assertFalse(
+            $user->hasAccess('hardware.delete'),
+            'Undefined permission must be denied'
+        );
+    }
+
+    /**
+     * WBS Member 4 (Nguyễn Thành Minh - 2312691):
      * Kiểm thử chính sách bảo mật UserPolicy ngăn chặn leo thang đặc quyền.
      */
     public function test_user_policy_prevents_privilege_escalation(): void
