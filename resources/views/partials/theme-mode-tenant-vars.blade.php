@@ -22,9 +22,38 @@
         --default-label-link-text: light-dark({{ $link_light_color ?? '#296282' }}, {{ $link_dark_color ?? '#5fa4cc' }});
     }
     [data-theme="light"] {
-        --link-color: {{ $link_light_color ?? '#296282' }};
+        --link-color: {{ ($link_light_color && $link_light_color !== '#ffffff') ? $link_light_color : '#111827' }};
     }
     [data-theme="dark"] {
-        --link-color: {{ $link_dark_color ?? '#5fa4cc' }};
+        --link-color: {{ $link_dark_color ?? '#60a5fa' }};
+    }
+
+    /* Đảm bảo hiển thị chữ màu đen rõ nét cho tất cả các bảng và liên kết trên toàn hệ thống */
+    body,
+    .content-wrapper,
+    .table,
+    .table > tbody > tr > td,
+    .table > thead > tr > th,
+    .bootstrap-table .table > tbody > tr > td,
+    .bootstrap-table .table > thead > tr > th,
+    .table a:not(.btn),
+    .bootstrap-table .table a:not(.btn) {
+        color: #111827 !important;
+    }
+
+    .table > tbody > tr > td a:not(.btn):hover,
+    .bootstrap-table .table a:not(.btn):hover {
+        color: #1d4ed8 !important;
+        text-decoration: underline !important;
+    }
+
+    .table > thead > tr > th,
+    .bootstrap-table .table > thead > tr > th {
+        color: #0f172a !important;
+        font-weight: 700 !important;
+    }
+
+    .text-muted, .table .text-muted {
+        color: #374151 !important;
     }
 </style>

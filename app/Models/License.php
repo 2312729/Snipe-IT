@@ -45,7 +45,7 @@ class License extends Depreciable
 
     public $timestamps = true;
 
-    protected $guarded = 'id';
+    protected $guarded = ['id'];
 
     protected $table = 'licenses';
 

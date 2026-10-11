@@ -148,7 +148,7 @@ function New-DocxPackage {
   <Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/>
 </Types>
 '@
-    Set-Content -Path (Join-Path $Folder '[Content_Types].xml') -Value $contentTypes -Encoding UTF8
+    Set-Content -LiteralPath (Join-Path $Folder '[Content_Types].xml') -Value $contentTypes -Encoding UTF8
 
     $rels = @'
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -226,11 +226,16 @@ function New-DocxPackage {
     Set-Content -Path (Join-Path $folderWord 'document.xml') -Value $document -Encoding UTF8
 
     $archivePath = Join-Path $reportRoot $FileName
+    $tempZip = Join-Path $reportRoot ($FileName + '.zip')
     if (Test-Path $archivePath) {
         Remove-Item $archivePath -Force
     }
+    if (Test-Path $tempZip) {
+        Remove-Item $tempZip -Force
+    }
 
-    Compress-Archive -Path (Join-Path $Folder '*') -DestinationPath $archivePath -CompressionLevel Optimal -Force | Out-Null
+    Compress-Archive -Path (Join-Path $Folder '*') -DestinationPath $tempZip -CompressionLevel Optimal -Force | Out-Null
+    Move-Item -LiteralPath $tempZip -Destination $archivePath -Force
 }
 
 foreach ($member in $members) {
@@ -239,7 +244,7 @@ foreach ($member in $members) {
         Remove-Item $memberFolder -Recurse -Force
     }
     New-Item -Path $memberFolder -ItemType Directory -Force | Out-Null
-    New-DocxPackage -Folder $memberFolder -Title $member.Title -Body $member.Body -Summary $member.Summary -Name $member.Name
+    New-DocxPackage -Folder $memberFolder -Title $member.Title -Body $member.Body -Summary $member.Summary -Name $member.Name -FileName $member.FileName
     Remove-Item $memberFolder -Recurse -Force
 }
 

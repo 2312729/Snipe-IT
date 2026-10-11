@@ -26,7 +26,7 @@ class LicenseSeat extends SnipeModel implements ICompanyableChild
 
     protected $presenter = LicenseSeatPresenter::class;
 
-    protected $guarded = 'id';
+    protected $guarded = ['id'];
 
     protected $table = 'license_seats';
 
