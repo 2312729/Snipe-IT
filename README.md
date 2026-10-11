@@ -71,7 +71,7 @@ graph TD
 | :---: | :--- | :---: | :--- | :--- | :--- | :--- |
 | **1** | **Phạm Nguyễn Ngọc Phước** | **2312718** | **Lead QA (Senior Testing Engineer)** | **Phân vùng 1:** Module API Checkout, Checkin & Quy trình Cấp phát / Thu hồi | Sử dụng container MySQL K16 để kiểm chứng cơ chế **Pessimistic Concurrency Locking (`lockForUpdate()`)** và Transaction Rollback chống Race Condition mà SQLite không thể thực hiện. | `tests/Feature/Checkouts/Api/AssetCheckoutTest.php`<br/>`tests/Feature/Checkins/Api/AssetCheckinTest.php` |
 | **2** | **Nguyễn Văn Quốc** | **2312729** | **QA Engineer (Senior Automation Tester)** | **Phân vùng 2:** Module Quản lý Tài sản Phần cứng, Dòng Model & Khấu hao | Sử dụng CSDL MySQL K16 để kiểm chứng ràng buộc toàn vẹn duy nhất vật lý (**Unique Index `asset_tag`**) và độ chính xác tính toán khấu hao đường thẳng trên Storage Engine thật. | `tests/Unit/AssetTest.php`<br/>`tests/Unit/DepreciationTest.php`<br/>`tests/Unit/AssetModelTest.php` |
-| **3** | **Nguyễn Đình Thạch** | **2314506** | **Team Leader & Infrastructure Lead** | **Phân vùng 3:** Module Bản quyền Phần mềm, Phụ kiện, Linh kiện & CI/CD K16 | Trực tiếp kiến trúc bộ điều phối `run.mjs`, quản lý vòng đời container Docker MySQL, cấp phát dynamic keys và kiểm thử tranh chấp ghế bản quyền (**Seat Allocation Pool**) trên CSDL cô lập. | `tests/testcontainers/run.mjs`<br/>`.github/workflows/testcontainers.yml`<br/>`tests/Unit/Models/LicenseTest.php` |
+| **3** | **Nguyễn Đình Thạch** | **2314506** | **Team Leader & Infrastructure Lead** | **Phân vùng 3:** Module Bản quyền Phần mềm, Phụ kiện, Linh kiện & CI/CD K16 | Trực tiếp kiến trúc bộ điều phối `run.mjs`, quản lý vòng đời container Docker MySQL, cấp phát dynamic keys và kiểm thử tranh chấp ghế bản quyền (**Seat Allocation Pool**) trên CSDL cô lập. | `tests/testcontainers/run.mjs`<br/>`.github/workflows/testcontainers.yml`<br/>`tests/Feature/Licenses/Api/LicenseSeatAllocationLimitTest.php`<br/>`tests/Feature/Licenses/Api/LicenseProductKeyMaskingTest.php`<br/>`tests/Feature/Accessories/Api/AccessoryQuantityOnCheckoutTest.php`<br/>`tests/Feature/Components/Api/ComponentAttachToAssetTest.php` |
 | **4** | **Nguyễn Thành Minh** | **2312691** | **QA Engineer (Security & Access Control)** | **Phân vùng 4:** Module Người dùng, Phân quyền RBAC, Đa công ty & Security Policy | Sử dụng môi trường sạch K16 để kiểm thử ma trận RBAC và cơ chế cách ly dữ liệu **CompanyableScope** nhằm đảm bảo không có rò rỉ trạng thái giữa các bài test bảo mật. | `tests/Unit/UserTest.php`<br/>`tests/Unit/CompanyScopingTest.php` |
 
 ---
@@ -106,15 +106,15 @@ graph TD
 - **Mã sinh viên:** `2314506`
 - **Vai trò:** Trưởng nhóm Dự án & Kỹ sư Kiến trúc Tự động hóa Hạ tầng (Project Lead & Test Automation Architect)
 - **Phương pháp luận K16 ứng dụng:**
-  1. **Xây dựng Nền tảng K16 Runner ([run.mjs](file:///d:/KIEM_THU_PHAN_MEM/Do_An/snipe-it-master/tests/testcontainers/run.mjs)):**
+  1. **Xây dựng Nền tảng K16 Runner ([run.mjs](tests/testcontainers/run.mjs)):**
      - Điều phối `@testcontainers/mysql`, ghim cứng phiên bản `mysql:8.0.36`.
      - Tự động sinh cặp khóa Passport RSA 2048-bit động trong bộ nhớ RAM phục vụ xác thực API token mà không cần ghi file vật lý vào repository.
      - Cơ chế đảm bảo dọn sạch tài nguyên (*Guaranteed Teardown*): Lệnh `container.stop()` đặt trong khối `finally` đảm bảo 100% container bị tiêu hủy kể cả khi bài test bị crash hoặc fail assertion.
-  2. **Quản trị CI/CD Pipeline:** Xây dựng quy trình [.github/workflows/testcontainers.yml](file:///d:/KIEM_THU_PHAN_MEM/Do_An/snipe-it-master/.github/workflows/testcontainers.yml) chạy tự động hóa trên GitHub Actions runner có Docker.
-  3. **Kiểm thử Giấy phép Bản quyền (Seats Pooling):** Thực thi [LicenseTest.php](file:///d:/KIEM_THU_PHAN_MEM/Do_An/snipe-it-master/tests/Unit/Models/LicenseTest.php), kiểm chứng phương thức `availCount()` tính toán chính xác ghế trống trên bảng `license_seats`, kiểm tra tính năng Masking Product Key và tự động điều phối tồn kho phụ kiện/linh kiện với trait `AdjustsQuantity`.
+  2. **Quản trị CI/CD Pipeline:** Xây dựng quy trình [.github/workflows/testcontainers.yml](.github/workflows/testcontainers.yml) chạy tự động hóa trên GitHub Actions runner có Docker.
+  3. **Kiểm thử Bản quyền, Phụ kiện & Linh kiện:** Bổ sung 4 bộ test tích hợp (12 test case) chạy trên MySQL 8.0.36 qua Testcontainers: giới hạn số ghế bản quyền (`numRemaining()`, `free_seats_count`), che giấu Product Key theo quyền `viewKeys`, tự động điều chỉnh tồn kho phụ kiện khi cấp phát/thu hồi và gắn/gỡ linh kiện vào tài sản (bảng `components_assets`). Chi tiết và kết quả tại [mục 5.3](#53-phân-vùng-3-bản-quyền-phần-mềm-phụ-kiện-linh-kiện--k16-cicd).
   4. **Lệnh thực thi chuẩn K16:**
      ```powershell
-     npm run test:integration:testcontainers -- tests/Unit/Models/LicenseTest.php
+     npm run test:integration:testcontainers -- tests/Feature/Licenses/Api/LicenseSeatAllocationLimitTest.php
      ```
 
 #### 👤 4. Nguyễn Thành Minh — QA Engineer (Security & Access Control)
@@ -284,11 +284,72 @@ flowchart TD
 
 ### 5.3 Phân vùng 3: Bản quyền Phần mềm, Phụ kiện, Linh kiện & K16 CI/CD
 - **Chủ trì:** Nguyễn Đình Thạch (2314506)
-- **Tập tin kiểm thử & Hạ tầng:** [LicenseTest.php](file:///d:/KIEM_THU_PHAN_MEM/Do_An/snipe-it-master/tests/Unit/Models/LicenseTest.php), [run.mjs](file:///d:/KIEM_THU_PHAN_MEM/Do_An/snipe-it-master/tests/testcontainers/run.mjs), [.github/workflows/testcontainers.yml](file:///d:/KIEM_THU_PHAN_MEM/Do_An/snipe-it-master/.github/workflows/testcontainers.yml).
+- **Nhánh làm việc:** `feature/license-tests`
+- **Hạ tầng:** [run.mjs](tests/testcontainers/run.mjs), [.github/workflows/testcontainers.yml](.github/workflows/testcontainers.yml).
 - **Cơ chế K16 cốt lõi:**
-  - Kiểm chứng logic tính ghế trống `LicenseSeat::availCount()`, ngăn chặn Over-allocation khi cấp phát đồng thời trên CSDL MySQL độc lập.
-  - Kiểm tra Masking Product Key và tự động điều phối tồn kho phụ kiện/linh kiện qua trait `AdjustsQuantity`.
+  - Kiểm chứng logic tính ghế trống (`License::numRemaining()`, `free_seats_count`), ngăn chặn cấp phát vượt số ghế trên CSDL MySQL độc lập.
+  - Kiểm tra che giấu Product Key theo quyền `viewKeys` và tự động điều chỉnh tồn kho phụ kiện/linh kiện khi cấp phát/thu hồi.
   - Quản trị toàn bộ vòng đời container Docker của nhóm và pipeline CI/CD GitHub Actions.
+
+#### 5.3.1 Bộ test case bổ sung của Phân vùng 3
+
+| Tệp kiểm thử | Test case | Kịch bản kiểm chứng |
+| --- | --- | --- |
+| [LicenseSeatAllocationLimitTest.php](tests/Feature/Licenses/Api/LicenseSeatAllocationLimitTest.php) | `test_license_seat_allocation_limits` | License 5 ghế: cấp phát lần lượt cho 5 user thành công, user thứ 6 bị từ chối và không có ghế nào được gán thêm. |
+| | `test_checked_in_seat_can_be_allocated_to_the_next_user` | Thu hồi 1 ghế của license đã đầy thì user tiếp theo được cấp phát đúng ghế vừa trống. |
+| | `test_free_seat_count_in_api_reflects_allocations` | API `GET /api/v1/licenses/{id}` trả về `free_seats_count` khớp số ghế còn trống (5 ghế, 3 đã dùng → 2). |
+| [LicenseProductKeyMaskingTest.php](tests/Feature/Licenses/Api/LicenseProductKeyMaskingTest.php) | `test_product_key_masking` | User không có quyền `viewKeys` chỉ nhận `product_key` dạng `------------`, key thật không xuất hiện trong response. |
+| | `test_product_key_is_visible_to_users_with_view_keys_permission` | User có quyền `licenses.keys` nhận đúng key thật. |
+| | `test_product_key_is_masked_in_license_index_for_users_without_view_keys` | Danh sách `GET /api/v1/licenses` cũng che key ở mọi dòng. |
+| [AccessoryQuantityOnCheckoutTest.php](tests/Feature/Accessories/Api/AccessoryQuantityOnCheckoutTest.php) | `test_accessory_quantity_adjusts_on_checkout` | Phụ kiện số lượng 10, cấp phát 2 → còn lại 8 (tổng `qty` giữ nguyên 10). |
+| | `test_checkin_restores_remaining_quantity` | Thu hồi từng chiếc → số lượng còn lại tăng 9 rồi 10. |
+| | `test_cannot_checkout_more_than_remaining_quantity` | Còn 3 mà yêu cầu 4 → bị từ chối, không phát sinh bản ghi cấp phát. |
+| [ComponentAttachToAssetTest.php](tests/Feature/Components/Api/ComponentAttachToAssetTest.php) | `test_component_attached_to_hardware` | Gắn 2 thanh RAM vào laptop `LAP-001` → có bản ghi `components_assets`, linh kiện còn lại 8/10. |
+| | `test_full_checkin_detaches_component_and_restores_quantity` | Gỡ toàn bộ → xóa bản ghi gắn kết, số lượng trở lại 10. |
+| | `test_partial_checkin_keeps_remaining_components_attached` | Gỡ 1 trên 3 → bản ghi gắn kết còn `assigned_qty = 2`. |
+
+#### 5.3.2 Kết quả thực thi trên Testcontainers (MySQL 8.0.36)
+
+Môi trường: PHP 8.4.26, PHPUnit 11.5.55, Docker 29.8.0, container `mysql:8.0.36` tạm thời do `run.mjs` khởi tạo.
+
+```text
+$ npm run test:integration:testcontainers -- tests/Feature/Licenses/Api/LicenseSeatAllocationLimitTest.php tests/Feature/Licenses/Api/LicenseProductKeyMaskingTest.php tests/Feature/Accessories/Api/AccessoryQuantityOnCheckoutTest.php tests/Feature/Components/Api/ComponentAttachToAssetTest.php
+
+PHPUnit 11.5.55 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.26
+Configuration: D:\Projects\Web\Snipe-IT\phpunit.xml
+
+............                                                      12 / 12 (100%)
+
+Time: 02:48.107, Memory: 88.00 MB
+
+OK (12 tests, 68 assertions)
+```
+
+Kiểm thử hồi quy toàn bộ Phân vùng 3 (các test có sẵn của License, Accessory, Component cùng 12 test bổ sung) để đảm bảo không phát sinh lỗi:
+
+```text
+$ npm run test:integration:testcontainers -- tests/Feature/Licenses tests/Feature/Accessories tests/Feature/Components
+
+PHPUnit 11.5.55 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.26
+Configuration: D:\Projects\Web\Snipe-IT\phpunit.xml
+
+...............................................................  63 / 346 ( 18%)
+............................................................... 126 / 346 ( 36%)
+............................................................... 189 / 346 ( 54%)
+............................................................... 252 / 346 ( 72%)
+............................................................... 315 / 346 ( 91%)
+...............................                                 346 / 346 (100%)
+
+Time: 33:02.811, Memory: 244.00 MB
+
+OK (346 tests, 1232 assertions)
+```
+
+> **Lưu ý khi chạy toàn bộ:** `memory_limit` mặc định 128M của PHP không đủ cho lần chạy 346 test. Nâng giới hạn cho riêng tiến trình kiểm thử, ví dụ trên Windows/PowerShell: tạo thư mục chứa tệp `memory.ini` với nội dung `memory_limit=1G`, sau đó đặt `$env:PHP_INI_SCAN_DIR` trỏ tới thư mục đó trước khi chạy lệnh trên.
 
 ### 5.4 Phân vùng 4: Người dùng, Phân quyền RBAC, Đa công ty & Security Policy
 - **Chủ trì:** Nguyễn Thành Minh (2312691)
@@ -366,7 +427,7 @@ npm run test:integration:testcontainers -- tests/Feature/Checkouts/Api/AssetChec
 npm run test:integration:testcontainers -- tests/Unit/AssetTest.php
 
 # 3. Chạy bài kiểm thử Ghế Bản quyền & Điều phối Số lượng (Phân vùng 3):
-npm run test:integration:testcontainers -- tests/Unit/Models/LicenseTest.php
+npm run test:integration:testcontainers -- tests/Feature/Licenses/Api/LicenseSeatAllocationLimitTest.php tests/Feature/Licenses/Api/LicenseProductKeyMaskingTest.php tests/Feature/Accessories/Api/AccessoryQuantityOnCheckoutTest.php tests/Feature/Components/Api/ComponentAttachToAssetTest.php
 
 # 4. Chạy bài kiểm thử Phân quyền RBAC & Đa công ty CompanyableScope (Phân vùng 4):
 npm run test:integration:testcontainers -- tests/Unit/UserTest.php
@@ -381,7 +442,7 @@ php artisan test
 
 # Chạy riêng theo từng tệp:
 php artisan test tests/Feature/Checkouts/Api/AssetCheckoutTest.php
-php artisan test tests/Unit/Models/LicenseTest.php
+php artisan test tests/Feature/Licenses/Api/LicenseSeatAllocationLimitTest.php
 php artisan test tests/Unit/UserTest.php
 ```
 
