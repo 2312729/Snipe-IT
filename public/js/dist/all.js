@@ -74991,14 +74991,14 @@ $(function () {
           return data;
         },
         /* processResults: function (data, params) {
-             params.page = params.page || 1;
-             var answer =  {
+              params.page = params.page || 1;
+              var answer =  {
                 results: data.items,
                 pagination: {
                     more: data.pagination.more
                 }
             };
-             return answer;
+              return answer;
         }, */
         cache: true
       },
@@ -76518,10 +76518,14 @@ $(function () {
 
 /* 
 HOW TO USE
- Create a Button looking like this:
- <a href='{{ route('modal.show', 'user') }}' data-toggle="modal"  data-target="#createModal" data-select='assigned_to' class="btn btn-sm btn-theme">New</a>
- If you don't have access to Blade commands (like {{ and }}, etc), you can hard-code a URL as the 'href'
- data-toggle="modal" - required for Bootstrap Modals
+
+Create a Button looking like this:
+
+<a href='{{ route('modal.show', 'user') }}' data-toggle="modal"  data-target="#createModal" data-select='assigned_to' class="btn btn-sm btn-theme">New</a>
+
+If you don't have access to Blade commands (like {{ and }}, etc), you can hard-code a URL as the 'href'
+
+data-toggle="modal" - required for Bootstrap Modals
 data-target="#createModal" - fixed ID for the modal, do not change
 data-select="assigned_to" - What is the *ID* of the select-dropdown that you're going to be adding to, if the modal-create was a success? Be on the lookout for duplicate ID's, it will confuse this library!
 class="btn btn-sm btn-theme" - makes it look button-ey, feel free to change :)
@@ -76610,14 +76614,14 @@ $(function () {
               return data;
             },
             /*processResults: function (data, params) {
-                 params.page = params.page || 1;
-                 var answer =  {
+                  params.page = params.page || 1;
+                  var answer =  {
                     results: data.items,
                     pagination: {
                         more: data.pagination.more
                     }
                 };
-                 return answer;
+                  return answer;
             },*/
             cache: true
           },
