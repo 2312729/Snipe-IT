@@ -1,0 +1,29 @@
+COMMAND: php -d memory_limit=1G vendor/bin/phpunit tests/Feature/Assets tests/Feature/AssetModels --no-progress --display-errors --display-skipped --display-incomplete --log-junit reports/k16-quoc-evidence/feature-assets-assetmodels.junit.xml
+PHPUnit 11.5.55 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.11
+Configuration: D:\KiemThu\Snipe-IT\phpunit.xml
+
+Time: 01:39.254, Memory: 144.00 MB
+
+There were 2 incomplete tests:
+
+1) Tests\Feature\Assets\Api\StoreAssetTest::test_permission_needed_to_store_encrypted_field
+D:\KiemThu\Snipe-IT\tests\Feature\Assets\Api\StoreAssetTest.php:858
+
+2) Tests\Feature\AssetModels\Api\IndexAssetModelsTest::test_asset_model_index_filter_can_search_computed_count_aliases
+This test is not compatible with SQLite
+
+D:\KiemThu\Snipe-IT\tests\Support\CanSkipTests.php:17
+D:\KiemThu\Snipe-IT\tests\Feature\AssetModels\Api\IndexAssetModelsTest.php:69
+
+--
+
+There was 1 skipped test:
+
+1) Tests\Feature\Assets\Api\DeleteAssetsTest::test_cannot_delete_asset_that_is_checked_out
+This behavior is not functioning yet.
+
+OK, but there were issues!
+Tests: 503, Assertions: 1864, Skipped: 1, Incomplete: 2.
+EXIT_CODE: 0

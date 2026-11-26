@@ -1,0 +1,23 @@
+COMMAND: vendor/bin/pint --test tests/Unit/AssetTest.php
+{"tool":"pint","result":"passed"}
+EXIT_CODE: 0
+COMMAND: php -l tests/Unit/AssetTest.php
+No syntax errors detected in tests/Unit/AssetTest.php
+EXIT_CODE: 0
+COMMAND: php -l tests/Unit/DepreciationTest.php
+No syntax errors detected in tests/Unit/DepreciationTest.php
+EXIT_CODE: 0
+COMMAND: php -l tests/Unit/AssetModelTest.php
+No syntax errors detected in tests/Unit/AssetModelTest.php
+EXIT_CODE: 0
+COMMAND: git diff --check
+git.exe : warning: in the working copy of 'tests/Unit/AssetTest.php', LF will be replaced by CRLF the next time Git
+touches it
+At line:8 char:41
++   @{ Name = 'git diff --check'; Run = { & git diff --check 2>&1 } }
++                                         ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: in the... Git touches it:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+EXIT_CODE: 0
+REPORT UTF8: True
+REPORT TRAILING_WHITESPACE_LINES: 0

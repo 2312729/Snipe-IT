@@ -1,3 +1,5 @@
 *
 !.gitignore
 !default.png
+!barcodes/
+!barcodes/invalid_barcode.gif

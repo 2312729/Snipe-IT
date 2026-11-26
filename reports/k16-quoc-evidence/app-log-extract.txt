@@ -1,0 +1,5 @@
+Filtered excerpts from existing `storage/logs/laravel.log`.
+Original file last modified: 2026-11-26 17:40:17. The original was not modified. This filtered copy keeps the first matching record for each error, removes `userId` and absolute paths, and summarizes the long stack trace. Both records predate the latest successful full Feature run.
+
+[2026-11-26 10:38:25] testing.ERROR: `file_get_contents` could not read the missing fallback `public/uploads/barcodes/invalid_barcode.gif`; `AssetsController.php:753`.
+[2026-11-26 10:39:19] testing.ERROR: PHP process exhausted its 128 MB CLI memory limit while compiling a Blade view; `BladeCompiler.php:239`.

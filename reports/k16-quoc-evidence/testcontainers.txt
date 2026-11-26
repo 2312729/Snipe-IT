@@ -1,0 +1,27 @@
+COMMAND: npm.cmd run test:integration:testcontainers -- tests/Feature/Assets/Api/StoreAssetTest.php --filter=test_asset_tags_must_be_unique_when_undeleted
+
+> test:integration:testcontainers
+> node tests/testcontainers/run.mjs tests/Feature/Assets/Api/StoreAssetTest.php --filter=test_asset_tags_must_be_unique_when_undeleted
+
+npm.cmd : D:\KiemThu\Snipe-IT\node_modules\testcontainers\build\container-runtime\clients\client.js:67
+At line:3 char:16
++ ... tputLines = & npm.cmd run test:integration:testcontainers -- tests/Fe ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (D:\KiemThu\Snip...ts\client.js:67:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+    throw new Error("Could not find a working container runtime strategy");
+          ^
+
+Error: Could not find a working container runtime strategy
+    at getContainerRuntimeClient
+(D:\KiemThu\Snipe-IT\node_modules\testcontainers\build\container-runtime\clients\client.js:67:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async MySqlContainer.start
+(D:\KiemThu\Snipe-IT\node_modules\testcontainers\build\generic-container\generic-container.js:62:24)
+    at async MySqlContainer.start
+(D:\KiemThu\Snipe-IT\node_modules\@testcontainers\mysql\build\mysql-container.js:38:42)
+    at async file:///D:/KiemThu/Snipe-IT/tests/testcontainers/run.mjs:61:17
+
+Node.js v24.21.0
+EXIT_CODE: 1

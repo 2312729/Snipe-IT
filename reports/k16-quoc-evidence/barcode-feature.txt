@@ -1,0 +1,10 @@
+COMMAND: vendor/bin/phpunit tests/Feature/Assets/AssetBarcodeAuthorizationTest.php --no-progress --display-errors
+PHPUnit 11.5.55 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.11
+Configuration: D:\KiemThu\Snipe-IT\phpunit.xml
+
+Time: 00:07.971, Memory: 78.00 MB
+
+OK (2 tests, 2 assertions)
+EXIT_CODE: 0

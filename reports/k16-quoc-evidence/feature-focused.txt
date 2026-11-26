@@ -1,0 +1,11 @@
+COMMAND: vendor/bin/phpunit tests/Feature/Assets/Api/StoreAssetTest.php tests/Feature/AssetModels/Api/AssetsForAssetModelTest.php --no-progress --display-errors
+PHPUnit 11.5.55 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.11
+Configuration: D:\KiemThu\Snipe-IT\phpunit.xml
+
+Time: 00:14.695, Memory: 96.00 MB
+
+OK, but there were issues!
+Tests: 48, Assertions: 190, Incomplete: 1.
+EXIT_CODE: 0

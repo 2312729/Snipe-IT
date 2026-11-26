@@ -1,0 +1,10 @@
+COMMAND: vendor/bin/phpunit tests/Unit/AssetTest.php tests/Unit/DepreciationTest.php tests/Unit/AssetModelTest.php --no-progress --display-errors
+PHPUnit 11.5.55 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.11
+Configuration: D:\KiemThu\Snipe-IT\phpunit.xml
+
+Time: 00:14.295, Memory: 84.00 MB
+
+OK (41 tests, 96 assertions)
+EXIT_CODE: 0

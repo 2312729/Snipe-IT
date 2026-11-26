@@ -450,11 +450,11 @@ class AssetTest extends TestCase
         $asset1 = Asset::factory()->create(['asset_tag' => 'UNIQUE-TEST-001']);
         $this->assertModelExists($asset1);
 
-        // Attempt to create another asset with the same asset_tag
-        $asset2 = Asset::factory()->make(['asset_tag' => 'UNIQUE-TEST-001']);
-        
-        // Should fail due to UNIQUE constraint
-        $this->assertFalse($asset2->save());
+        $duplicateAsset = Asset::factory()->make(['asset_tag' => $asset1->asset_tag]);
+
+        // Asset tags are rejected by the model's unique_undeleted validation rule.
+        $this->assertFalse($duplicateAsset->save());
+        $this->assertTrue($duplicateAsset->getErrors()->has('asset_tag'));
     }
 
     /**
@@ -464,25 +464,25 @@ class AssetTest extends TestCase
     {
         // Create encrypted custom field using factory
         $field = CustomField::factory()->testEncrypted()->create();
-        
+
         // Create asset with the encrypted custom field
         $asset = Asset::factory()->hasEncryptedCustomField($field)->create();
-        
-        // Manually encrypt a value and store it (simulating controller behavior)
+
+        // Store the same encrypted representation used by the asset write path.
         $plaintext = 'This is a test encrypted value';
-        $encryptedValue = Crypt::encryptString($plaintext);
-        
+        $encryptedValue = Crypt::encrypt($plaintext);
+
         $dbColumn = $field->db_column_name();
         $asset->{$dbColumn} = $encryptedValue;
         $asset->save();
         $asset->refresh();
-        
-        // Verify value is encrypted in database
-        $this->assertNotEquals($plaintext, $asset->{$dbColumn});
-        
-        // Verify decrypted value matches
-        $decrypted = Crypt::decryptString($asset->{$dbColumn});
-        $this->assertEquals($plaintext, $decrypted);
+
+        // Verify the database contains ciphertext, not plaintext.
+        $storedValue = DB::table('assets')->where('id', $asset->id)->value($dbColumn);
+        $this->assertNotSame($plaintext, $storedValue);
+        $this->assertSame($encryptedValue, $storedValue);
+
+        $this->assertSame($plaintext, Crypt::decrypt($storedValue));
     }
 
     /**
@@ -490,44 +490,64 @@ class AssetTest extends TestCase
      */
     public function test_mac_address_custom_field_format_and_storage(): void
     {
-        // Create MAC address custom field manually to ensure db_column is generated
-        $macField = new CustomField([
-            'name' => 'MAC Address Test',
-            'format' => 'regex:/^([0-9a-fA-F]{2}[:-]){5}[0-9a-fA-F]{2}$/',
-            'element' => 'text',
-        ]);
-        $macField->save();
+        $macField = CustomField::factory()->macAddress()->state(['name' => 'MAC Address Unit Test'])->create();
         $macField->refresh();
-        
+
         // Create a fieldset and attach the MAC field
         $fieldset = CustomFieldset::factory()->create();
         $fieldset->fields()->attach($macField->id, ['order' => 1, 'required' => false]);
-        
+
         // Create model with the fieldset
         $model = AssetModel::factory()->create(['fieldset_id' => $fieldset->id]);
-        
+
         // Create asset with the model
         $asset = Asset::factory()->create(['model_id' => $model->id]);
-        
+
         // The custom field column should now exist on the assets table
         // Verify it exists
+        $this->assertNotEmpty($macField->db_column_name());
         $this->assertTrue(Schema::hasColumn('assets', $macField->db_column_name()));
-        
+
         // Get the database column name
         $dbColumn = $macField->db_column_name();
-        
+
         // Set a valid MAC address
         $macAddress = '00:1A:2B:3C:4D:5E';
         $asset->{$dbColumn} = $macAddress;
         $asset->save();
         $asset->refresh();
-        
+
         // Verify MAC address is stored correctly
         $this->assertEquals($macAddress, $asset->{$dbColumn});
-        
+
         // Test invalid MAC address format fails validation
         $asset2 = Asset::factory()->make(['model_id' => $model->id]);
         $asset2->{$dbColumn} = 'invalid-mac-address';
         $this->assertFalse($asset2->save());
+        $this->assertTrue($asset2->getErrors()->has($dbColumn));
+    }
+
+    public function test_imei_custom_field_format_and_storage(): void
+    {
+        $imeiField = CustomField::factory()->imei()->state(['name' => 'IMEI Unit Test'])->create();
+        $imeiField->refresh();
+        $fieldset = CustomFieldset::factory()->create();
+        $fieldset->fields()->attach($imeiField->id, ['order' => 1, 'required' => false]);
+        $model = AssetModel::factory()->create(['fieldset_id' => $fieldset->id]);
+        $asset = Asset::factory()->create(['model_id' => $model->id]);
+        $dbColumn = $imeiField->db_column_name();
+
+        $this->assertTrue(Schema::hasColumn('assets', $dbColumn));
+
+        $imei = '490154203237518';
+        $asset->{$dbColumn} = $imei;
+        $this->assertTrue($asset->save());
+        $this->assertSame($imei, DB::table('assets')->where('id', $asset->id)->value($dbColumn));
+
+        $invalidAsset = Asset::factory()->make(['model_id' => $model->id]);
+        $invalidAsset->{$dbColumn} = 'not-an-imei';
+
+        $this->assertFalse($invalidAsset->save());
+        $this->assertTrue($invalidAsset->getErrors()->has($dbColumn));
     }
 }
