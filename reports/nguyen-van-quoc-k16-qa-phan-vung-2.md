@@ -730,4 +730,69 @@ Trong phạm vi tổng hợp do người giao việc xác nhận, các Unit/Feat
 
 ## 10. Giao nhận Git
 
-Phần test, fixture, báo cáo và evidence sẽ được giao trên nhánh `feat/test-quoc` sau khi staged diff được rà soát. Commit hash và trạng thái push được cung cấp trong handoff cuối để tránh ghi trước thông tin chưa tồn tại.
+Không commit hoặc push trong lần cập nhật này. Nhánh local `feat/test-quoc` đang tồn tại nhưng nhánh `origin/feat/test-quoc` đã bị xóa; cần rà soát trạng thái nhánh trước khi giao nhận Git. Các file agent/config cá nhân không thuộc phạm vi báo cáo và không được stage.
+
+## 11. Đối chiếu đặc tả chính thức Phân vùng 2 (2.3.3.2)
+
+### 11.1. Căn cứ, mã kịch bản và ma trận Severity/Priority
+
+Phần này giữ các định danh mà người phụ trách xác nhận: `2.3.3.2.1`–`2.3.3.2.4`, `TS-02.1`–`TS-02.3`, `TC-HW-01`–`TC-HW-11`, và `TC-DP-01`–`TC-DP-03`. Tuy nhiên, trong working tree được rà soát, `reports/` không có nội dung đặc tả chứa các định danh đó, tên case, bước/dữ liệu/kết quả mong đợi hoặc giá trị Severity/Priority. Tìm kiếm theo các định danh trong báo cáo và evidence hiện có không trả về bản đặc tả. Vì vậy bảng dưới giữ nguyên mã đã được xác nhận nhưng không tự đặt tên, mức độ hoặc gán test theo suy đoán. Đây là giới hạn truy vết tài liệu, không phải kết luận rằng các test nguồn không tồn tại.
+
+Không có đủ dữ liệu để tái tạo ma trận Severity/Priority hay mô tả chính xác ba luồng `TS-02.1`–`TS-02.3`. Các kết quả cũ ở mục 6 vẫn được giữ như kết quả chạy ở thời điểm đã ghi trong log; chúng không được nâng thành kết quả chạy mới hoặc coi là bằng chứng cho từng TC chính thức.
+
+### 11.2. Bảng truy vết từng test case được yêu cầu
+
+`Không thể xác minh` nghĩa là chưa thể xác định tiêu chí của TC chính thức để kết luận test nguồn hiện có có tương ứng đầy đủ hay không. Cột test nguồn ghi các test gần chủ đề trong code nếu có; đó không phải xác nhận ánh xạ 1:1. Tên chính thức và Severity/Priority được để chưa xác minh thay vì suy đoán.
+
+| Mã TC | Tên chính thức | Severity / Priority | Test nguồn ứng viên (ánh xạ chưa xác nhận) | Bao phủ theo đặc tả | Kết quả và evidence hiện có | Khoảng trống / khác biệt |
+|---|---|---|---|---|---|---|
+| TC-HW-01 | Chưa xác minh trong đặc tả có trong working tree | Chưa xác minh | Không thể gán 1:1; xem ma trận hành vi đã kiểm chứng ở mục 11.3 | Không thể xác minh | Chưa có kết quả có thể gắn riêng cho TC này | Thiếu tên, tiền điều kiện, expected result và mức Severity/Priority nguyên văn. |
+| TC-HW-02 | Chưa xác minh trong đặc tả có trong working tree | Chưa xác minh | Không thể gán 1:1; xem mục 11.3 | Không thể xác minh | Chưa có kết quả có thể gắn riêng cho TC này | Thiếu tiêu chí để phân biệt validation, DB constraint hoặc luồng API/UI cụ thể. |
+| TC-HW-03 | Chưa xác minh trong đặc tả có trong working tree | Chưa xác minh | Không thể gán 1:1; xem mục 11.3 | Không thể xác minh | Chưa có kết quả có thể gắn riêng cho TC này | Thiếu tên và bước/dữ liệu chính thức; không suy luận từ các test tự tăng tag. |
+| TC-HW-04 | Chưa xác minh trong đặc tả có trong working tree | Chưa xác minh | Không thể gán 1:1; xem mục 11.3 | Không thể xác minh | Chưa có kết quả có thể gắn riêng cho TC này | Thiếu expected result để đối chiếu kiểm tra `model_id`. |
+| TC-HW-05 | Chưa xác minh trong đặc tả có trong working tree | Chưa xác minh | Không thể gán 1:1; xem mục 11.3 | Không thể xác minh | Chưa có kết quả có thể gắn riêng cho TC này | Thiếu expected result để xác định warranty boundary/validation được yêu cầu. |
+| TC-HW-06 | Chưa xác minh trong đặc tả có trong working tree | Chưa xác minh | Không thể gán 1:1; xem mục 11.3 | Không thể xác minh | Chưa có kết quả có thể gắn riêng cho TC này | Thiếu định dạng tiền và quy tắc locale được nêu trong đặc tả. |
+| TC-HW-07 | Chưa xác minh trong đặc tả có trong working tree | Chưa xác minh | Không thể gán 1:1; xem mục 11.3 | Không thể xác minh | Chưa có kết quả có thể gắn riêng cho TC này | Thiếu dữ liệu/expected để xác định phép tính giá trị linh kiện cần kiểm thử. |
+| TC-HW-08 | Chưa xác minh trong đặc tả có trong working tree | Chưa xác minh | Không thể gán 1:1; xem mục 11.3 | Không thể xác minh | Chưa có kết quả có thể gắn riêng cho TC này | Thiếu định nghĩa trạng thái xóa mềm/restore và expected result theo đặc tả. |
+| TC-HW-09 | Chưa xác minh trong đặc tả có trong working tree | Chưa xác minh | Không thể gán 1:1; xem mục 11.3 | Không thể xác minh | Chưa có kết quả có thể gắn riêng cho TC này | Không thể xác định case này có nhắm tới IMEI, MAC hay quy tắc Custom Field khác. |
+| TC-HW-10 | Chưa xác minh trong đặc tả có trong working tree | Chưa xác minh | Không thể gán 1:1; xem mục 11.3 | Không thể xác minh | Chưa có kết quả có thể gắn riêng cho TC này | Không thể xác định dữ liệu và định dạng được mong đợi. |
+| TC-HW-11 | Chưa xác minh trong đặc tả có trong working tree | Chưa xác minh | Không thể gán 1:1; xem mục 11.3 | Không thể xác minh | Chưa có kết quả có thể gắn riêng cho TC này | Thiếu nội dung case; không suy diễn từ tên phân vùng. |
+| TC-DP-01 | Chưa xác minh trong đặc tả có trong working tree | Chưa xác minh | `DepreciationTest` có các test amount, percentage và quan hệ; không thể xác định case nào ứng với mã này | Không thể xác minh | Các test Unit trong file đã chạy theo evidence cũ; xem mục 6 và `reports/k16-quoc-evidence/unit-run.txt` | Chưa có tiêu chí đặc tả để xác định độ phủ riêng cho TC-DP-01. |
+| TC-DP-02 | Chưa xác minh trong đặc tả có trong working tree | Chưa xác minh | `DepreciationTest` có test floor amount/percentage và chặn giá trị âm; không thể xác định case nào ứng với mã này | Không thể xác minh | Các test Unit trong file đã chạy theo evidence cũ; xem mục 6 và `reports/k16-quoc-evidence/unit-run.txt` | Chưa có expected result và mức ưu tiên riêng của TC-DP-02. |
+| TC-DP-03 | Chưa xác minh trong đặc tả có trong working tree | Chưa xác minh | `DepreciationTest` có test tính tuyến tính trong kỳ; không thể xác định case nào ứng với mã này | Không thể xác minh | Các test Unit trong file đã chạy theo evidence cũ; xem mục 6 và `reports/k16-quoc-evidence/unit-run.txt` | Chưa có expected result và mức ưu tiên riêng của TC-DP-03. |
+
+### 11.3. Đối chiếu hành vi triển khai với các điểm rủi ro được nêu
+
+Bảng này ghi nhận source và test tìm được theo chủ đề; kết quả chỉ được coi là đã chạy khi có log/JUnit tương ứng ở cột evidence. Nó không thay thế tên, thứ tự hay Severity/Priority của đặc tả chính thức.
+
+| Chủ đề | Hiện trạng trong source | Test/evidence đã tìm thấy | Mức kết luận có căn cứ và khoảng trống |
+|---|---|---|---|
+| `asset_tag`: DB và validation | `Asset::$rules` dùng `unique_undeleted:assets,asset_tag`. Migration tạo index thường ghép `(deleted_at, asset_tag)`, không phải unique index. | Unit `AssetTest::test_asset_tag_unique_constraint`; Feature `StoreAssetTest::test_asset_tags_must_be_unique_when_undeleted` và `...can_be_duplicated_if_deleted`. Unit/full Feature logs và JUnit hiện có. | Có evidence cũ cho validation khi chưa xóa mềm và cho phép dùng lại tag đã soft-delete. Không có bằng chứng constraint unique ở tầng DB; tên test Unit không chứng minh DB constraint. Không kiểm thử trực tiếp ghi duplicate bằng DB bypass model/validation. |
+| `autoincrement_asset`: sinh mã, va chạm, số khuyết | Hàm tạo tag dùng `auto_increment_assets`, `next_auto_tag_base`, prefix và zero-fill. `nextAutoIncrement()` quét hậu tố số của tag. | Unit có `test_auto_increment`, `test_auto_increment_collision`, `test_auto_increment_double`, các test `gap_and_backfill`, prefixless và giá trị lớn. Có trong `unit-run.txt`. | Có kiểm tra tuần tự/va chạm mô phỏng bằng hai model tạo trước khi save và backfill. Không phải kiểm thử hai request/process đồng thời, transaction isolation hay tải concurrency thật; không tuyên bố đã kiểm thử concurrency. |
+| `model_id` | Rule của Asset yêu cầu integer và `exists:models,id,deleted_at,NULL`, tức record Model phải tồn tại và chưa soft-delete. | Asset/Feature factories tạo asset với model hợp lệ; các Unit/Feature suite cũ chạy. | Chưa tìm thấy trong evidence đã lưu kết quả của các ca riêng cho thiếu `model_id`, ID không tồn tại, hoặc Model đã soft-delete. Không coi rule trong source là bằng chứng test đã thực thi. |
+| Depreciation tuyến tính, `depreciation_min`, phần trăm và không âm | `getLinearDepreciatedValue()` được dùng trong Asset; `Depreciation` hỗ trợ loại amount/percentage và có trường `depreciation_min`. | Unit `DepreciationTest` gồm floor amount, floor percentage, giá trị không âm và tính trong kỳ; 8 test trong file nằm trong lượt Unit 41 test. | Có coverage hành vi cho các ví dụ trong test trên SQLite. Không suy ra MySQL pass; không chứng minh quy tắc kế toán/ngày/rounding ngoài assertion. |
+| Custom Field IMEI/MAC và mã hóa | Custom field được validate/lưu theo cấu hình field; test mã hóa dùng Laravel `Crypt`. | Unit có test IMEI/MAC format/storage và encrypted field generic; `unit-run.txt`. Feature encrypted-field tests có trong full Feature JUnit. | Evidence không chứng minh thuật toán AES cụ thể. Test IMEI/MAC format không tự chứng minh giá trị hai trường này được mã hóa; không gộp hai khẳng định đó. Test quyền encrypted field còn incomplete. |
+| Warranty months / boundary | Rule cho `warranty_months` là nullable numeric `digits_between:0,240`; accessor expiration tính từ `purchase_date` và số tháng bảo hành. | Unit `test_warranty_expires_attribute` kiểm tra 24 tháng từ 2017-01-01 đến 2019-01-01; `test_warranty_progress_percent_returns_zero_without_required_dates`. Có trong `unit-run.txt`. | Có bằng chứng accessor và thiếu ngày bắt buộc. Không thấy boundary tests cho 0/240, âm, lớn hơn 240, tháng cuối ngày hoặc leap-day. |
+| Tiền tệ / `purchase_cost` | Rule Asset là numeric, không âm và có giới hạn max; StoreAsset có xử lý input dấu chấm/dấu phẩy. | Feature `test_stores_period_as_decimal_separator_for_purchase_cost`, `...comma_separator...`; nằm trong full Feature JUnit. | Có evidence theo hai trường hợp test; chưa bao phủ đầy đủ locale, dấu phân cách hàng nghìn, ký hiệu tiền hoặc mọi biên giá trị. |
+| Giá trị linh kiện gán cho Asset | Asset tính tổng chi phí linh kiện theo `assigned_qty`; chi phí null được chuẩn hóa thành 0 trong các test hiện có. | Unit `test_asset_components_calculated_total_uses_assigned_quantity` và `...treats_null_purchase_cost_as_zero`; nằm trong Unit run. | Có coverage cho quantity và null cost theo fixtures này; không suy rộng ra mọi hành vi nhập/xuất, soft-delete hoặc khôi phục Component. |
+| Asset soft-delete/restore | Có luồng xóa mềm và các endpoint/UI restore trong source. | Feature `DeleteAssetTest`, `BulkDeleteAssetsTest`, restore-related tests nằm trong thư mục Feature Assets được chạy theo JUnit full run. | Có coverage cho các test liệt kê trong JUnit, nhưng không khẳng định tất cả kết hợp permission/restore/dupe-tag được bao phủ. Test API xóa Asset đang checkout bị source đánh dấu skipped. |
+
+### 11.4. Phạm vi kịch bản TS-02
+
+| Kịch bản | Nội dung đặc tả nguyên văn | Tình trạng đối chiếu |
+|---|---|---|
+| TS-02.1 | Không có trong tài liệu/evidence hiện diện trong checkout | Giữ nguyên mã; không thể khẳng định flow, expected result, test mapping hoặc kết quả. |
+| TS-02.2 | Không có trong tài liệu/evidence hiện diện trong checkout | Giữ nguyên mã; không thể khẳng định flow, expected result, test mapping hoặc kết quả. |
+| TS-02.3 | Không có trong tài liệu/evidence hiện diện trong checkout | Giữ nguyên mã; không thể khẳng định flow, expected result, test mapping hoặc kết quả. |
+
+## 12. Phân biệt kết quả cũ và lượt cập nhật báo cáo
+
+Các số liệu ở mục 4–6 là kết quả cũ được chép từ artifact đã lưu: 41 Unit test, 503 Feature test của hai thư mục, và regression barcode 2 test; tổng Unit + full Feature là 544 lượt với 541 pass, 0 fail, 1 skipped, 2 incomplete. Đây là số liệu ở cấp suite, không tự chứng minh từng TC-HW/TC-DP.
+
+Trong lượt cập nhật báo cáo này không chạy lại PHPUnit/Testcontainers và không sửa test hoặc application code. Vì vậy không có kết quả chạy mới. Testcontainers/MySQL vẫn BLOCKED/NOT RUN theo `reports/k16-quoc-evidence/testcontainers.txt`: runner không khởi tạo được runtime và dừng trước PHPUnit. Không suy diễn MySQL behavior từ kết quả SQLite.
+
+## 13. Khoảng trống tài liệu và kết luận đối với mã TC chính thức
+
+Các test hành vi hiện có cho tag, auto-increment, depreciation, IMEI/MAC, warranty, currency parsing, component totals và một số luồng Asset delete/restore đã chạy theo log cũ ở mục 11.3. Mức độ phù hợp với từng mã `TC-HW-*`/`TC-DP-*` chưa thể kết luận khi thiếu tên, expected result và Severity/Priority nguyên văn để lập ánh xạ. Vì vậy hiện không thể phân loại chính xác từng mã theo “đầy đủ / một phần / chưa có” mà không suy đoán; các mã ở mục 11.2 được đánh dấu “Không thể xác minh”.
+
+Không tuyên bố đã kiểm thử concurrency thật, warranty boundary, mọi quy tắc currency parsing, `model_id` soft-delete validation, mọi component aggregation, hoặc mọi tổ hợp Asset soft-delete/restore. Những nội dung chỉ có rule trong source hoặc test gần chủ đề được tách biệt khỏi kết quả test có log. Cần lưu bản đặc tả chính thức trong hồ sơ dự án để có thể gắn nguyên văn tên, ưu tiên, điều kiện và kết quả mong đợi cho từng mã mà không thay đổi các kết quả đã ghi nhận.
