@@ -92,3 +92,7 @@ storage/ldap_client_tls.key
 /.zed
 boost.json
 opencode.json
+
+# Local AI agent context
+/.ai/
+/.kilo/agents/
